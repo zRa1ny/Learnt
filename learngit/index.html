@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>vue.js</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<style type="text/css">
+		#vue-app{
+			text-align:center;
+		}
+		.block{
+			display:block;
+		}
+		.none{
+			display:none;
+		}
+	</style>
+</head>
+<body>
+	<div id="vue-app" >
+		<h2>直接使用{{}}渲染data数据</h2>
+		<p>{{name}}</p>
+		<h2>使用methods函数渲染data数据</h2>
+		<p>我是get函数结果{{get()}}</p>
+		<h2>v-bind绑定属性</h2>
+		<input type="text" name="" v-bind:value="'这是V-Bind渲染的name'+name">
+		<h2>v-html将内容作为html代码渲染进绑定的标签的内部</h2>
+		<div v-html="url"></div>
+		<h2>v-on绑定事件</h2>
+		<button v-on:click="toggle=!toggle">toggle</button>
+		<button v-on:click.once="toggle=!toggle">toggle only 1</button>
+		<button v-on:click.stop="toggle=!toggle">toggle stop</button>
+		<button v-on:click.prev="toggle=!toggle">toggle prev</button>
+		<p  v-bind:class="{block:toggle,none:!toggle}">	i am toggle</p>
+		<h2>数据的双向绑定</h2>
+		<input ref="showInp1" type="text" name="" v-on:keyup="showInp">
+		<input ref="showInp2" type="text" name="" v-on:keyup.enter="showInp1">
+		<input type="text" name="" v-model="nowinput2">
+		<p>keyupshow:{{nowinput}}</p>
+		<p>keup.entershow:{{nowinput1}}</p>
+		<p>v-model:{{nowinput2}}</p>
+		<h2>v-show</h2>
+		<button v-on:click="showtoggle=!showtoggle">showtoggle</button>
+		<p  v-show="showtoggle">i am toggle</p>
+		<h2>v-if和v-else-if</h2>
+		<button v-on:click="ifok=!ifok">ifoktoggle</button>
+		<p v-if="ifok">Yes</p> 
+		<p v-else="ifok">no</p>
+		<h2>Computed 计算属性</h2>
+		<button v-on:click="b++">b++</button><button v-on:click="b--">b--</button>
+		<button v-on:click="c++">c++</button>
+		<button v-on:click="d++">d++</button>
+		<p>b直接函数计算的结果：{{b}}</p>
+		<p>方法计算a+b:{{aaddb()}}</p>
+		<p>方法计算b+c:{{baddc()}}</p>
+		<p>方法计算d+c:{{daddc()}}</p>
+		<p>b直接函数计算的结果：{{b}}</p>
+		<p>属性计算a+b:{{aaddb1}}</p>
+		<p>属性计算b+c:{{baddc1}}</p>
+		<p>属性计算d+c:{{daddc1}}</p>
+		<p>总结 methods每一次触发都会执行所以方法，computed只会执行相应的方法</p>
+		<h2>for</h2>
+		<div v-for="todo in todolists">
+			<p>{{todo}}</p>
+		</div>
+		<div v-for="todo in todolists">
+			<p v-for="t in todo">
+				<span>{{t}}</span>
+			</p>
+		</div>
+		<template v-for="todo in todolists">
+			<p>{{todo}}</p>
+		</template>
+		<template v-for="todo in todolists"
+		>
+			<p v-for="t in todo">{{t}}</p>
+		</template>
+	
+
+
+
+	</div>
+
+	<script type="text/javascript" src="app.js"></script>
+</body>
+</html>
