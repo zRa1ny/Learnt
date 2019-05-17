@@ -1,0 +1,11 @@
+CACHE MANIFEST
+# myapp version 9
+#上一行标识这个文件是一个清单文件,本行是注释
+#下面内容都是应用程序依赖的资源文件的url
+CACHE:
+index.html
+config.json
+/c6/index.js
+
+
+NETWORK:*

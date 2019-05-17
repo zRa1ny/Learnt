@@ -1,0 +1,21 @@
+CACHE MANIFEST
+## v 1.5
+#上一行标识这个文件是一个清单文件,本行是注释
+#下面内容都是应用程序依赖的资源文件的url
+CACHE:
+index.html
+config.json
+c6/index.js
+c8/index.js
+c9/index.js
+c10/index.js
+c11/index.js
+c12/index.js
+c13/index.js
+c14/index.js
+c15/index.js
+c16/index.js
+c17/index.js
+c18/index.js
+c19/index.js
+c20/index.js
