@@ -1,0 +1,76 @@
+.fixed-table-container tbody td .th-inner, .fixed-table-container thead th .th-inner, th {
+    background-color: #edefee;
+}
+
+.table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+    border-color:#dae2e3;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: white;
+}
+a {
+    color: #3ba7f4;
+}
+.pagination li.page-jumper a
+ input {
+    background-color: #f5f6f6;
+    border-color:#dae2e3;
+}
+
+.fixed-table-pagination .pagination a {
+    background-color: #f5f6f6;
+}
+
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+    background-color: #008bf0;
+}
+
+.table-bordered {
+    border-color: #dae2e3;
+}
+
+.bootstrap-table table.table {
+    background: #edefee!important;
+}
+
+.btn-primary,.btn-primary:hover,.btn-primary.active {
+    background: #1a8cf2;
+}
+
+.btn-success,.btn-success:hover,.btn-success.active {
+    background: #1fb89a;
+}
+.store-selector .all a {
+    background: #1a8cf2!important;
+}
+
+.area-pop .tab .curr a {
+    background: #1a8cf2!important;
+}
+
+.nav-tabs>.nav-tabs {
+    background-color: #cfd3d8;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    background-color: #fff;
+    color: #333;
+}
+
+ul.nav.nav-tabs {
+    background-color: #cfd3d8;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    background-color: #fff;
+    color: #333;
+}
+
+.store-selector .mc a:active, .store-selector .mc a:hover {
+    background: #005aa0!important;
+}
+
+.content-title h4.border-left{
+    border-left-color:#005aa0;
+}

@@ -1,0 +1,32 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <style>
+        #main{
+            padding: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="main">
+        <h3>cig-editor示例</h3>
+        <p></p>
+        <div class="row">
+            <div class="col-sm-12">
+                <cig-editor
+                    :value="value"
+                    v-model="value"
+                    @input="editorChang">
+                </cig-editor>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+</html>

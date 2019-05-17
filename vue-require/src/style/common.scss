@@ -1,0 +1,23 @@
+/*样式重置*/
+
+@import './core/reset';
+
+/*参数*/
+
+@import './var';
+
+/*字体*/
+
+@import './font/font-awesome';
+
+/*控件 样式*/
+
+@import './components/index';
+
+/*切换动画*/
+
+@import './transition/index';
+
+/*项目公用*/
+
+@import './frame';

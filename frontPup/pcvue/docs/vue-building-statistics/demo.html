@@ -1,0 +1,32 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../../../components/font-awesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../components/ionicons/css/ionicons.min.css">
+        <link rel="stylesheet" href="../../common/css/style.css">
+    </head>
+
+    <body>
+        <div id="example" style="width:1200px;margin:0 auto;">
+            <h3>vue-building-statistics组件</h3>
+            <vue-building-statistics 
+                v-bind:dhouseholds="dHouseholds"
+                v-bind:households="households"
+                v-bind:inpersons="inPersons"
+                v-bind:rentalnum="rentalNum"
+                v-bind:vacantnum="vacantNum"
+                v-bind:symbols="peopleSymbol"
+                v-bind:istest="istest">
+            </vue-building-statistics>
+        </div>
+        <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+        <script type="text/javascript" src="../require-config.js"></script>
+        <script>
+            requirejs(["./demo.js"], function () {});
+
+        </script>
+    </body>
+
+</html>

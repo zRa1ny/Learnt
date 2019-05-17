@@ -1,0 +1,102 @@
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="/components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="form">
+        <h5>基础的表单，支持基本的类型 display,radio,checkbox:multi,checkbox,selected:multi,selected,textarea,number,text 依赖vueForm</h5>
+        <div class="form-horizontal form-group-sm">
+            <cig-form data-path="data" :fields="fields"></cig-form>
+            <!-- data-path 数据的在vue上对应的路径 -->
+            <!-- fields 字段类型 -->
+        </div>
+        <button @click="showData"> 编辑后的值</button>
+        <div slot="fieldslot.contactPerson">
+            <input @click="showPop" placeholder="点击选择联系人" type="text" readonly v-model="data.contactPerson" class="form-control">
+        </div>
+    </div>
+
+
+    <div id="form2">
+        <h5>表单布局，默认是两列布局，每一项可以跨列 依赖vueForm</h5>
+        <div class="form-horizontal form-group-sm">
+            <cig-form data-path="data" :fields="fields"></cig-form>
+        </div>
+    </div>
+
+    <div id="form3">
+        <h5>表单布局，也可以设置为三列布局和一列布局，每一项可以跨列 依赖vueForm</h5>
+        <label><input type="radio" name="type" v-model="render" value="table1Render">一列</label>
+        <label><input type="radio" name="type" v-model="render" value="table3Render">三列</label>
+        <div class="form-horizontal form-group-sm">
+            <cig-form data-path="data" :fields="fields" :fields-render="render">
+                <!-- fields-render 默认支持三个值 table1Render table2Render table3Render -->
+            </cig-form>
+        </div>
+    </div>
+
+    <div id="form4">
+        <h5>复杂表单，自定义内容 依赖vueForm，如果自定义内容有引用控件，需要加上相应的页面</h5>
+        <div class="form-horizontal form-group-sm">
+            <cig-form data-path="data" :fields="fields">
+                <cig-editor v-model="data.field1" slot="fieldslot.field1"></cig-editor>
+                <!--<div class="input-group" slot="fieldslot.field1">
+                    <input type="text" v-model="data.field1" class="form-control">
+                    <div class="input-group-addon" @click='reset' title="重置"><i class="glyphicon glyphicon-map-marker"></i></div>
+                </div>-->
+                <haha slot="fieldslot.field2" :count="data.field2"></haha>
+                <cig-files slot="fieldslot.field4" v-model="data.field4" file-type="test-image">
+                </cig-files>
+            </cig-form>
+        </div>
+    </div>
+
+    <div id="form5">
+        <h5>表单配套工具 mixins ：表单默认值 + 表单校验 依赖vueForm</h5>
+        <div class="form-horizontal form-group-sm">
+            <cig-form data-path="data" ref="form" :fields="fields">
+            </cig-form>
+        </div>
+        <button @click="raiseValidate()">校验</button>
+    </div>
+    <div id="form6">
+        <h5>表单校验自定义 依赖vueForm</h5>
+        <div class="form-horizontal form-group-sm">
+            <cig-form data-path="data" ref="form" :fields="fields">
+            </cig-form>
+        </div>
+        <button @click="validate()">校验</button>
+    </div>
+
+    <div id="form7">
+        <h5>用 computed 控制显示哪些列 依赖vueForm</h5>
+        <div class="form-horizontal form-group-sm">
+            <cig-form data-path="data" ref="form" :fields="computedFields">
+            </cig-form>
+        </div>
+    </div>
+
+    <div id="form8">
+        <h5>复杂表单 自定义布局 依赖vueForm</h5>
+        <div class="form-horizontal form-group-sm">
+            <cig-form data-path="data" :fields-render="render" :fields="fields">
+            </cig-form>
+            <!-- fields-render 也可以绑定一个 方法，去渲染不同的布局 -->
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/components/requirejs/require.js"></script>
+    <script type="text/javascript" src="/cig/require-config-dev.js"></script>
+
+    <script>
+    requirejs(["./form.js"],function(){});
+</script>
+</body>
+
+</html>

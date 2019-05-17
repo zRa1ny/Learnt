@@ -1,0 +1,33 @@
+{
+    "success":1,
+    "data":[
+        {
+            "pId":1,
+            "cardNum":"cardNum1",
+            "name":"选项1",
+            "phone":"phone1",
+            "address":"address1"
+        },
+        {
+            "pId":2,
+            "cardNum":"cardNum2",
+            "name":"选项2",
+            "phone":"phone2",
+            "address":"address2"
+        },
+        {
+            "pId":3,
+            "cardNum":"cardNum3",
+            "name":"选项3",
+            "phone":"phone3",
+            "address":"address3"
+        },
+        {
+            "pId":4,
+            "cardNum":"cardNum4",
+            "name":"选项4",
+            "phone":"phone4",
+            "address":"address4"
+        }
+    ]
+}

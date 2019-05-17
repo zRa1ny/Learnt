@@ -1,0 +1,47 @@
+.treeview .list-group-item {
+    cursor: pointer;
+    user-select: none;
+}
+
+.treeview span.indent {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.treeview span.icon {
+	width: 12px;
+	margin-right: 5px;
+	/* position: absolute;
+    right: 10px;
+    top: 50%;
+    margin-top: -7px; */
+}
+
+.treeview .node-disabled {
+	color: silver;
+	cursor: not-allowed;
+}
+
+.treeview .node-selected {
+    color: #FFFFFF;
+    background-color: #428bca;
+}
+
+.treeview .node-tree:hover {
+    background-color: #F5F5F5;
+}
+.treeview .node-selected:hover {
+    background-color: #2c6494;
+}
+
+.treeview.menu-tree .list-group-item{
+    color: #cccccc;
+    background-color: #333c4e;
+    border: 1px solid #333c4e;
+}
+.treeview.menu-tree .list-group-item:hover{
+	background-color: #3a4459;
+}
+.treeview.menu-tree .list-group-item a{
+	color: inherit;
+}

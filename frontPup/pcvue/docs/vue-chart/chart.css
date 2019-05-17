@@ -1,0 +1,95 @@
+.event-chart1,
+.event-chart {
+    height: 300px;
+    background: #ffffff;
+    border-bottom: 1px solid #cccccc;
+    display: inline-block;
+    width: 100%;
+}
+
+.event-chart1 {
+    width: 49% !important;
+}
+
+.full-page {
+    position: relative;
+}
+/*bar*/
+
+.chart .row h4 {
+    color: #3b9ed3;
+}
+
+.chart ul.legend,
+.chart .legend li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    /* border: 1px solid #bcc1c5; */
+}
+
+.chart .legend li {
+    display: inline-block;
+    line-height: 30px;
+    /* padding-right: 18px; */
+}
+
+.chart ul.legend {
+    border: 1px solid #bcc1c5;
+    border-radius: 7px;
+    text-align: center;
+    background: #fff;
+}
+
+.chart .legend span.ico::before,
+.chart .legend span.ico1 i {
+    display: block;
+    width: 10px;
+    height: 10px;
+    content: ".";
+    text-indent: -9999px;
+    margin-right: 10px;
+    top: 10px;
+    position: absolute;
+    left: 11px;
+    border-radius: 5px;
+}
+
+.chart .legend span.ico1::before {
+    display: none;
+}
+
+.chart .legend span.txt {
+    display: inline-block;
+    height: 30px;
+    /* position: relative; */
+}
+
+
+.pie ul.legend li {
+    float: left;
+}
+
+.pie ul.legend {
+    border: none;
+    background: transparent;
+    width: 320px;
+    margin: 0 auto;
+}
+
+.height100 {
+    height: 350px;
+    position: relative;
+}
+
+.bar-area {
+    position: absolute;
+    top: 40px;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    overflow: auto;
+}
+svg{
+    width: 100% !important;
+}

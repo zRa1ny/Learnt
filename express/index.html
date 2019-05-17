@@ -1,0 +1,30 @@
+<head>
+  <title>打开本地磁盘</title>
+</head>
+
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
+  <center>
+    <table border=1 bordercolor=7070ff width=500>
+      <tr align="center" height="30">
+        <td>
+          <input type=submit value="打开C盘" onClick="open_disk('C:\Users\pytho\Desktop\duoxing.zip')">
+        </td>
+      </tr>
+    </table>
+  </center>
+</body>
+
+</html>
+<script>
+  function open_disk(disk) {
+    try {
+      window.open('file://' + disk + ':\\');
+    } catch (e) {
+      try {
+        window.open('file:///' + disk + ':');
+      } catch (e) {
+        alert("打不开我也没办法了：（");
+      }
+    }
+  }
+</script>

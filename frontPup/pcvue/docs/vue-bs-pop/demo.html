@@ -1,0 +1,52 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../common/css/style.css">
+    </head>
+
+    <body>
+        <div id="pop1">
+            <h5 @click="show">打开弹窗1</h5>
+            <div id="bspop" is="bs-pop" type="lg" title="弹窗1" ref="pop">
+                <div ref="alert"></div>
+                <div>大号弹窗</div>
+                <template slot="footer">
+                    <button type="button" class="btn btn-default" @click="close">关闭</button>
+                </template>
+            </div>
+        </div>
+        <div id="pop2">
+            <h5 @click="show">打开弹窗2</h5>
+            <bs-pop :class="name" type="sm" :value="true" :fade="false" title="弹窗2" ref="pop">
+                <div class="form-horizontal form-group-sm">
+                   小号弹窗，直接显示，直接隐藏
+                </div>
+                <template slot="footer">
+                    <button type="button" class="btn btn-primary" @click="save">保存</button>
+                    <button type="button" class="btn btn-default" @click="close">关闭</button>
+                </template>
+            </bs-pop>
+        </div>
+        <div id="pop3">
+                <h5 @click="show">打开弹窗3</h5>
+                <bs-pop title="弹窗2" ref="pop">
+                    <div class="form-horizontal form-group-sm">
+                        中号弹窗
+                    </div>
+                    <template slot="footer">
+                        <button type="button" class="btn btn-primary" @click="save">保存</button>
+                        <button type="button" class="btn btn-default" @click="close">关闭</button>
+                    </template>
+                </bs-pop>
+            </div>
+        <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+        <script type="text/javascript" src="../require-config.js"></script>
+        <script>
+            requirejs(["./demo.js"], function () {});
+
+        </script>
+    </body>
+
+</html>

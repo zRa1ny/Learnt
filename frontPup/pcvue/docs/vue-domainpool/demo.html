@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="application/x-www-form-urlencoded;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <title>vue-domainpool</title>
+</head>
+
+<body>
+    <h2>通过发送ajax请求，获取一个数组对象</h2>
+    <div id="domainpool">
+        打印获取的domains：
+        {{domains}}
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script src="./components/jquery/dist/jquery.js"></script>
+  <script src="./components/underscore/underscore.js"></script>
+  <script src="./components/backbone/backbone.js"></script>
+  <script src="./components/requirejs/require.js"></script>
+  <ul id="aView"></ul>
+  <script>
+    var List = [{
+        title: "t1",
+        des: "d1"
+      },
+      {
+        title: "t2",
+        des: "d2"
+      },
+      {
+        title: "t3",
+        des: "d3"
+      },
+    ]
+    var myList = Backbone.Collection.extend({
+      comparator: function (a, b) {
+        return a.get('title').length > b.get('title').length; //返回true a>b  排序b -> a
+      }
+    })
+    var aList = new myList(List);
+    var ItemView = Backbone.View.extend({
+      tagName: 'li',
+      className: 'list-item',
+      render: function () {
+        this.$el.html(this.model.get('title'));
+        return this;
+      },
+    })
+
+    var ListView = Backbone.View.extend({
+      initialize: function () {
+        if (this.collection) {
+          this.byId = {};
+          this.views = [];
+          this.collection.each(this.registerView, this);
+          this.listenTo(this.collection, "reset", this.resetView);
+          this.listenTo(this.collection, "add", this.addView);
+          this.listenTo(this.collection, "remove", this.removeView);
+          this.listenTo(this.collection, "change", this.updateView);
+          this.listenTo(this.collection, "sort", this.resetView);
+        }
+      },
+      registerView: function (model) {
+        var view = new ItemView({
+          model: model
+        });
+        this.byId[model.cid] = view;
+        this.views.push(view);
+      },
+      resetView: function () {
+        this.views = [];
+        this.byId = {};
+        this.collection.each(this.registerView, this);
+        this.render();
+      },
+      addView: function (model) {
+        var view = new ItemView({
+          model: model
+        });
+        var at = this.collection.indexOf(model);
+        this.byId[model.cid] = view;
+        $before = this.views[at - 1].$el;
+        $before.after(view.render().$el);
+        this.views.splice(at, 0, view) //第二个参数为0,在at下标处push一个view
+      },
+      removeView: function (model) {
+        var view = this.byId[model.cid];
+        delete this.byId[model.cid];
+        view.remove();
+        var at = _.indexOf(this.views, view);
+        this.views.splice(at, 1)
+
+      },
+      updateView: function (model) {
+        var view = this.byId[model.cid];
+        view.render()
+      },
+      render: function () {
+        var _this = this;
+        this.$el.empty();
+        _.each(this.views, function (view) {
+
+          $_el = view.render().$el;
+          _this.$el.append($_el);
+        })
+        return this;
+      }
+    })
+    var aView = new ListView({
+      el: "#aView",
+      collection: aList
+    })
+    aView.render();
+
+    var newList = [{
+        title: "newt1",
+        des: "newd1"
+      },
+      {
+        title: "newt2",
+        des: "newd2"
+      },
+      {
+        title: "newt3",
+        des: "newd3"
+      },
+    ];
+    // aList.add({
+    //   title: 'addt',
+    //   des: "add"
+    // }, {
+    //   at: 2
+    // })
+    // aList.models[1].set({
+    //   title: 'haha',
+    //   des: 'xx'
+    // })
+    // aList.reset(newList)
+    // aList.sort();
+    aList.models[2].destroy();
+  </script>
+</body>
+
+</html>

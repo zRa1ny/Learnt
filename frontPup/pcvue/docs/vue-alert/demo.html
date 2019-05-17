@@ -1,0 +1,52 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../common/css/style.css">
+    <title>vue-alert</title>
+</head>
+<body>
+    <div id="btns">
+        <h2>弹窗类型提示</h2>
+        <a name="alert"></a>
+        <h4>alert.alert示例</h4>
+        <button @click="alert1">alert1</button>
+        <button @click="alert2">alert2</button>
+        <button @click="alert3">alert3</button>
+        
+        <h4>alert.confirm示例</h4>
+        <a name="confirm"></a>
+        <button @click="confirm1">confirm1</button>
+        <button @click="confirm2">confirm2</button>
+       
+        <h4>alert.tips示例</h4>
+        <a name="tips"></a>
+        <button @click="tips1">tips default</button>
+        <button @click="tips2">tips close after 10s</button>
+     
+    </div>
+
+    <div id="form">
+        <a name="getMixin"></a>
+        <h2>表单内提示</h2>
+        <div ref="alert"></div>
+        <h4>showError类型</h4>
+        <button @click="error1">Error</button>
+        
+        <h4>warning类型</h4>
+        <button @click="error2">Warning</button>
+       
+        <h4>success类型</h4>
+        <button @click="error3">Success</button>
+        <button @click="error4">Success 3s</button>
+        
+        <h4>清除表单所有提示状态</h4>
+        <button @click="error5">clearMessage</button>
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+</html>

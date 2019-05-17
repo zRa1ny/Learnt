@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="openexe.js"></script>
+  <script src="components/jquery/dist/jquery.js"></script>
+  <title></title>
+
+  <script language=javascript type="text/javascript">
+    function download() {
+      console.log("下载");
+      var $eleForm = $("<form method='get'></form>");
+      $eleForm.attr("action", "http://127.0.0.1:3200/common/getImages?id=8886b93a-0c5b-4b74-a8df-71f3e2be095b");
+      $(document.body).append($eleForm);
+      //提交表单，实现下载
+      $eleForm.submit();
+
+      // var IFrameRequest=document.createElement("iframe");
+      // IFrameRequest.id="IFrameRequest";
+      // IFrameRequest.src="http://127.0.0.1:3200/common/getImages?id=8886b93a-0c5b-4b74-a8df-71f3e2be095b";
+      // IFrameRequest.style.display="none";
+      // document.body.appendChild(IFrameRequest);
+      console.log("下载结束");
+    }
+  </script>
+  <style type="text/css">
+
+  </style>
+</head>
+
+<body>
+  <h3>文件上传：</h3>
+  选择一个文件上传: <br />
+  <form action="http://localhost:3200/common/uploadFile" method="post" enctype="multipart/form-data">
+    <!-- <form action="http://test-zhzl.spacecig.com/dxjcbackend/common/uploadFile" method="post" enctype="multipart/form-data"></form> -->
+    用户名:<input type="text" name="username"><br>
+    请上传头像1：<input type="file" name="file" multiple="multiple"><br>
+
+    <!--请上传头像3：<input type="file" name="avatar"><br>
+    请上传背景：<input type="file" name="bg"><br> -->
+    <input type="submit" value="提交">
+  </form>
+  <div id="box1" class="box2" style="background: yellowgreen;">
+    <p>我是一个p元素<span>我是一个span</span></p>
+    <input type="button" value="下载文件" onclick="FtpDownload()">
+    <input type="button" value="打开EXE" onclick="openexe('QQ.exe')">
+    <input type="button" value="测试cookie" onclick="setCookie('ssssss','11111111111',Infinity);">
+    <input type="button" value="测试下载" onclick="download()">
+    <a href="http://127.0.0.1:5500/test/down/测试图片.jpg" download="test.png">点击下载图片</a>
+    <a href="http://127.0.0.1:3200/common/getImages?id=819420c0-b998-454f-947e-ad8b92d75fe1"
+      download="test.png">点击下载文件</a>
+  </div>
+  <!-- 
+  <iframe src="ftp://192.168.1.190/wx001/"></iframe> -->
+
+</body>
+
+</html>

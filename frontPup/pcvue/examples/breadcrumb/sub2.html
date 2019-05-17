@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head> 
+      <meta charset="utf-8" /> 
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+      <title>我是子页面2</title> 
+      <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" /> 
+      <link rel="stylesheet" href="/components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css" /> 
+      <link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css" /> 
+      <link rel="stylesheet" href="/components/ionicons/css/ionicons.min.css" /> 
+      
+      <link rel="stylesheet" href="/cig/common/css/style.css" />
+      <link rel="stylesheet" href="/components/cig-adminlte/dist/css/AdminLTE.min.css" /> 
+      <link rel="stylesheet" href="/components/cig-adminlte/dist/css/skins/skin-blue.min.css" />
+      <link rel="stylesheet" href="/cig/common/css/admin-lte-fix.css" />
+      <link rel="stylesheet" href="/cig/common/css/common2frame-fix.css" />
+      <link rel="stylesheet" href="/cig/common/css/control-style2017.css" />
+  </head>
+<body class="skin-blue frame-body">
+  <div class="wrapper"> 
+    <div class="l-content">
+    
+
+<div class="content-wrapper" id="content">
+    <h4>我是子页面2</h4>
+
+    <div>
+    </div>
+    <bs-pop ref="pop">
+        <a href="sub3.html">我是链接，跳转到其他页面</a>
+    </bs-pop>
+    <div>
+        <button @click="$frmOpenSubUrl('sub1.html')">返回子页面1</button>
+        <button @click="$frmBackToMain('refresh')">返回主列表</button>
+        <button @click="$refs.pop.show()">打开弹出窗口</button>
+    </div>
+    <div style="height:1000px;">我是撑高度的</div>
+</div>
+
+    </div> 
+  </div> 
+    
+    <script type="text/javascript" src="/zhzl/parent/js/common.js"></script> 
+    <script type="text/javascript" src="/zhzl/parent/js/config.js"></script> 
+    <script type="text/javascript" src="/components/requirejs/require.js"></script>
+
+<script type="text/javascript" src="/cig/require-config-dev.js"></script>
+<script type="text/javascript" src="/cig/vue/global-plugins.js"></script> 
+
+    <script>
+        requirejs(["/zhzl/parent/js/layout-frame.js","/zhzl/main.js"],function(frame,main){
+            frame.bind(main);
+        })
+    </script>
+    
+<script type="text/javascript">
+    requirejs(['vue','jQuery','vueBsPop'], function (Vue) {
+        new Vue({
+            el:"#content",
+            methods:{
+
+            }
+        })
+    });
+</script>
+ 
+ 
+ </body>
+</html>
+

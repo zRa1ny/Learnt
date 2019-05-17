@@ -1,0 +1,36 @@
+.input-select-wrap {
+    position: relative;
+}
+
+.input-group .input-select-wrap {
+    position: initial;
+}
+
+.input-select-wrap ul.list-group {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 29px;
+    display: none;
+}
+
+.input-select-wrap.focus ul.list-group {
+    display: block;
+    z-index: 10;
+}
+
+.input-select-wrap li.list-group-item {
+    cursor: pointer;
+}
+
+.input-select-wrap .active {
+    color: #FFFFFF;
+    background-color: #428bca;
+}
+
+.input-select-wrap .list-group-item:hover {
+    background-color: #F5F5F5;
+}
+.input-select-wrap .active:hover {
+    background-color: #2c6494;
+}

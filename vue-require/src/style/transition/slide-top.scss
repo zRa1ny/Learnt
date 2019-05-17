@@ -1,0 +1,17 @@
+.slide-top-enter-active {
+    transform: translate3d(0, 0, 0);
+    transition: transform $_animate_time ease-out;
+}
+
+.slide-top-enter {
+    transform: translate3d(0, -100%, 0)
+}
+
+.slide-top-leave-active {
+    transform: translate3d(0, -50%, 0);
+    transition: transform $_animate_time ease-out;
+}
+
+.slide-top-leave {
+    transform: translate3d(0, 0, 0)
+}

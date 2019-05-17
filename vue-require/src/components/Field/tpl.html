@@ -1,0 +1,17 @@
+<cs-cell class="cs-field" :title="label" :icon="icon" v-clickoutside="doCloseActive" :class="[{
+      'is-textarea': type === 'textarea',
+      'is-nolabel': !label
+    }]">
+    <textarea @change="$emit('change', currentValue)" ref="textarea" class="cs-field-core" :placeholder="placeholder" v-if="type === 'textarea'" :rows="rows" :disabled="disabled" :readonly="readonly" v-model="currentValue">
+    </textarea>
+    <input @change="$emit('change', currentValue)" ref="input" class="cs-field-core" :placeholder="placeholder" :number="type === 'number'" v-else :type="type" @focus="active = true" :disabled="disabled" :readonly="readonly" :value="currentValue" @input="handleInput">
+    <div @click="handleClear" class="cs-field-clear" v-if="!disableClear" v-show="currentValue && type !== 'textarea' && active">
+        <i class="fa fa-times-circle"></i>
+    </div>
+    <span class="cs-field-state" v-if="state" :class="['is-' + state]">
+      <i class="fa" :class="['fa-' + stateIcon]"></i>
+    </span>
+    <div class="cs-field-other">
+        <slot></slot>
+    </div>
+</cs-cell>

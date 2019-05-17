@@ -1,0 +1,80 @@
+@component-namespace cs {
+    @component field {
+      display: flex;
+
+      @when textarea {
+        align-items: inherit;
+
+        .cs-cell-title {
+          padding: toRem(10*1.8) 0;
+        }
+
+        .cs-cell-value {
+          padding: toRem(5*1.8) 0;
+        }
+      }
+
+      .cs-cell-title {
+        width: toRem(105*1.8);
+        flex: none;
+      }
+
+      .cs-cell-value {
+        flex: 1;
+        color: inherit;
+        display: flex;
+      }
+
+      @descendent core {
+        appearance: none;
+        border-radius: 0;
+        border: 0;
+        flex: 1;
+        outline: 0;
+        line-height: 1.6;
+        font-size: inherit;
+        width: 100%;
+      }
+
+      @descendent clear {
+        opacity: .2;
+      }
+
+      @descendent state {
+        color: inherit;
+        margin-left: toRem(20*1.8);
+
+        .fa {
+          font-size: toRem(20*1.8);
+        }
+
+        @when error {
+          color: $error-color;
+        }
+
+        @when warning {
+          color: $warning-color;
+        }
+
+        @when success {
+          color: $success-color;
+        }
+
+        @when default {
+          margin-left: 0;
+        }
+      }
+
+      @descendent other {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+
+      @when nolabel {
+        .cs-cell-title {
+          display: none;
+        }
+      }
+    }
+  }

@@ -1,0 +1,40 @@
+.main-sidebar, .left-side
+{
+    padding-top: 0px;
+    position: absolute;
+    width: 195px;
+}
+.l-head *{
+    box-sizing: content-box;   
+    line-height: 1.14;}
+.content-index a,
+.l-head a{color: #333;}
+.content-index ul,
+.content-index li,
+.l-head ul,
+.l-head li{list-style: none;padding: 0;margin: 0;box-sizing: content-box;}
+.content-index input{font-family: "宋体";font-size: 12px;line-height: 100%;box-sizing: content-box;}
+.content-index label{font-weight: normal;box-sizing: content-box;}
+.content-index input[type="checkbox"]{margin: 0;}
+.content-wrapper,.right-side{background-color:#f5f5f5;margin-left: 200px;}
+
+
+.skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side {
+    background-color: #f1f8ff;
+    border: 0px solid #d6e2ec;
+    border-right-width: 1px;
+}
+body {
+    font-family: "Microsoft YaHei";
+}
+
+.fixed-table-container tbody td .th-inner, .fixed-table-container thead th .th-inner,th {
+    font-weight: normal;
+    background: #e5e5e5;
+}
+.date-group.input-group .input-group-addon{
+    background-color: #eee;
+}
+.date-group.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+    background-color: #fff;
+}

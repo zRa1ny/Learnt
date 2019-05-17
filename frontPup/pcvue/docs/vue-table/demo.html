@@ -1,0 +1,108 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <title>vue-table</title>
+    <style>
+        .fixed-table-body {
+            height: auto !important;
+        }
+
+        .fixed-table-pagination {
+            overflow: hidden;
+        }
+
+        .row-del *,
+        .row-del {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        body>div {
+            display: block;
+        }
+
+        .bootstrap-highlight-select .fixed-table-container tbody .selected td {
+            background-color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="table1">
+        <h5>默认的列表模板，带filter,keyword,btns，可以直接include queryTable.tpl 依赖 vueTable</h5>
+        <cig-table-filter v-if="filters && filters.length > 0" :filters="filters" :domain-ajax-options="domainAjaxOptions" v-model="filter"
+            @input="doSearch()"></cig-table-filter>
+        <div class="bootstrap-table">
+            <div class="fixed-table-toolbar clearfix">
+                <div class="bs-bars pull-left cig-bars">
+                    <template v-for="btn in btns">
+                        <button v-if="btn.visible !== false" :class="['btn btn-sm',btn.baseClass, btn.disabled ? 'disabled' : btn.enableClass]" :disabled="btn.disabled"
+                            @click="executeCommand(btn.id)">{{btn.name}}</button>
+                    </template>
+                </div>
+                <div class="columns columns-right btn-group pull-right">
+                </div>
+                <div class="pull-right search" style="width: 300px;">
+                    <div class="input-group">
+                        <input class="form-control" v-model="keyword" @keyup.enter="doSearch()" type="text" placeholder="搜索">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" @click="doSearch()">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <cig-table ref="table" :config="{checkbox:false}" :loading-message="loadingMessage" :config="tableConfig" @pagerdatachange="pagerDatachange" :page-size="pageSize" :columns="tableColumns" @selectchange="tableSelectChange?tableSelectChange():(1)" :ajax-options="tableAjaxOptions" @sorted="sortRow">
+            </cig-table>
+        </div>
+    </div>
+    <hr>
+    <div id="table2">
+        <h5>只有列表，自己控制请求参数，并展示不同的列怎么设置 依赖 vueTable</h5>
+        <label>
+            <input type="radio" name="type" v-model="type" value="1">数据源1</label>
+        <label>
+            <input type="radio" name="type" v-model="type" value="2">数据源2</label>
+        <div class="bootstrap-table">
+            <cig-table ref="table" :config="{checkbox:true}" :columns="tableColumns" :ajax-options="tableAjaxOptions">
+            </cig-table>
+        </div>
+    </div>
+    <hr>
+    <!-- <div id="table4">
+        <h5>不分页列表 依赖 vueBsTable</h5>
+        <button @click="changeData">取服务器的数据</button>
+        <div class="bootstrap-table">
+            <bs-table ref="table" @selectchange="tableSelectChange()?tableSelectChange():(1)" :config="{checkbox:true}" :columns="tableColumns"
+                :rows="tableRows" @sorted="sortRow">
+            </bs-table>
+        </div>
+    </div>
+    <hr>
+    <div id="table5">
+        <h5>行编辑列表 依赖 vueBsTable</h5>
+        <div class="bootstrap-table">
+            <bs-edit-table ref="table" :config="{checkbox:false}" :columns="tableColumns" :rows="tableRows">
+            </bs-edit-table>
+        </div>
+    </div>
+    <hr>
+    <div id="table6">
+        <h5>单选高亮</h5>
+        <div class="bootstrap-table bootstrap-highlight-select">
+            <bs-table ref="table" :config="{checkbox:false}" :columns="tableColumns" :rows="tableRows">
+            </bs-table>
+        </div>
+    </div> -->
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+
+</html>

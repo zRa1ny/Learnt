@@ -1,0 +1,76 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <style>
+        a{
+            text-decoration: none;
+        }
+        a li span:first-child {
+            text-decoration: underline;
+        }
+        a li span:last-child {
+            color: #555;
+            padding-left: 10px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h3>组件demo列表</h3>
+        <p>"√" 标记为有demo且已经完成</p>
+        <div id="list">
+        </div>
+    </div>
+    <script>
+    window.onload = function(){
+        var componentslist = [
+                {'vue-area':true},
+                {'vue-attachment':true},
+                {'vue-bs-list':true},
+                {'vue-bs-pop':true},
+                {'vue-bs-table':true},
+                {'vue-bs-treeview':true},
+                {'vue-building':true},
+                {'vue-building-statistics':true},
+                {'vue-cig-check':true},
+                {'vue-cig-select':true},
+                {'vue-editor':true},
+                {'vue-excelimport':true},
+                {'vue-form':true},
+                {'vue-object-selector':true},
+                {'vue-table-filter':true},
+                {'vue-yh-db':true},
+                {'vue-alert':true},
+                {'vue-arbor':true},
+                {'vue-chart':true},
+                {'vue-commonuserword':true},
+                {'vue-depmap':true},
+                {'vue-domainpool':true},
+                {'vue-popcomponent':true},
+                {'vue-table':true},          
+            ],
+            str='',html='';
+        componentslist.map(function(item){
+            var name = '', state = '<span></span>';
+            for( var key in item){
+                if(item.hasOwnProperty(key)){
+                    name = key;
+                    state = item[key]?"<span>(√)</span>":state;
+                }
+            }
+            name && (str += '<a href="http://localhost:8086/front-public/pcvue/docs/'+name+'/demo.html">\
+                    <li><span>'+ name +'</span>' + state +'</li>\
+                </a>');
+        });
+        if(str){
+            html= '<ul>' + str + '</ul>';
+        }else{
+            html= '暂无内容';
+        }
+        document.getElementById("list").innerHTML = html;
+    }
+    </script>
+</body>
+</html>

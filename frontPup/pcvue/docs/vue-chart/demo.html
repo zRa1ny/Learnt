@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="application/x-www-form-urlencoded;charset=UTF-8">
+    <link rel="stylesheet" href="../../common/css/style.css">
+    <link rel="stylesheet" href="./chart.css">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <title>vue-chart</title>
+</head>
+
+<body>
+    <div id="chart1">
+        <a name="cigchart"></a>
+        <div class="col-lg-6 content-item height100">
+            <h2>cig-chart——饼图</h2>
+            <cig-chart ref="chartpie" :data="datachartpie" type="pie" width='260' height="100" :options='optionspie'>
+            </cig-chart>
+        </div>
+        <div class="col-lg-6 content-item height100">
+            <h2>cig-chart——柱状图</h2>
+            <cig-chart ref="chartbar" :data="datachartbar" type="bar" width='260' height="100" :options='optionsbar'>
+            </cig-chart>
+        </div>
+        <a name="cigbar"></a>
+        <div class="col-lg-6 content-item height100">
+            <h2>cig-chart-stack-bar——堆叠数据柱状图</h2>
+            <cig-chart-stack-bar :data="databar" :total-label="selectArea"></cig-chart-stack-bar>
+        </div>
+        <a name="cigpie"></a>
+        <div class="col-lg-6 content-item height100">
+            <h2>cig-chart-pie2——嵌套环形图</h2>
+            <cig-chart-pie2 :colors="colors" :data="datapie"></cig-chart-pie2>
+        </div>
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+
+</html>

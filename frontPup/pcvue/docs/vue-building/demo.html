@@ -1,0 +1,37 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../../../components/font-awesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../components/ionicons/css/ionicons.min.css">
+        <link rel="stylesheet" href="../../vue/vue-building/style.css">
+        <link rel="stylesheet" href="../../common/css/style.css">
+        <link rel="stylesheet" href="./icomoon.css">
+    </head>
+
+    <body>
+        <div style="display:flex;">
+            <div id="example" style="flex: 2">
+                <h3>vue-building组件</h3>
+                <vue-building v-on:clickhouse="clickhouse" :buildingname="houses.buildingName" :height="houses.height" :width="houses.width" :houses="houses.houses" :prefix="houses.prefix">
+                </vue-house>
+            </div>
+            <div id="example2" style="flex: 1">
+                <h3>vue-people组件</h3>
+                <vue-building-people @clickpeople="clickpeople" :peoples="peoples"></vue-building-people>
+            </div>
+            <div id="example3" style="flex: 1">
+                <h3>vue-building-house组件</h3>
+                <vue-building-house @clicktitle="clicktitle" @clickpeople="clickpeople" :prefix="prefix" :postfix="postfix" :house-area="houseArea" :symbol="symbol" :paicha-date="paichaDate" :house-name="houseName" :peoples="peoples"></vue-building-house>
+            </div>
+        </div>
+        <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+        <script type="text/javascript" src="../require-config.js"></script>
+        <script>
+            requirejs(["./demo.js"], function () {});
+
+        </script>
+    </body>
+
+</html>

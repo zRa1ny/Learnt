@@ -1,0 +1,30 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../common/css/style.css">
+        <style>
+        </style>
+    </head>
+
+    <body>
+        <div id="list" style="width: 1200px;margin: 30px auto;">
+            <div class="list1">
+                <h4>多选列表</h4>
+                <bs-list @input="itemClick" :multi="true" :data="list1"></bs-list>
+            </div>
+            <div class="list2">
+                <h4>单选列表</h4>
+                <bs-list @input="itemClick" :multi="false" valuepath="value" :item-component="itemComponent" :data="list2" ></bs-list>
+            </div>
+        </div>
+        <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+        <script type="text/javascript" src="../require-config.js"></script>
+        <script>
+            requirejs(["./demo.js"], function () {});
+
+        </script>
+    </body>
+
+</html>

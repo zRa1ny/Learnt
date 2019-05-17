@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <!-- <form action="http://192.168.1.97:3200/fileShare/uploadfile" method="post" enctype="multipart/form-data">
+  <input type="file" name="file" id="file" />
+  <button type="button" class="flat_blue_highlight" id="uploadFile">上传</button>
+</form> -->
+
+  <div class="upload-file">
+    <div class="uf-button">
+      <form
+        id="uf-form"
+        method="get"
+        action="http://192.168.1.98:8081/api/file"
+        target="frame"
+      >
+        <button id="uf-btn-upload" class="btn btn-default">
+          <span class="glyphicon glyphicon-plus"></span>
+          添加
+        </button>
+        <input id="uf-input-upload" type="file" name="file" />
+      </form>
+      <iframe
+        id="frame"
+        name="frame"
+        style="border: 0;width: 400px;height: 200px;"
+      ></iframe>
+      <!-- visibility:hidden;height: 0;  -->
+    </div>
+  </div>
+
+  <script src="../js/jquery.min.js"></script>
+  <!-- <script>
+  $("#uploadFile").click(function () {
+    $(this).attr("disabled", true);
+    if (!($("#file").val().length > 0)) {
+      art.dialog({
+        content: '请先选择文件！',
+        icon: 'error',
+        time: 1.5
+      });
+      $(this).removeAttr("disabled");
+      return false;
+    }
+    var fileName = $("#file").val();
+    console.log(fileName)
+    // var fileType = fileName.substring(fileName.lastIndexOf("."));
+    // if (fileType != ".xlsx" && fileType != ".xls") {
+    //   art.dialog({
+    //     content: '只能选择excel文件！',
+    //     icon: 'error',
+    //     time: 1.5
+    //   });
+    //   $("#file,#showFile").val("");
+    //   $(this).removeAttr("disabled");
+    //   return false;
+    // }
+    $("form").submit();
+  })
+</script> -->
+  <script>
+    $('#uf-btn-upload').on('click', function(e) {
+      // $('#uf-form').submit();
+      console.log('上传文件')
+    })
+    //监听frame的load事件判断是否有返回信息
+    $('#uf-frame').on('load', function() {
+      console.log('xx')
+      var response = $('#uf-frame')
+        .contents()
+        .find('body')
+        .html()
+      console.log(response)
+    })
+  </script>
+
+  <body></body>
+</html>

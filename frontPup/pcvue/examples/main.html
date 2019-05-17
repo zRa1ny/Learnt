@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html>
+  <head> 
+      <meta charset="utf-8" /> 
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+      <title>长兴县社会治理网格化信息管理系统</title> 
+      <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" /> 
+      <link rel="stylesheet" href="/zhzl/home/css/reset.css" />
+
+      <link rel="stylesheet" href="/zhzl/home/css/frame_main.css" />
+  </head>
+<body>
+    
+    <div id="main" :class="['bar-state-'+menuState]">
+        <header>
+            <div class="sys-title">长兴县社会治理网格化信息管理系统</div>
+            <div class="top-menu">
+                <ul>
+                    <li v-for="topMenu in topMenus"
+                        :class="{disabled:!isEnable(menus,topMenu.name),act:topMenu.name==curTopMenu.name}" 
+                        @click="selectTopMenu(topMenu)">
+                        <a href="javascript:;" :class="['icon',topMenu.icon]"></a>
+                        <a href="javascript:;" class="nav-text">{{topMenu.name}}</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <div :class='{"left-bar":true,"hover":leftHover}'>
+            <div :class="['left-menu','left-menu-'+menuState]" v-cloak @mouseover="leftHover = true" @mouseout="leftHover = false">
+                <button @click='selectLeftMenu({Name:"主面包屑",Url:"/cig/examples/breadcrumb/main.html"})'>打开一个菜单</button>
+                <div :class="['menu-icon','menu-icon-'+menuState]" @click="switchState"></div>
+                <bs-treeview :data="leftMenus" @input="selectLeftMenu" :node-component="nodeComponent" nodes-path="Children"></bs-treeview>
+            </div>
+            <div :class='{"user-panel":true,"hover":userHover}' @mouseover="userHover = true" @mouseout="userHover = false" v-cloak>
+                <div class="user-info">欢迎你，{{user.name}}</div>
+                <div class="user-actions">
+                    <span class="user-messages">消息</span>
+                    <span class="user-logout" onclick='location.href = "/proxymanager/smal/logout?ReturnUrl=/zhzl-frames/main-jd.html"'>退出</span>
+                </div>
+            </div>
+        </div>
+        <div class="sys-content">
+            <div class="sys-breadcrumb" v-show="breadcrumbs.length > 0" v-cloak>
+                <ul>
+                    <template v-for="(breadcrumb,index) in breadcrumbs">
+                        <li v-if="index > 0" class="split"></li>
+                        <li @click="naviBreadcrumb(breadcrumb)">{{breadcrumb.name}}</li>
+                    </template>
+                    <li v-if="subBreadcrumb" class="split"></li>
+                    <li v-if="subBreadcrumb">{{subBreadcrumb.title}}</li>
+                </ul>
+            </div>
+            <div class="sys-frame">
+                <iframe v-show="!subBreadcrumb" 
+                    ref="contentFrame"
+                    frameborder="0"
+                    allowtransparency>
+                </iframe>
+                <iframe v-if="subBreadcrumb" 
+                    ref="subBreadContentFrame" 
+                    frameborder="0" 
+                    allowtransparency>
+                </iframe>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="/components/requirejs/require.js"></script>
+
+<script type="text/javascript" src="/cig/require-config-dev.js"></script>
+
+    <script>
+        (function(){
+            var host = location.host;
+            host = host.split(":")[0];
+            if(host.match(/[0-9\\.]+$/)){
+            }
+            else{
+                var tmps = host.split(".");
+                while(tmps.length > 2){
+                    tmps.shift();
+                }
+                document.domain = tmps.join(".");
+            }
+        })();
+    </script>
+    <script>
+        var menuUrl = "/system/getUserMenu?teamname=ZHZL_JD";
+        var topMenus = [
+            {icon:"icon-nav1",name:"首页"},
+            {icon:"icon-nav9",name:"事件管理"},
+            {icon:"icon-nav2",name:"基础数据"},
+            {icon:"icon-nav12",name:"日常管理"},
+            {icon:"icon-nav13",name:"微信管理"},
+        ];
+        var defaultUrl = "/cig/examples/css_style1.html";
+        requirejs(["/zhzl/main.js"],function(main){
+            mainVm.setContentUrl("/zhzl/wggl/index.html");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../vue/vue-attachment/style.css">
+    <link rel="stylesheet" href="../../common/css/style.css">
+    <style>
+        img.sl{
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div id="file">
+            <h5>cig-preview组件</h5>
+            <img class="sl" @click="showfile1" :src="previewurl" alt="">
+            <h5>cig-files-previewimg组件</h5>
+            <img @click="showfile3" class="sl" :src="bUrl" alt="">
+            <cig-preview ref="preview" :url="previewurl"  @input="input" v-model="previewurl" :is-image="isImg" :img-files="imgFiles">
+            </cig-preview>
+            <div class="form-horizontal form-group-sm">
+                <cig-form :fields="fields" data-path="data" ref="form">
+                    <cig-files slot="fieldslot.files" wrap-class="form-control" v-model="data.files" file-type="zz-xc-file">
+                    </cig-files>
+                </cig-form>
+            </div>
+        </div>
+    </div>
+    <bs-pop id="viewfile3" title="预览" type="lg" ref="pop">
+        <div class="row imgPreview">
+            <cig-files-previewimg :url="bUrl" v-model="bUrl" :files="bFiles" ref="previewimg_b">
+            </cig-files-previewimg>
+        </div>
+        <template slot="footer">
+            <button type="button" class="btn btn-default" @click="hide">关闭</button>
+        </template>
+    </bs-pop>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+    <script>
+        requirejs(["./demo.js"], function () {});
+
+    </script>
+</body>
+
+</html>

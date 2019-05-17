@@ -1,0 +1,1978 @@
+{
+    "success": 1,
+    "data": {
+        "report": {
+            "query": "人员走访",
+            "dims": [
+                {
+                    "alias": "辖区",
+                    "items": [
+                        {
+                            "id": "乡镇街道",
+                            "alias": "乡镇街道",
+                            "group": "辖区"
+                        },
+                        {
+                            "id": "村社区",
+                            "alias": "村社区",
+                            "group": "辖区"
+                        },
+                        {
+                            "id": "网格",
+                            "alias": "网格",
+                            "group": "辖区"
+                        }
+                    ]
+                },
+                {
+                    "alias": "统计日期",
+                    "items": [
+                        {
+                            "id": "统计日期_年",
+                            "alias": "统计年份",
+                            "group": "统计日期"
+                        },
+                        {
+                            "id": "统计日期_月",
+                            "alias": "统计月份",
+                            "group": "统计日期",
+                            "format": "yyyy-MM"
+                        }
+                    ]
+                },
+                {
+                    "id": "走访类型",
+                    "alias": "走访类型"
+                }
+            ],
+            "meas": [
+                {
+                    "col": "PERSON_ID",
+                    "tType": "COUNT",
+                    "alias": "应走访数量"
+                },
+                {
+                    "col": "IS_CONTROL",
+                    "tType": "SUM",
+                    "alias": "应走访重点管控人数"
+                },
+                {
+                    "col": "IS_SERVICE",
+                    "tType": "SUM",
+                    "alias": "应走访重点服务人数"
+                },
+                {
+                    "col": "IS_ZF",
+                    "tType": "SUM",
+                    "alias": "实际走访人数"
+                },
+                {
+                    "col": "IS_WGY_ZF",
+                    "tType": "SUM",
+                    "alias": "网格员实际走访人数"
+                },
+                {
+                    "col": "IS_WGYZDY_ZF",
+                    "tType": "SUM",
+                    "alias": "网格指导员实际走访人数"
+                },
+                {
+                    "col": "IS_ZZWGY_ZF",
+                    "tType": "SUM",
+                    "alias": "专职网格员实际走访人数"
+                },
+                {
+                    "alias": "应走访重点管控人数（类型明细）",
+                    "items": [
+                        {
+                            "col": "IS_CONTROL_201",
+                            "tType": "SUM",
+                            "alias": "刑满释放人员"
+                        },
+                        {
+                            "col": "IS_CONTROL_202",
+                            "tType": "SUM",
+                            "alias": "社区矫正人员"
+                        },
+                        {
+                            "col": "IS_CONTROL_203",
+                            "tType": "SUM",
+                            "alias": "精神病人"
+                        },
+                        {
+                            "col": "IS_CONTROL_204",
+                            "tType": "SUM",
+                            "alias": "吸毒人员"
+                        },
+                        {
+                            "col": "IS_CONTROL_205",
+                            "tType": "SUM",
+                            "alias": "艾滋病危险人员"
+                        },
+                        {
+                            "col": "IS_CONTROL_206",
+                            "tType": "SUM",
+                            "alias": "信访人员"
+                        },
+                        {
+                            "col": "IS_CONTROL_207",
+                            "tType": "SUM",
+                            "alias": "重点青少年"
+                        },
+                        {
+                            "col": "IS_CONTROL_208",
+                            "tType": "SUM",
+                            "alias": "邪教人员"
+                        },
+                        {
+                            "col": "IS_CONTROL_209",
+                            "tType": "SUM",
+                            "alias": "传销人员"
+                        },
+                        {
+                            "col": "IS_CONTROL_210",
+                            "tType": "SUM",
+                            "alias": "其他人员"
+                        },
+                        {
+                            "col": "IS_CONTROL_211",
+                            "tType": "SUM",
+                            "alias": "危险品从业人员"
+                        }
+                    ]
+                },
+                {
+                    "alias": "应走访重点服务人数（类型明细）",
+                    "items": [
+                        {
+                            "col": "IS_SERVICE_301",
+                            "tType": "SUM",
+                            "alias": "残疾人"
+                        },
+                        {
+                            "col": "IS_SERVICE_302",
+                            "tType": "SUM",
+                            "alias": "困境儿童"
+                        },
+                        {
+                            "col": "IS_SERVICE_303",
+                            "tType": "SUM",
+                            "alias": "留守人员"
+                        },
+                        {
+                            "col": "IS_SERVICE_304",
+                            "tType": "SUM",
+                            "alias": "老年人"
+                        },
+                        {
+                            "col": "IS_SERVICE_305",
+                            "tType": "SUM",
+                            "alias": "临时救助"
+                        },
+                        {
+                            "col": "IS_SERVICE_306",
+                            "tType": "SUM",
+                            "alias": "低保人员"
+                        },
+                        {
+                            "col": "IS_SERVICE_307",
+                            "tType": "SUM",
+                            "alias": "寄递从业人员"
+                        },
+                        {
+                            "col": "IS_SERVICE_308",
+                            "tType": "SUM",
+                            "alias": "失业人员"
+                        },
+                        {
+                            "col": "IS_SERVICE_309",
+                            "tType": "SUM",
+                            "alias": "育龄妇女"
+                        }
+                    ]
+                }
+            ],
+            "domains": {
+                "userrole": [
+                    {
+                        "text": "全部",
+                        "value": "all"
+                    },
+                    {
+                        "text": "网格员",
+                        "value": "01"
+                    },
+                    {
+                        "text": "网格指导员",
+                        "value": "02"
+                    },
+                    {
+                        "text": "专职网格员",
+                        "value": "03"
+                    }
+                ],
+                "personTab": [
+                    {
+                        "text": "全部",
+                        "value": "all"
+                    },
+                    {
+                        "text": "重点管控",
+                        "value": "IS_CONTROL"
+                    },
+                    {
+                        "text": "刑满释放人员",
+                        "value": "IS_CONTROL_201"
+                    },
+                    {
+                        "text": "社区矫正人员",
+                        "value": "IS_CONTROL_202"
+                    },
+                    {
+                        "text": "精神病人",
+                        "value": "IS_CONTROL_203"
+                    },
+                    {
+                        "text": "吸毒人员",
+                        "value": "IS_CONTROL_204"
+                    },
+                    {
+                        "text": "艾滋病危险人员",
+                        "value": "IS_CONTROL_205"
+                    },
+                    {
+                        "text": "信访人员",
+                        "value": "IS_CONTROL_206"
+                    },
+                    {
+                        "text": "重点青少年",
+                        "value": "IS_CONTROL_207"
+                    },
+                    {
+                        "text": "邪教人员",
+                        "value": "IS_CONTROL_208"
+                    },
+                    {
+                        "text": "传销人员",
+                        "value": "IS_CONTROL_209"
+                    },
+                    {
+                        "text": "其他人员",
+                        "value": "IS_CONTROL_210"
+                    },
+                    {
+                        "text": "危险品从业人员",
+                        "value": "IS_CONTROL_211"
+                    },
+                    {
+                        "text": "重点服务",
+                        "value": "IS_SERVICE"
+                    },
+                    {
+                        "text": "残疾人",
+                        "value": "IS_SERVICE_301"
+                    },
+                    {
+                        "text": "困境儿童",
+                        "value": "IS_SERVICE_302"
+                    },
+                    {
+                        "text": "留守人员",
+                        "value": "IS_SERVICE_303"
+                    },
+                    {
+                        "text": "老年人",
+                        "value": "IS_SERVICE_304"
+                    },
+                    {
+                        "text": "临时救助",
+                        "value": "IS_SERVICE_305"
+                    },
+                    {
+                        "text": "低保人员",
+                        "value": "IS_SERVICE_306"
+                    },
+                    {
+                        "text": "寄递从业人员",
+                        "value": "IS_SERVICE_307"
+                    },
+                    {
+                        "text": "失业人员",
+                        "value": "IS_SERVICE_308"
+                    },
+                    {
+                        "text": "育龄妇女",
+                        "value": "IS_SERVICE_309"
+                    }
+                ]
+            }
+        },
+        "config": {
+            "cols": [],
+            "rows": [
+                {
+                    "id": "乡镇街道",
+                    "alias": "乡镇街道",
+                    "group": "辖区"
+                }
+            ],
+            "meas": [
+                {
+                    "col": "PERSON_ID",
+                    "tType": "COUNT",
+                    "name": "ZF_COUNT",
+                    "alias": "应走访数量"
+                },
+                {
+                    "col": "IS_CONTROL",
+                    "tType": "SUM",
+                    "alias": "应走访重点管控人数"
+                },
+                {
+                    "col": "IS_CONTROL_201",
+                    "tType": "SUM",
+                    "alias": "应走访刑满释放人员"
+                },
+                {
+                    "col": "IS_CONTROL_202",
+                    "tType": "SUM",
+                    "alias": "应走访社区矫正人员"
+                },
+                {
+                    "col": "IS_CONTROL_203",
+                    "tType": "SUM",
+                    "alias": "应走访精神病人"
+                },
+                {
+                    "col": "IS_CONTROL_204",
+                    "tType": "SUM",
+                    "alias": "应走访吸毒人员"
+                },
+                {
+                    "col": "IS_CONTROL_205",
+                    "tType": "SUM",
+                    "alias": "应走访艾滋病危险人员"
+                },
+                {
+                    "col": "IS_CONTROL_206",
+                    "tType": "SUM",
+                    "alias": "应走访信访人员"
+                },
+                {
+                    "col": "IS_CONTROL_207",
+                    "tType": "SUM",
+                    "alias": "应走访重点青少年"
+                },
+                {
+                    "col": "IS_CONTROL_208",
+                    "tType": "SUM",
+                    "alias": "应走访邪教人员"
+                },
+                {
+                    "col": "IS_CONTROL_209",
+                    "tType": "SUM",
+                    "alias": "应走访传销人员"
+                },
+                {
+                    "col": "IS_CONTROL_210",
+                    "tType": "SUM",
+                    "alias": "应走访其他人员"
+                },
+                {
+                    "col": "IS_CONTROL_211",
+                    "tType": "SUM",
+                    "alias": "应走访危险品从业人员"
+                },
+                {
+                    "col": "IS_SERVICE",
+                    "tType": "SUM",
+                    "alias": "应走访重点服务人数"
+                },
+                {
+                    "col": "IS_SERVICE_301",
+                    "tType": "SUM",
+                    "alias": "应走访残疾人"
+                },
+                {
+                    "col": "IS_SERVICE_302",
+                    "tType": "SUM",
+                    "alias": "应走访困境儿童"
+                },
+                {
+                    "col": "IS_SERVICE_303",
+                    "tType": "SUM",
+                    "alias": "应走访留守人员"
+                },
+                {
+                    "col": "IS_SERVICE_304",
+                    "tType": "SUM",
+                    "alias": "应走访老年人"
+                },
+                {
+                    "col": "IS_SERVICE_305",
+                    "tType": "SUM",
+                    "alias": "应走访临时救助"
+                },
+                {
+                    "col": "IS_SERVICE_306",
+                    "tType": "SUM",
+                    "alias": "应走访低保人员"
+                },
+                {
+                    "col": "IS_SERVICE_307",
+                    "tType": "SUM",
+                    "alias": "应走访寄递从业人员"
+                },
+                {
+                    "col": "IS_SERVICE_308",
+                    "tType": "SUM",
+                    "alias": "应走访失业人员"
+                },
+                {
+                    "col": "IS_SERVICE_309",
+                    "tType": "SUM",
+                    "alias": "应走访育龄妇女"
+                },
+                {
+                    "col": "IS_ZF",
+                    "tType": "SUM",
+                    "alias": "实际走访人数"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访重点管控人数"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL_201",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL_201']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访刑满释放人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL_202",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL_202']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访社区矫正人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL_203",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL_203']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访精神病人"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL_204",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL_204']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访吸毒人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL_205",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL_205']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访艾滋病危险人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL_206",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL_206']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访信访人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL_207",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL_207']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访重点青少年"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL_208",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL_208']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访邪教人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL_209",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL_209']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访传销人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL_210",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL_210']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访其他人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_CONTROL_211",
+                        "dtype": 10,
+                        "exp": "col['IS_CONTROL_211']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访危险品从业人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_SERVICE",
+                        "dtype": 10,
+                        "exp": "col['IS_SERVICE']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访重点服务人数"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_SERVICE_301",
+                        "dtype": 10,
+                        "exp": "col['IS_SERVICE_301']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访残疾人"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_SERVICE_302",
+                        "dtype": 10,
+                        "exp": "col['IS_SERVICE_302']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访困境儿童"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_SERVICE_303",
+                        "dtype": 10,
+                        "exp": "col['IS_SERVICE_303']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访留守人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_SERVICE_304",
+                        "dtype": 10,
+                        "exp": "col['IS_SERVICE_304']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访老年人"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_SERVICE_305",
+                        "dtype": 10,
+                        "exp": "col['IS_SERVICE_305']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访临时救助"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_SERVICE_306",
+                        "dtype": 10,
+                        "exp": "col['IS_SERVICE_306']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访低保人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_SERVICE_307",
+                        "dtype": 10,
+                        "exp": "col['IS_SERVICE_307']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访寄递从业人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_SERVICE_308",
+                        "dtype": 10,
+                        "exp": "col['IS_SERVICE_308']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访失业人员"
+                },
+                {
+                    "col": {
+                        "name": "IS_ZF_IS_SERVICE_309",
+                        "dtype": 10,
+                        "exp": "col['IS_SERVICE_309']&col['IS_ZF']"
+                    },
+                    "tType": "SUM",
+                    "alias": "实际走访育龄妇女"
+                }
+            ],
+            "measPos": "col",
+            "filters": [
+                {
+                    "alias": "走访人角色",
+                    "name": "role",
+                    "type": "select:domain/userrole",
+                    "action": "switch:meas",
+                    "map": {
+                        "all": [
+                            {
+                                "col": "PERSON_ID",
+                                "tType": "COUNT",
+                                "name": "ZF_COUNT",
+                                "alias": "应走访数量"
+                            },
+                            {
+                                "col": "IS_CONTROL",
+                                "tType": "SUM",
+                                "alias": "应走访重点管控人数"
+                            },
+                            {
+                                "col": "IS_CONTROL_201",
+                                "tType": "SUM",
+                                "alias": "应走访刑满释放人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_202",
+                                "tType": "SUM",
+                                "alias": "应走访社区矫正人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_203",
+                                "tType": "SUM",
+                                "alias": "应走访精神病人"
+                            },
+                            {
+                                "col": "IS_CONTROL_204",
+                                "tType": "SUM",
+                                "alias": "应走访吸毒人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_205",
+                                "tType": "SUM",
+                                "alias": "应走访艾滋病危险人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_206",
+                                "tType": "SUM",
+                                "alias": "应走访信访人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_207",
+                                "tType": "SUM",
+                                "alias": "应走访重点青少年"
+                            },
+                            {
+                                "col": "IS_CONTROL_208",
+                                "tType": "SUM",
+                                "alias": "应走访邪教人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_209",
+                                "tType": "SUM",
+                                "alias": "应走访传销人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_210",
+                                "tType": "SUM",
+                                "alias": "应走访其他人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_211",
+                                "tType": "SUM",
+                                "alias": "应走访危险品从业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE",
+                                "tType": "SUM",
+                                "alias": "应走访重点服务人数"
+                            },
+                            {
+                                "col": "IS_SERVICE_301",
+                                "tType": "SUM",
+                                "alias": "应走访残疾人"
+                            },
+                            {
+                                "col": "IS_SERVICE_302",
+                                "tType": "SUM",
+                                "alias": "应走访困境儿童"
+                            },
+                            {
+                                "col": "IS_SERVICE_303",
+                                "tType": "SUM",
+                                "alias": "应走访留守人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_304",
+                                "tType": "SUM",
+                                "alias": "应走访老年人"
+                            },
+                            {
+                                "col": "IS_SERVICE_305",
+                                "tType": "SUM",
+                                "alias": "应走访临时救助"
+                            },
+                            {
+                                "col": "IS_SERVICE_306",
+                                "tType": "SUM",
+                                "alias": "应走访低保人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_307",
+                                "tType": "SUM",
+                                "alias": "应走访寄递从业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_308",
+                                "tType": "SUM",
+                                "alias": "应走访失业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_309",
+                                "tType": "SUM",
+                                "alias": "应走访育龄妇女"
+                            },
+                            {
+                                "col": "IS_ZF",
+                                "tType": "SUM",
+                                "alias": "实际走访人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点管控人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_201",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_201']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访刑满释放人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_202",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_202']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访社区矫正人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_203",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_203']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访精神病人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_204",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_204']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访吸毒人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_205",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_205']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访艾滋病危险人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_206",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_206']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访信访人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_207",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_207']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点青少年"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_208",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_208']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访邪教人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_209",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_209']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访传销人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_210",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_210']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访其他人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_211",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_211']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访危险品从业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点服务人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_301",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_301']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访残疾人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_302",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_302']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访困境儿童"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_303",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_303']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访留守人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_304",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_304']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访老年人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_305",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_305']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访临时救助"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_306",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_306']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访低保人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_307",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_307']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访寄递从业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_308",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_308']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访失业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_309",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_309']&col['IS_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访育龄妇女"
+                            }
+                        ],
+                        "01": [
+                            {
+                                "col": "PERSON_ID",
+                                "tType": "COUNT",
+                                "name": "ZF_COUNT",
+                                "alias": "应走访数量"
+                            },
+                            {
+                                "col": "IS_CONTROL",
+                                "tType": "SUM",
+                                "alias": "应走访重点管控人数"
+                            },
+                            {
+                                "col": "IS_CONTROL_201",
+                                "tType": "SUM",
+                                "alias": "应走访刑满释放人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_202",
+                                "tType": "SUM",
+                                "alias": "应走访社区矫正人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_203",
+                                "tType": "SUM",
+                                "alias": "应走访精神病人"
+                            },
+                            {
+                                "col": "IS_CONTROL_204",
+                                "tType": "SUM",
+                                "alias": "应走访吸毒人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_205",
+                                "tType": "SUM",
+                                "alias": "应走访艾滋病危险人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_206",
+                                "tType": "SUM",
+                                "alias": "应走访信访人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_207",
+                                "tType": "SUM",
+                                "alias": "应走访重点青少年"
+                            },
+                            {
+                                "col": "IS_CONTROL_208",
+                                "tType": "SUM",
+                                "alias": "应走访邪教人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_209",
+                                "tType": "SUM",
+                                "alias": "应走访传销人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_210",
+                                "tType": "SUM",
+                                "alias": "应走访其他人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_211",
+                                "tType": "SUM",
+                                "alias": "应走访危险品从业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE",
+                                "tType": "SUM",
+                                "alias": "应走访重点服务人数"
+                            },
+                            {
+                                "col": "IS_SERVICE_301",
+                                "tType": "SUM",
+                                "alias": "应走访残疾人"
+                            },
+                            {
+                                "col": "IS_SERVICE_302",
+                                "tType": "SUM",
+                                "alias": "应走访困境儿童"
+                            },
+                            {
+                                "col": "IS_SERVICE_303",
+                                "tType": "SUM",
+                                "alias": "应走访留守人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_304",
+                                "tType": "SUM",
+                                "alias": "应走访老年人"
+                            },
+                            {
+                                "col": "IS_SERVICE_305",
+                                "tType": "SUM",
+                                "alias": "应走访临时救助"
+                            },
+                            {
+                                "col": "IS_SERVICE_306",
+                                "tType": "SUM",
+                                "alias": "应走访低保人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_307",
+                                "tType": "SUM",
+                                "alias": "应走访寄递从业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_308",
+                                "tType": "SUM",
+                                "alias": "应走访失业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_309",
+                                "tType": "SUM",
+                                "alias": "应走访育龄妇女"
+                            },
+                            {
+                                "col": "IS_WGY_ZF",
+                                "tType": "SUM",
+                                "alias": "实际走访人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点管控人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_201",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_201']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访刑满释放人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_202",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_202']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访社区矫正人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_203",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_203']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访精神病人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_204",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_204']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访吸毒人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_205",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_205']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访艾滋病危险人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_206",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_206']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访信访人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_207",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_207']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点青少年"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_208",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_208']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访邪教人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_209",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_209']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访传销人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_210",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_210']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访其他人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_211",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_211']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访危险品从业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点服务人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_301",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_301']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访残疾人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_302",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_302']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访困境儿童"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_303",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_303']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访留守人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_304",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_304']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访老年人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_305",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_305']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访临时救助"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_306",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_306']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访低保人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_307",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_307']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访寄递从业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_308",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_308']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访失业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_309",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_309']&col['IS_WGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访育龄妇女"
+                            }
+                        ],
+                        "02": [
+                            {
+                                "col": "PERSON_ID",
+                                "tType": "COUNT",
+                                "name": "ZF_COUNT",
+                                "alias": "应走访数量"
+                            },
+                            {
+                                "col": "IS_CONTROL",
+                                "tType": "SUM",
+                                "alias": "应走访重点管控人数"
+                            },
+                            {
+                                "col": "IS_CONTROL_201",
+                                "tType": "SUM",
+                                "alias": "应走访刑满释放人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_202",
+                                "tType": "SUM",
+                                "alias": "应走访社区矫正人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_203",
+                                "tType": "SUM",
+                                "alias": "应走访精神病人"
+                            },
+                            {
+                                "col": "IS_CONTROL_204",
+                                "tType": "SUM",
+                                "alias": "应走访吸毒人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_205",
+                                "tType": "SUM",
+                                "alias": "应走访艾滋病危险人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_206",
+                                "tType": "SUM",
+                                "alias": "应走访信访人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_207",
+                                "tType": "SUM",
+                                "alias": "应走访重点青少年"
+                            },
+                            {
+                                "col": "IS_CONTROL_208",
+                                "tType": "SUM",
+                                "alias": "应走访邪教人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_209",
+                                "tType": "SUM",
+                                "alias": "应走访传销人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_210",
+                                "tType": "SUM",
+                                "alias": "应走访其他人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_211",
+                                "tType": "SUM",
+                                "alias": "应走访危险品从业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE",
+                                "tType": "SUM",
+                                "alias": "应走访重点服务人数"
+                            },
+                            {
+                                "col": "IS_SERVICE_301",
+                                "tType": "SUM",
+                                "alias": "应走访残疾人"
+                            },
+                            {
+                                "col": "IS_SERVICE_302",
+                                "tType": "SUM",
+                                "alias": "应走访困境儿童"
+                            },
+                            {
+                                "col": "IS_SERVICE_303",
+                                "tType": "SUM",
+                                "alias": "应走访留守人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_304",
+                                "tType": "SUM",
+                                "alias": "应走访老年人"
+                            },
+                            {
+                                "col": "IS_SERVICE_305",
+                                "tType": "SUM",
+                                "alias": "应走访临时救助"
+                            },
+                            {
+                                "col": "IS_SERVICE_306",
+                                "tType": "SUM",
+                                "alias": "应走访低保人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_307",
+                                "tType": "SUM",
+                                "alias": "应走访寄递从业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_308",
+                                "tType": "SUM",
+                                "alias": "应走访失业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_309",
+                                "tType": "SUM",
+                                "alias": "应走访育龄妇女"
+                            },
+                            {
+                                "col": "IS_WGYZDY_ZF",
+                                "tType": "SUM",
+                                "alias": "实际走访人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点管控人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_201",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_201']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访刑满释放人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_202",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_202']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访社区矫正人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_203",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_203']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访精神病人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_204",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_204']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访吸毒人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_205",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_205']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访艾滋病危险人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_206",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_206']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访信访人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_207",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_207']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点青少年"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_208",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_208']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访邪教人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_209",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_209']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访传销人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_210",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_210']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访其他人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_211",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_211']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访危险品从业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点服务人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_301",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_301']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访残疾人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_302",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_302']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访困境儿童"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_303",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_303']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访留守人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_304",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_304']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访老年人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_305",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_305']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访临时救助"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_306",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_306']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访低保人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_307",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_307']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访寄递从业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_308",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_308']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访失业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_309",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_309']&col['IS_WGYZDY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访育龄妇女"
+                            }
+                        ],
+                        "03": [
+                            {
+                                "col": "PERSON_ID",
+                                "tType": "COUNT",
+                                "name": "ZF_COUNT",
+                                "alias": "应走访数量"
+                            },
+                            {
+                                "col": "IS_CONTROL",
+                                "tType": "SUM",
+                                "alias": "应走访重点管控人数"
+                            },
+                            {
+                                "col": "IS_CONTROL_201",
+                                "tType": "SUM",
+                                "alias": "应走访刑满释放人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_202",
+                                "tType": "SUM",
+                                "alias": "应走访社区矫正人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_203",
+                                "tType": "SUM",
+                                "alias": "应走访精神病人"
+                            },
+                            {
+                                "col": "IS_CONTROL_204",
+                                "tType": "SUM",
+                                "alias": "应走访吸毒人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_205",
+                                "tType": "SUM",
+                                "alias": "应走访艾滋病危险人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_206",
+                                "tType": "SUM",
+                                "alias": "应走访信访人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_207",
+                                "tType": "SUM",
+                                "alias": "应走访重点青少年"
+                            },
+                            {
+                                "col": "IS_CONTROL_208",
+                                "tType": "SUM",
+                                "alias": "应走访邪教人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_209",
+                                "tType": "SUM",
+                                "alias": "应走访传销人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_210",
+                                "tType": "SUM",
+                                "alias": "应走访其他人员"
+                            },
+                            {
+                                "col": "IS_CONTROL_211",
+                                "tType": "SUM",
+                                "alias": "应走访危险品从业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE",
+                                "tType": "SUM",
+                                "alias": "应走访重点服务人数"
+                            },
+                            {
+                                "col": "IS_SERVICE_301",
+                                "tType": "SUM",
+                                "alias": "应走访残疾人"
+                            },
+                            {
+                                "col": "IS_SERVICE_302",
+                                "tType": "SUM",
+                                "alias": "应走访困境儿童"
+                            },
+                            {
+                                "col": "IS_SERVICE_303",
+                                "tType": "SUM",
+                                "alias": "应走访留守人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_304",
+                                "tType": "SUM",
+                                "alias": "应走访老年人"
+                            },
+                            {
+                                "col": "IS_SERVICE_305",
+                                "tType": "SUM",
+                                "alias": "应走访临时救助"
+                            },
+                            {
+                                "col": "IS_SERVICE_306",
+                                "tType": "SUM",
+                                "alias": "应走访低保人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_307",
+                                "tType": "SUM",
+                                "alias": "应走访寄递从业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_308",
+                                "tType": "SUM",
+                                "alias": "应走访失业人员"
+                            },
+                            {
+                                "col": "IS_SERVICE_309",
+                                "tType": "SUM",
+                                "alias": "应走访育龄妇女"
+                            },
+                            {
+                                "col": "IS_ZZWGY_ZF",
+                                "tType": "SUM",
+                                "alias": "实际走访人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点管控人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_201",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_201']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访刑满释放人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_202",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_202']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访社区矫正人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_203",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_203']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访精神病人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_204",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_204']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访吸毒人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_205",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_205']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访艾滋病危险人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_206",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_206']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访信访人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_207",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_207']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点青少年"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_208",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_208']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访邪教人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_209",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_209']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访传销人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_210",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_210']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访其他人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_CONTROL_211",
+                                    "dtype": 10,
+                                    "exp": "col['IS_CONTROL_211']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访危险品从业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访重点服务人数"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_301",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_301']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访残疾人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_302",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_302']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访困境儿童"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_303",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_303']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访留守人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_304",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_304']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访老年人"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_305",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_305']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访临时救助"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_306",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_306']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访低保人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_307",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_307']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访寄递从业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_308",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_308']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访失业人员"
+                            },
+                            {
+                                "col": {
+                                    "name": "IS_ZF_IS_SERVICE_309",
+                                    "dtype": 10,
+                                    "exp": "col['IS_SERVICE_309']&col['IS_ZZWGY_ZF']"
+                                },
+                                "tType": "SUM",
+                                "alias": "实际走访育龄妇女"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "alias": "走访对象类型",
+                    "name": "personTab",
+                    "type": "select:domain/personTab",
+                    "action": "filter:whereMap",
+                    "map": {
+                        "all": "",
+                        "IS_CONTROL": "IS_CONTROL = 1",
+                        "IS_CONTROL_201": "IS_CONTROL_201 = 1",
+                        "IS_CONTROL_202": "IS_CONTROL_202 = 1",
+                        "IS_CONTROL_203": "IS_CONTROL_203 = 1",
+                        "IS_CONTROL_204": "IS_CONTROL_204 = 1",
+                        "IS_CONTROL_205": "IS_CONTROL_205 = 1",
+                        "IS_CONTROL_206": "IS_CONTROL_206 = 1",
+                        "IS_CONTROL_207": "IS_CONTROL_207 = 1",
+                        "IS_CONTROL_208": "IS_CONTROL_208 = 1",
+                        "IS_CONTROL_209": "IS_CONTROL_209 = 1",
+                        "IS_CONTROL_210": "IS_CONTROL_210 = 1",
+                        "IS_CONTROL_211": "IS_CONTROL_211 = 1",
+                        "IS_SERVICE": "IS_SERVICE = 1",
+                        "IS_SERVICE_301": "IS_SERVICE_301 = 1",
+                        "IS_SERVICE_302": "IS_SERVICE_302 = 1",
+                        "IS_SERVICE_303": "IS_SERVICE_303 = 1",
+                        "IS_SERVICE_304": "IS_SERVICE_304 = 1",
+                        "IS_SERVICE_305": "IS_SERVICE_305 = 1",
+                        "IS_SERVICE_306": "IS_SERVICE_306 = 1",
+                        "IS_SERVICE_307": "IS_SERVICE_307 = 1",
+                        "IS_SERVICE_308": "IS_SERVICE_308 = 1",
+                        "IS_SERVICE_309": "IS_SERVICE_309 = 1"
+                    }
+                },
+                {
+                    "alias": "统计年月",
+                    "name": "month",
+                    "type": "input:date/today$month/yyyy-MM",
+                    "action": "filter:whereValue/formatDate(\"统计日期_月\",'yyyy-MM')='{{value}}'"
+                }
+            ],
+            "totalInfo": {
+                "tablerow": "top"
+            },
+            "sortInfo": {}
+        }
+    }
+}

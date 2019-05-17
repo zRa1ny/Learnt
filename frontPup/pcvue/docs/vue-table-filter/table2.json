@@ -1,0 +1,38 @@
+{
+    "success": 1,
+    "data": {
+        "total": 9155,
+        "rows": [
+            {
+                "id": "dd0c94b9-0ffc-46ea-94fe-fec1dca8e7d0",
+                "placeName": "123123",
+                "placeCode": null,
+                "placeType": "1",
+                "departmentId": "1143630001602560",
+                "areaName": "三狮社区第四网格",
+                "phoneImagePath": null,
+                "lineType": null,
+                "tubeUnitName": null,
+                "placeAddr": "中国浙江省湖州市长兴县振兴弄",
+                "lastCheckDate": "",
+                "placeTypeMax": "2",
+                "placeKeyAttribute": null
+            },
+            {
+                "id": "3b339774-1f56-4b3a-85e7-9f779b30503a",
+                "placeName": "鸡蛋鸡蛋鸡蛋",
+                "placeCode": null,
+                "placeType": "1",
+                "departmentId": "1143595373428736",
+                "areaName": "武汉第一网格",
+                "phoneImagePath": null,
+                "lineType": null,
+                "tubeUnitName": null,
+                "placeAddr": "湖北省武汉市洪山区光谷创业街18",
+                "lastCheckDate": "",
+                "placeTypeMax": "2",
+                "placeKeyAttribute": null
+            }
+        ]
+    }
+}

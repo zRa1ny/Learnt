@@ -1,0 +1,63 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <style>
+        #main{
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <h3>cig-table-filter 组件示例</h3>
+        <p>当前包括mode为pop和limit两个组件的演示</p>        
+        <cig-table-filter v-if="filters.length > 0" :mode="filtermode" 
+            :filters="filters"
+            :pop-model="filterPopModel"
+            v-model="filter"
+            @input="doSearch()"></cig-table-filter>
+        <div class="bootstrap-table">
+            <div class="fixed-table-toolbar clearfix">
+                <div class="bs-bars pull-left cig-bars">
+                </div>
+                <div class="columns columns-right btn-group pull-right" style="width:100%; text-align: right;">
+                    <div class="form-inline">
+                        <cig-table-filter v-if="filters.length > 0" 
+                            :mode="filtermode2" 
+                            :filters="filters" 
+                            v-model="filter"
+                            :pop-model="filterPopModel"
+                            @input="doSearch()"></cig-table-filter>
+                        <div class="input-group">
+                            <input class="form-control" v-model.trim="keyword" @keyup.enter="doSearch()" type="text" :placeholder="placeholder">
+                            <span class="input-group-btn"> 
+                                <button class="btn btn-default" style="height: 34px; background-color: #e1e1e1;" type="button" @click="doSearch()">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button> 
+                            </span> 
+                        </div>
+                        <button v-if="filters.length > 0 && filtermode =='pop'" 
+                            class="btn btn-primary" type="button"
+                            @click="openFilterPop">
+                            打开弹窗筛选
+                        </button> 
+                        <button class="btn btn-primary" type="button" @click="resetFilter" title="将重置所有查询条件">重置</button> 
+                    </div>
+                </div>
+            </div>
+            <cig-table ref="table"
+                :config="tableConfig"
+                :columns="tableColumns"
+                @selectchange="tableSelectChange"
+                :ajax-options="tableAjaxOptions">
+            </cig-table>
+        </div>
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+</html>

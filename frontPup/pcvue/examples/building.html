@@ -1,0 +1,18 @@
+<html>
+<head>        
+<link rel="stylesheet" href="/components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/components/ionicons/css/ionicons.min.css">
+<link rel="stylesheet" href="/zhzl/syfw/css/icomoon.css">
+</head>
+<body>
+    <div id="example">
+        <vue-building v-on:clickhouse="clickhouse" v-bind:buildingname="houses.buildingName" v-bind:height="houses.height" v-bind:width="houses.width" v-bind:houses="houses.houses" v-bind:prefix="houses.prefix"></vue-house>
+    </div>
+<script type="text/javascript" src="/components/requirejs/require.js"></script>
+<script type="text/javascript" src="/cig/require-config-dev.js"></script>
+<script>
+    requirejs(["./building.js"],function(){});
+</script>
+</body>
+</html>

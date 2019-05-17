@@ -1,0 +1,49 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <style>
+        #main{
+            padding: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="main">
+        <h3>vue-cig-select示例</h3>
+        <p>单选示例</p>
+        <div class="row">
+            <div class="col-sm-4">
+                <cig-select
+                    :options="obj.options"
+                    :value="obj.value"
+                    :multiple="obj.multiple"
+                    :name="obj.name">
+                </cig-select>
+            </div>
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4"></div>
+        </div>
+        <p>多选示例</p>
+        <div class="row">
+            <div class="col-sm-4">
+                <cig-select
+                    :options="obj2.options"
+                    :value="obj2.value"
+                    :multiple="obj2.multiple"
+                    :name="obj2.name">
+                </cig-select>
+            </div>
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4"></div>
+        </div>
+        
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="application/x-www-form-urlencoded;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <title>vue-commonuserword</title>
+    <style>
+        .dropdown-menu {
+            min-width: 80px !important;
+            display: block;
+            height: fit-content;
+            top: 32px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>设置常用语的插件</h2>
+    <div id="commonuserword">
+        <commonwords :comment="mycomment"></commonwords>
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+
+</html>

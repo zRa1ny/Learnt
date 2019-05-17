@@ -1,0 +1,79 @@
+define([
+    'require',
+    'vue',
+    'vueAlert'
+], function(require, Vue, alert) {
+    'use strict';
+    //普通弹出框
+    var vm = new Vue({
+        el:"#btns",
+        methods:{
+            alert1:function(){
+                alert.alert("123");
+            },
+            alert2:function(){
+                alert.alert({
+                    title:"哈哈1",
+                    message:"123",
+                });
+            },
+            alert3:function(){
+                alert.alert({
+                    title:"哈哈2",
+                    message:"123",
+                    callback:function(){
+                        window.alert(123);
+                    }
+                });
+            },
+            confirm1:function(){
+                alert.confirm({
+                    message:"确认123",
+                    okFn:function(){
+                        window.alert("点击了确认");
+                    }
+                })
+            },
+            confirm2:function(){
+                alert.confirm({
+                    title:"自定义",
+                    message:"确认456",
+                    okFn:function(){
+                        window.alert("点击了确认");
+                    },
+                    cancelFn:function(){
+                        window.alert("点击了取消");
+                    }
+                })
+            },
+            tips1:function(){
+                alert.tips("保存成功");
+            },
+            tips2:function(){
+                alert.tips({
+                    message:"保存成功10s",
+                    timeout:10000
+                });
+            }
+        }
+    })
+
+    var vm = new Vue({
+        el:"#form",
+        mixins:[alert.getMixin()],
+        methods:{
+            error1:function(){
+                this.showError("Error1")
+            },
+            error2:function(){
+                this.message("Warning","warning")
+            },
+            error3:function(){
+                this.message("Success","success")
+            },
+            error4:function(){
+                this.message("Success! Hide after 3s","success",3000)
+            }
+        }
+    })
+});

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <style>
+    .enclosure {
+      background: #000;
+    }
+
+    #content {
+      background: #fff;
+      font-size: 18px;
+      color: #000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+    <div id="css" style="width:20px;height:20px;background:#000"></div>
+
+    <img src="http://pic31.nipic.com/20130804/7487939_090818211000_2.jpg"
+      style="position: absolute;left:100px;top:100px;width: 100px;height: auto;"
+      onmousedown="if(!event.shiftKey)drag(this,event)">
+    <div id="drag" style="width:200px;position: absolute;left: 100px;top:200px;">
+      <div class="title" style="height: 30px;background:yellow;" onmousedown="drag(this.parentNode,event)"></div>
+      <div class="main" style="height: 200px;background: greenyellow"></div>
+    </div>
+
+    <p id="content" style="width:200px">content</p>
+    <style>
+      #clock {
+        font: bold 24pt sans;
+        background: #ddf;
+        padding: 10px;
+        border: solid black 2px;
+        border-radius: 10px;
+      }
+    </style>
+    <div>
+      <h1>从时钟中拖出时间戳</h1>
+      <span id="clock"></span>
+      <textarea cols=60 rows=20></textarea>
+    </div>
+  </div>
+  <ul class="bdnd">
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+  </ul>
+  <input type="text" data-allowed-chars="0123456789" data-messageid="zipwarn">
+  <span id="zipwarn" style="color: red;visibility: hidden"></span>
+  <script src="c6/index.js"></script>
+  <script src="c8/index.js"></script>
+  <script src="c9/index.js"></script>
+  <script src="c10/index.js"></script>
+  <script src="c11/index.js"></script>
+  <!-- <script src="c12/index.js"></script> -->
+  <script src="c13/index.js"></script>
+  <script src="c14/index.js"></script>
+  <script src="c15/index.js"></script>
+  <script src="c16/index.js"></script>
+  <script src="c17/index.js"></script>
+  <script src="c18/index.js"></script>
+  <!-- <script src="https://cdn.bootcss.com/jquery/1.4.4/jquery.min.js"></script>
+  <script src="c19/index.js"></script> -->
+  <script src="c20/index.js"></script>
+
+
+
+</body>
+
+</html>

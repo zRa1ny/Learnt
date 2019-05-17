@@ -1,0 +1,37 @@
+<html>
+    <head>
+        
+<link rel="stylesheet" href="/components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+<style>
+</style>
+    </head>
+<body>
+    <div id="other1">
+        <h5>区域选择，单位选择等 依赖vueArea</h5>
+        <cig-area></cig-area>
+        <h5>多附件 依赖vueAttachment</h5>
+        <cig-files></cig-files>
+        <h5>弹窗 依赖vueBsPop</h5>
+        <bs-pop title="大弹窗" type="lg"></bs-pop>
+        <bs-pop title="小弹窗" type="sm"></bs-pop>
+        <bs-pop title="中弹窗" type=""></bs-pop>
+        <h5>树控件 依赖vueBsTreeview</h5>
+        <bs-treeview></bs-treeview>
+        <h5>自动填充选择器 依赖vueObjectSelector</h5>
+        <cig-object-selector></cig-object-selector>
+        <h5>过滤器 一般和列表配合用，也可以单独用 依赖vueTableFilter</h5>
+        <cig-table-filter></cig-table-filter>
+        <h5>标签页  依赖vueBsTab</h5>
+        <bs-tab></bs-tab>
+        <h5>富文本  依赖vueArticle</h5>
+        <cig-article></cig-article>
+    </div>
+
+<script type="text/javascript" src="/components/requirejs/require.js"></script>
+<script type="text/javascript" src="/cig/require-config-dev.js"></script>
+
+<script>
+    requirejs(["./others.js"],function(){});
+</script>
+</body>
+</html>

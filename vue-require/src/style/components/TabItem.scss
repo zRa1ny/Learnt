@@ -1,0 +1,31 @@
+$tab-item-font-size : toRem(12*1.8);
+@component-namespace cs {
+	@component tab-item {
+		display: block;
+		padding: toRem(7*1.8) 0;
+		flex: 1;
+		text-decoration: none;
+	
+
+		@descendent icon {
+			size: toRem(24*1.8);
+			margin: 0 auto toRem(5*1.8);
+		}
+
+		@descendent label {
+			color: inherit;
+			font-size: $tab-item-font-size;
+			line-height: 1;
+		}
+	}
+}
+.cs-tab-item-icon{
+	&:empty {
+		display: none;
+	}
+
+	& > * {
+		display: block;
+		size: 100%;
+	}
+}

@@ -1,0 +1,68 @@
+{
+    "success": 1,
+    "data": {
+        "total": 9155,
+        "rows": [           
+            {
+                "id": "3355a298-215c-4662-a5f4-daa2089a8a08",
+                "placeName": "天下第一",
+                "placeCode": null,
+                "placeType": "8",
+                "departmentId": "1143630001602560",
+                "areaName": "三狮社区第四网格",
+                "phoneImagePath": null,
+                "lineType": null,
+                "tubeUnitName": null,
+                "placeAddr": "中国浙江省湖州市长兴县振兴弄",
+                "lastCheckDate": "2018-08-24",
+                "placeTypeMax": "8",
+                "placeKeyAttribute": "1"
+            },
+            {
+                "id": "594aa9a1-8c63-4a77-9e88-807ea9acd1f7",
+                "placeName": "2345",
+                "placeCode": null,
+                "placeType": "5",
+                "departmentId": "1143630001602560",
+                "areaName": "三狮社区第四网格",
+                "phoneImagePath": null,
+                "lineType": null,
+                "tubeUnitName": null,
+                "placeAddr": "中国浙江省湖州市长兴县振兴弄",
+                "lastCheckDate": "",
+                "placeTypeMax": "2",
+                "placeKeyAttribute": null
+            },
+            {
+                "id": "e10eea50-aa06-4bba-87a2-f92236aaea3d",
+                "placeName": "湖州科技",
+                "placeCode": null,
+                "placeType": "8",
+                "departmentId": "1143630001602560",
+                "areaName": "三狮社区第四网格",
+                "phoneImagePath": null,
+                "lineType": null,
+                "tubeUnitName": null,
+                "placeAddr": "中国浙江省湖州市长兴县振兴弄",
+                "lastCheckDate": "",
+                "placeTypeMax": "2",
+                "placeKeyAttribute": "6"
+            },
+            {
+                "id": "086106f4-235c-4541-8116-e482bdab4f59",
+                "placeName": "呃呃呃呃呃呃",
+                "placeCode": null,
+                "placeType": "1",
+                "departmentId": "1143595373428736",
+                "areaName": "武汉第一网格",
+                "phoneImagePath": null,
+                "lineType": null,
+                "tubeUnitName": null,
+                "placeAddr": "湖北省武汉市洪山区创业街16",
+                "lastCheckDate": "",
+                "placeTypeMax": "2",
+                "placeKeyAttribute": "1"
+            }
+        ]
+    }
+}

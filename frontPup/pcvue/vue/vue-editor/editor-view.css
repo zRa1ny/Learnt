@@ -1,0 +1,26 @@
+.editor-view table.sortEnabled tr.firstRow th,
+.editor-view table.sortEnabled tr.firstRow td{padding-right:20px;background-repeat: no-repeat;background-position: center right;   background-image:url(/static/components/ueditor/dist/utf8-php/themes/default/images/sortable.png);}
+.editor-view .selectTdClass{background-color:#edf5fa !important}
+.editor-view table.noBorderTable td,
+.editor-view table.noBorderTable th,
+.editor-view table.noBorderTable caption{border:1px dashed #ddd !important}
+.editor-view table{margin-bottom:10px;border-collapse:collapse;display:table;}
+.editor-view td,
+.editor-view th{padding: 5px 10px;border: 1px solid #DDD;}
+.editor-view caption{border:1px dashed #DDD;border-bottom:0;padding:3px;text-align:center;}
+.editor-view th{border-top:1px solid #BBB;background-color:#F7F7F7;}
+.editor-view table tr.firstRow th{border-top-width:2px;}
+.editor-view .ue-table-interlace-color-single{ background-color: #fcfcfc; }
+ .editor-view .ue-table-interlace-color-double{ background-color: #f7faff; }
+.editor-view td p{margin:0;padding:0;}
+.editor-view ol,
+.editor-view ul{margin:0;pading:0;width:95%}
+.editor-view li{clear:both;}
+.editor-view .list-paddingleft-1{padding-left:0}
+.editor-view .list-paddingleft-2{padding-left:30px}
+.editor-view .list-paddingleft-3{padding-left:60px}
+.editor-view .pagebreak{display:block;clear:both !important;cursor:default !important;width: 100% !important;margin:0;}
+.editor-view pre{margin:.5em 0;padding:.4em .6em;border-radius:8px;background:#f8f8f8;}
+.editor-view .loadingclass{display:inline-block;cursor:default;background: url('/static/components/ueditor/dist/utf8-php/themes/default/images/loading.gif') no-repeat center center transparent;border:1px solid #cccccc;margin-left:1px;height: 22px;width: 22px;}
+.editor-view .loaderrorclass{display:inline-block;cursor:default;background: url('/static/components/ueditor/dist/utf8-php/themes/default/images/loaderror.png') no-repeat center center transparent;border:1px solid #cccccc;margin-right:1px;height: 22px;width: 22px;}
+.editor-view .anchorclass{background: url('/static/components/ueditor/dist/utf8-php/themes/default/images/anchor.gif') no-repeat scroll left center transparent;cursor: auto;display: inline-block;height: 16px;width: 15px;}

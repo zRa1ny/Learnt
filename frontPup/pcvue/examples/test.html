@@ -1,0 +1,30 @@
+<html>
+    <head>
+        
+<link rel="stylesheet" href="/components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+<style>
+</style>
+    </head>
+<body>
+    <cig-table id="aaa" 
+        :config="aaa.aaaaconfig"
+        :ajax-options='{url:"./table_data/table_data1.json"}'
+        :columns="[{title: '性别',field: 'xb',visible: true}]"
+        ></cig-table>
+
+    <cig-ajax-area
+        slot="fieldslot.gridId"
+        :ajax-options="data.ajaxOptions" 
+        @input="input" 
+        v-model="valueProxy"
+        empty-text="请选择"
+        :value="valueProxy">
+    </cig-ajax-area>
+<script type="text/javascript" src="/components/requirejs/require.js"></script>
+<script type="text/javascript" src="/cig/require-config-dev.js"></script>
+
+<script>
+    requirejs(["./test.js"],function(){});
+</script>
+</body>
+</html>

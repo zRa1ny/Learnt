@@ -1,0 +1,36 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <style>
+        #main{
+            padding: 10px;
+        }
+        .red{
+            color: red;
+            font-weight: 700;
+        }
+        .c666{
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <h3>analysis-item 组件示例1</h3>
+        <p>当前效果由<strong>analysisItem</strong>中的<span class="red">resizeComponent、chartComponent、analysisDataComponent</span>生成一个柱状图图表</p>
+        <p class="c666">可调整窗口宽度查看图表重置宽度效果，点击图表柱状可查看打印值</p>        
+        <bar style="height:400px;" @colitemclick="colItemClick"></bar>
+        <h3 style="border-top: 1px solid #777;padding-top: 30px;">analysis-item 组件示例2</h3>
+        <p>当前效果由<strong>analysisItem</strong>中的<span class="red">customViewerComponent</span>生成一个表格统计</p>
+        <p class="c666">因为<span class="red">导出</span>需要请求后台接口，当前demo不可用</p>        
+        <table-tj></table-tj>
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+</html>

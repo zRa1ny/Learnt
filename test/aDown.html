@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <a href="http://test-zhzl.spacecig.com/dxjcbackend/common/getImages?id=e6bf2504-47a8-48ff-9533-cc8c446a00fe"
+    download="">下载</a>
+
+  <form id="uf-form" method="get" action="http://test-zhzl.spacecig.com/dxjcbackend/common/getImages" target="frame">
+    <button id="uf-btn-upload" class="btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span>
+      添加
+    </button>
+    <input id="uf-input-upload" type="text" value="e6bf2504-47a8-48ff-9533-cc8c446a00fe" name="id" />
+  </form>
+  <iframe id="frame" name="frame" style="border: 0;width: 400px;height: 200px;"></iframe>
+  <!-- visibility:hidden;height: 0;  -->
+
+  <span id="sapndown">下载</span>
+  </div>
+  <script src="https://cdn.bootcss.com/jquery/1.3.1/jquery.min.js"></script>
+  <script src="../js/down.js"></script>
+  <script>
+    // console.log(window.navigator.msSaveBlob) //ie10>
+    var DownLoadFile = function (options) {
+      var config = {
+        method: 'post'
+      };
+      var $iframe = $('<iframe id="down-file-iframe" />');
+      var $form = $('<form target="down-file-iframe" method="' + config.method + '" />');
+      $(document.body).append($iframe);
+      $iframe.append($form);
+      $form.attr('action', options.url);
+      for (var key in options.data) {
+        $form.append('<input type="hidden" name="' + key + '" value="' + options.data[key] + '" />');
+      }
+      $form[0].submit();
+      $iframe.remove();
+    };
+    //调用方法实现下载。
+    $("#sapndown").click(function () {
+      // window.location.href =
+      //   "http://test-zhzl.spacecig.com/dxjcbackend/common/getImages?id=e6bf2504-47a8-48ff-9533-cc8c446a00fe";
+      // $('<form action="/fgwwjcommon/commonservice/downloadTemplate?theme=none" method="post">' +
+      //     // action请求路径及推送方法
+      //     '<input type="text" name="filePath" value="' + filePath + '"/>' + // 文件名称及文件路径
+      //     '</form>')
+      //   .appendTo('body').submit().remove();
+      DownLoadFile({
+        url: "http://test-zhzl.spacecig.com/dxjcbackend/common/getImages",
+        data: {
+          id: "e6bf2504-47a8-48ff-9533-cc8c446a00fe"
+        }
+      })
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+        <title>vue-bs-table</title>
+        <style>
+            .fixed-table-body {
+            height: auto !important;
+        }
+        .bootstrap-highlight-select .fixed-table-container tbody .selected td {
+            background-color: #aaa;
+        }
+        .rsizeTable{
+            width: 100%;
+        }
+        .rsizeTable th,.rsizeTable td{
+            text-align: center;
+        }
+    </style>
+    </head>
+
+    <body>
+        <div id="table1">
+            <h3>v-tableresize指令</h3>
+            <table class="rsizeTable" v-tableresize border="1">
+                <tbody>
+                    <tr>
+                        <th>表头1</th>
+                        <th>表头2</th>
+                        <th>表头3</th>
+                        <th>表头4</th>
+                    </tr>
+                    <tr>
+                        <td>内容</td>
+                        <td>内容</td>
+                        <td>内容</td>
+                        <td>内容</td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+            <h5>不分页列表 依赖 vueBsTable</h5>
+            <button @click="changeData">取服务器的数据</button>
+            <div class="bootstrap-table">
+                <bs-table ref="table" @cellClick="cellClick" @selectchange="tableSelectChange()?tableSelectChange():(1)" :config="{checkbox:true}"
+                    :columns="tableColumns" :rows="tableRows" @sorted="sortRow">
+                </bs-table>
+            </div>
+        </div>
+        <hr>
+        <div id="table2">
+            <h5>行编辑列表 依赖 vueBsTable</h5>
+            <div class="bootstrap-table">
+                <bs-edit-table ref="table" :config="{checkbox:false}" :columns="tableColumns" :rows="tableRows">
+                </bs-edit-table>
+            </div>
+        </div>
+        <hr>
+        <div id="table3">
+            <h5>单选高亮</h5>
+            <div class="bootstrap-table bootstrap-highlight-select">
+                <bs-table ref="table" :config="{checkbox:false}" :columns="tableColumns" :rows="tableRows">
+                </bs-table>
+            </div>
+        </div>
+        <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+        <script type="text/javascript" src="../require-config.js"></script>
+
+        <script>
+            requirejs(["./demo.js"], function () {});
+
+        </script>
+    </body>
+
+</html>

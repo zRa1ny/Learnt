@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../vue/vue-area/style.css">
+        <style>
+            body>div{
+            display: inline-block;
+            width: 45%;
+        }
+        body>div>.form-control{
+            width: 50%;
+        }
+        </style>
+    </head>
+
+    <body>
+        <div id="area1">
+            <h5>cig-area组件</h5>
+            <div class="form-control">
+                <cig-area :data="dept" :node-component="nodeComponent" value-path="id" :loading="false"></cig-area>
+            </div>
+        </div>
+        <div id="area2">
+            <h5>cig-ajax-area组件</h5>
+            <div class="form-control">
+                <cig-ajax-area :ajax-options="ajaxOptions" empty-text="请选择"></cig-ajax-area>
+            </div>
+        </div>
+        <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+        <script type="text/javascript" src="../require-config.js"></script>
+        <script>
+            requirejs(["./demo.js"], function () {});
+
+        </script>
+    </body>
+
+</html>

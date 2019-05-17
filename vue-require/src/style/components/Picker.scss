@@ -1,0 +1,53 @@
+.picker {
+    overflow: hidden;
+  }
+
+  .picker-toolbar {
+    height: toRem(40*1.8);
+  }
+
+  .picker-items {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    text-align: right;
+    font-size: toRem(24*1.8);
+    position: relative;
+  }
+
+  .picker-center-highlight {
+    height: toRem(36*1.8);
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 50%;
+    margin-top: toRem(-18*1.8);
+    pointer-events: none
+  }
+
+  .picker-center-highlight:before,
+  .picker-center-highlight:after {
+    content: '';
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    background-color: #eaeaea;
+    display: block;
+    z-index: 15;
+    transform: scaleY(0.5);
+  }
+
+  .picker-center-highlight:before {
+    left: 0;
+    top: 0;
+    bottom: auto;
+    right: auto;
+  }
+
+  .picker-center-highlight:after {
+    left: 0;
+    bottom: 0;
+    right: auto;
+    top: auto;
+  }

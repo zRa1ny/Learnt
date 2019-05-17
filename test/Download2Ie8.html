@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <button onclick="ifDown('http://127.0.0.1:5500/test/down/测试图片.jpg')">下载IMG</button>
+  <button onclick="ifDown('http://127.0.0.1:5500/test/down/测试txt.txt')">下载TXT</button>
+  <button onclick="ifDown('http://127.0.0.1:5500/test/down/测试zip.zip')">下载ZIP</button>
+  <button onclick="ifDown('http://127.0.0.1:5500/test/down/测试word.docx')">下载WORD</button>
+  <button onclick="ifDown('http://127.0.0.1:5500/test/down/测试表格.xlsx')">下载EXCEL</button>
+  <button onclick="ifDown('http://127.0.0.1:5500/test/down/测试表格.xlsx','ceshi')">iframeDown</button>
+  <!-- <iframe id="a" src='http://127.0.0.1:5500/test/down/测试图片.jpg'></iframe> -->
+  <script>
+    // DownLoadFile: function (options) {
+    //     var config = {
+    //       method: ' get' // }; // var $iframe=$('<iframe id="down-file-iframe" />');
+    // var $form = $('
+    // <
+    // form target = "down-file-iframe"
+    // method = "' + config.method + '" / > ');
+    // $(document.body).append($iframe);
+    // $(document.body).append($form);
+    // // $iframe.append();
+    // $form.attr('action', "http://test-zhzl.spacecig.com/dxjcbackend/common/getImages");
+    // for (var key in options.data) {
+    // $form.append('<input type="hidden" name="' + key + '" value="' + options.data[key] + '" />');
+    // }
+    // $form[0].submit();
+    // // $iframe.remove();
+    // },
+    // SaveAs5: function (imgURL, name) {
+
+    // },
+    function ifDown(url, name) {
+      if (!name) name = "";
+      window.open(url, "", "width = 1, height = 1, top = 5000, left = 5000 ")
+      var oIrame = document.createElement('iframe');
+      oIrame.style.width = "0px";
+      oIrame.style.height = "0px";
+      oIrame.style.opacity = 1;
+      document.body.appendChild(oIrame)
+      oIrame.src = url;
+      var IfDoc = oIrame.contentDocument || oIrame.document;
+      oIrame.onreadystatechange = function () { // IE下的节点都有onreadystatechange这个事件  
+        if (oIrame.readyState == "complete") {
+          IfDoc.execCommand("SaveAs", true, name)
+          document.body.removeChild(oIrame)
+        }
+      };
+    }
+
+
+
+    var DownLoad = function (url, name) {
+      if (!!window.ActiveXObject || "ActiveXObject" in window) {
+        //ie
+        var oPow = window.open(url, "", "width = 1, height = 1, top = 5000, left = 5000 ");
+        var isOpen = true; //判断window.open是否被禁用
+        try {
+          if (oPow == null) {
+            isOpen = false
+          }
+        } catch (err) {
+          isOpen = false
+        }
+        if (isOpen) {
+          //没禁用window.open采用window.open下载
+          while (oPow.document.readyState !== "complete") {
+            if (oPow.document.readyState === "complete") break;
+          }
+          oPow.document.execCommand("SaveAs", true, name);
+          oPow.close();
+        } else {
+          //禁用了window.open采用iframe下载
+          var oIrame = document.createElement('iframe');
+          oIrame.style.width = "0px";
+          oIrame.style.height = "0px";
+          oIrame.style.opacity = 1;
+          document.body.appendChild(oIrame)
+          oIrame.src = url;
+          var IfDoc = oIrame.contentDocument || oIrame.document;
+          oIrame.onreadystatechange = function () { // IE下的节点都有onreadystatechange这个事件  
+            if (oIrame.readyState == "complete") {
+              // oIrame.execCommand("SaveAs", true, name)
+              document.body.removeChild(oIrame)
+            }
+          };
+
+        }
+
+      } else {
+        if (typeof url == 'object' && url instanceof Blob) {
+          url = URL.createObjectURL(url); // 创建blob地址
+        }
+        var aLink = document.createElement('a');
+        aLink.href = url;
+        aLink.download = name || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+        var event;
+        if (window.MouseEvent) {
+          event = new MouseEvent('click');
+        } else {
+          if (document.createEvent) {
+            event = document.createEvent('MouseEvents');
+            event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+          }
+        }
+        aLink.dispatchEvent(event);
+      }
+
+    }
+
+
+    function isIeNum() {
+      var browser = navigator.appName
+      var b_version = navigator.appVersion
+      var version = b_version.split(";");
+      var trim_Version = version[1].replace(/[ ]/g, "");
+      if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+        return (6);
+      } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+        return (7);
+      } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+        return (8);
+      } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE9.0") {
+        return (9);
+      } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE10.0") {
+        return (10);
+      }
+
+      return false;
+    }
+  </script>
+</body>
+
+</html>

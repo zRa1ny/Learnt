@@ -1,0 +1,52 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Language" content="utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="author" content="ޅѾ֮ݒ(MyZ)" />
+  <meta name="Copyright" content="ޅѾ֮ݒ(MyZ)" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <link rel="icon" href="" type="image/x-icon" />
+  <link rel="shortcut icon" href="" type="image/x-icon" />
+  <link href="" rel="stylesheet" type="text/css" />
+  <title></title>
+  <script type="text/javascript">
+    function winBack() {
+      var h = document.getElementById("name").value;
+      var i = document.getElementById("title").value;
+      var v = document.getElementById("content").value;
+      if (window.opener) {
+        fWindowText1 = window.opener.document.getElementById("bigbox");
+        window.opener.showMsg("已经传回了数据winBack")
+        var bigboxDiv = document.createElement("div");
+        var myDiv = document.createElement("div");
+        var text = document.createTextNode("姓名：" + h);
+        myDiv.appendChild(text);
+        bigboxDiv.appendChild(myDiv);
+        var myDiv2 = document.createElement("div");
+        var text = document.createTextNode("标题：" + i);
+        myDiv2.appendChild(text);
+        bigboxDiv.appendChild(myDiv2);
+        var myDiv3 = document.createElement("div");
+        var text = document.createTextNode("内容：" + v);
+        myDiv3.appendChild(text);
+        bigboxDiv.appendChild(myDiv3);
+        fWindowText1.appendChild(bigboxDiv);
+        //alert(myDiv.childNodes[0].nodeValue);
+        //fWindowText1.value = fWindowText1.value + h; 
+        window.close();
+      }
+    }
+  </script>
+</head>
+
+<body> 姓名：<textarea id="name" name="text1"></textarea></br>
+  标题：<textarea id="title" name="text1"></textarea></br>
+  内容：<textarea id="content" name="text1"></textarea></br>
+  <input type="button" name="back" value="back" onclick="javascript:winBack();" />
+</body>
+
+</html>

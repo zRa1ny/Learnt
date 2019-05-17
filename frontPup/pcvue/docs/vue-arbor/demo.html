@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="application/x-www-form-urlencoded;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <title>vue-arbor</title>
+</head>
+
+<body>
+    <div id="arbor">
+        <h2>关系图插件</h2>
+        <cig-arbor :value="imgData" @itemclick="itemclick" width="1058" height="280" style="display: block;margin: 20px auto;"></cig-arbor>
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+
+</html>

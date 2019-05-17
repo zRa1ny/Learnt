@@ -1,0 +1,34 @@
+<html>
+    <head>
+        
+<link rel="stylesheet" href="/components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    </head>
+<body>
+    <div id="btns">
+        <button @click="alert1">alert1</button>
+        <button @click="alert2">alert2</button>
+        <button @click="alert3">alert3</button>
+        <button @click="confirm1">confirm1</button>
+        <button @click="confirm2">confirm2</button>
+
+        
+        <button @click="tips1">tips default</button>
+        <button @click="tips2">tips close after 10s</button>
+    </div>
+
+    <div id="form">
+        <h5>表单内提示</h5>
+        <div ref="alert"></div>
+        <button @click="error1">Error</button>
+        <button @click="error2">Warning</button>
+        <button @click="error3">Success</button>
+        <button @click="error4">Success 3s</button>
+    </div>
+<script type="text/javascript" src="/components/requirejs/require.js"></script>
+<script type="text/javascript" src="/cig/require-config-dev.js"></script>
+
+<script>
+    requirejs(["./alert.js"],function(){});
+</script>
+</body>
+</html>

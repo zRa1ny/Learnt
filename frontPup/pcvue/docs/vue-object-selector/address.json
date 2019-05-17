@@ -1,0 +1,20 @@
+{
+    "success": 1,
+    "data": [
+        {
+            "addressDetail": "详情稚城街道金陵村"
+        },
+        {
+            "addressDetail": "详情雉城街道三狮社区318宿舍"
+        },
+        {
+            "addressDetail": "详情雉城街道三狮社区三狮苑"
+        },
+        {
+            "addressDetail": "详情雉城街道三狮社区园丁小区"
+        },
+        {
+            "addressDetail": "详情雉城街道三狮社区金城小区"
+        }
+    ]
+}

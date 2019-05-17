@@ -1,0 +1,58 @@
+$_scale_: 320 / 750;
+
+/* base color*/
+
+
+$color-blue: #26a2ff;
+$color-white: #fff;
+$color-grey: #d9d9d9;
+$border-color: #c8c8cd;
+$success-color: #4caf50;
+$error-color: #f44336;
+$warning-color: #ffc107;
+
+$cell-value-color: #888;
+
+$_base_color: $color-blue;
+
+/*cs-header and cs-footer*/
+
+$_header_height: 90;
+$_footer_height: 90;
+
+/* cs-button*/
+
+$_button_default_color: #656b79;
+$_button_default_background_color: #f6f8fa;
+$_button_default_plain_color: #5a5a5a;
+$_button_default_box_shadow: 0 0 1px #b8bbbf;
+$_button_primary_color: #fff;
+$_button_primary_background_color: $_base_color;
+$_button_danger_color: #fff;
+$_button_danger_background_color: #ef4f4f;
+
+/* Checklist Component */
+$checklist-title-color: #888;
+
+/* Tab Item Component */
+$tab-item-font-size: 12px;
+
+/* Tabbar Component */
+$tabbar-background-color: #fafafa;
+$tabbar-tab-item-selected-background-color: #eaeaea;
+$tabbar-tab-item-selected-color: $color-blue;
+
+
+$z-index-normal: 1;
+
+/* function and mixin*/
+
+@function toRem($number) {
+    @return ( $number * $_scale_ / 12)+rem
+}
+
+@mixin txtHidden {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

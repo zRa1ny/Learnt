@@ -1,0 +1,127 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <style>
+        #main{
+            padding: 10px;
+        }
+        .row{
+            margin-bottom: 10px;
+        }
+        .col-sm-2{
+            text-align: right;
+            font-weight: 700;
+        }
+        dd span.form-control{
+            background-color: #c5c5c5;
+        }
+        @media (min-width: 768px){        
+            .dl-horizontal dt { width: 200px; }
+            .dl-horizontal dd {
+                margin-left: 220px;
+            }
+        }
+        p{
+            font-weight: 700;
+            line-height: 50px;
+            padding-left: 20px;
+            font-size: 18px;
+            color: darkred;
+            border-bottom: 1px saddlebrown solid;
+            margin-bottom: 30px;
+        }
+        .div_out{
+            border: 1px solid #d7d7d7;
+            padding: 10px 2px;
+            margin-top: 20px;
+        }
+        .btn{
+           margin-left: 20px;
+        }
+        .colordiv{
+            display: flex;
+            flex-direction: row;
+        }
+        .colorcon{
+            flex:1;
+        }
+        .colorcon .color{
+            display: inline-block;
+            width: 80px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        .colorcon ul li{
+            width: 20px;
+            height:  20px;
+            float: left;
+            margin-right: 5px;
+            cursor: pointer;
+            list-style: none;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="main">
+        <h3>vueForm 中的vue的指令示例</h3>        
+        <div class="row">
+            <div class="col-sm-2">v-date:</div>
+            <div class="col-sm-10"><input v-date v-model="vdate" @input="input" readonly></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">v-month:</div>
+            <div class="col-sm-10"><input v-month v-model="vmonth" @input="input" readonly></div>
+        </div> 
+        <div class="row">
+            <div class="col-sm-2">v-datetime:</div>
+            <div class="col-sm-10"><input v-datetime v-model="vdatetime" @input="input" readonly></div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-sm-2">v-daterange:</div>
+            <div class="col-sm-10"><input v-daterange v-model="vdaterange" @input="input" readonly></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">v-rangemonth:</div>
+            <div class="col-sm-10"><input v-rangemonth="config" v-model="vrangemonth" start-data="2018-8-1" end-data="2018-8-30" @input="input" readonly></div>
+        </div>-->
+        
+        <hr>
+        <h3>vueForm 中的cig-form组件</h3>        
+        <div class="div_out">
+            <p>下方示列：为基础表单，渲染方式为1列</p>
+            <cig-form :fields="fields1" data-path="mainInfo1" ref="form1" fields-render="table1Render">
+            </cig-form>
+            <button class="btn" @click="btnClick1">打印当前表单值</button>
+            <div v-if="log1">{{log1}}</div>
+        </div>        
+        <div class="div_out">
+            <p>下方示列：为验证表单，渲染方式为2列，并加入了自定义表单</p>
+            <cig-form :fields="fields2" data-path="mainInfo2" ref="form2">
+                <div slot="fieldslot.tcolor" class="colordiv">
+                    <div class="colorcon">
+                        <span class="color" :style="{backgroundColor:mainInfo2.tcolor}"></span>
+                        <span>{{mainInfo2.tcolor}}</span>
+                    </div>
+                    <div class="colorcon">
+                        <ul>
+                            <li v-for="(color,index) in colors" :key="index" :style="{backgroundColor:color}" @click="colorClick(color)"></li>
+                        </ul>
+                    </div>
+                </div>
+            </cig-form>
+            <button class="btn" @click="btnClick2">打印当前表单值</button>
+            <div v-if="log2">{{log2}}</div>
+        </div>
+
+        
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+</html>

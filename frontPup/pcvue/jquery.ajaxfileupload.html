@@ -1,0 +1,10 @@
+<script>
+    (function(){
+        var host = location.host;
+        var tmps = host.split(":")[0].split(".");
+        while(tmps.length > 2){
+            tmps.shift();
+        }
+        document.domain = tmps.join(".")
+    })();
+</script>

@@ -1,0 +1,92 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <title>vue-popcomponent</title>
+    <style>
+        #main{
+            padding: 10px;
+        }
+        .row{            
+            background-color: #337ab7;
+        }
+        .row>.col-sm-4,.row>.col-sm-3{
+            line-height: 34px;
+        }
+        .row>.col-sm-4>span,.row>.col-sm-3>span{
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>在一个vue实例中最多只有一个搜索下拉框是打开状态</h1>
+    <div id="main">
+        <h3>cig-obj-selector示例</h3>
+        <p>通过设置请求，获得“对象id”和“对象名称”</p>
+        <div class="row">
+            <div class="col-sm-4">
+                <cig-obj-selector
+                    :auto-select="obj.autoSelect"
+                    :start-load-length="obj.startLoadLength"
+                    :data="obj.value"
+                    :value="obj.keyword"
+                    :data-mapper="obj.dataMapper"
+                    :ajax-options="obj.ajaxOptions"
+                    :item-component="obj.itemComponent"
+                    @select="objSelect">
+                </cig-obj-selector>
+            </div>
+            <div class="col-sm-4"><span>对象id:{{obj.value.id}}</span></div>
+            <div class="col-sm-4"><span>对象名称:{{obj.value.name}}</span></div>
+        </div>
+        <hr></hr>
+        <h3>cig-person-selector示例</h3>
+        <a name="person"></a>
+        <p>通过设置请求，获得：用户身份证号、用户id、用户姓名、用户电话、用户地址</p>
+        <div class="row">
+            <div class="col-sm-4">
+                <cig-obj-selector
+                    :data="person.value"
+                    :value="person.keyword"
+                    :data-mapper="person.dataMapper"
+                    :ajax-options="person.ajaxOptions"
+                    :item-component="person.itemComponent"
+                    @input="personSelect">
+                </cig-obj-selector>
+            </div>
+            <div class="col-sm-4"><span>用户身份证号:{{person.value.pCardNum}}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>用户id:{{person.value.pId}}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>用户姓名:{{person.value.pName}}</span></div>
+            <div class="col-sm-4"><span>用户电话:{{person.value.pPhone}}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>用户地址:{{person.value.pAddress}}</span></div>
+        </div>
+        <!-- 因为固定AJAX请求地址，上面由cig-obj-selector模拟cig-person-selector的行为，跟下列代码效果相同：
+        <cig-person-selector
+            :data="person.value"
+            :value="person.keyword"
+            :data-mapper="person.dataMapper"
+            :item-component="person.itemComponent"
+            @input="personSelect">
+        </cig-person-selector>
+        -->
+        <hr></hr>
+        <h3>cig-address-selector示例</h3>
+        <p>通过设置请求，获得“区域”和“地址”</p>
+        <div class="row">
+            <div class="col-sm-4">
+                <cig-address-selector
+                    :data="address.value"
+                    :place-data-mapper="address.placeDataMapper"
+                    :detail-data-mapper="address.detailDataMapper"
+                    :place-ajax="address.placeAjax"
+                    :detail-ajax="address.detailAjax">
+                </cig-address-selector>
+            </div>
+            <div class="col-sm-4"><span>区域:{{address.value.place}}</span></div>
+            <div class="col-sm-4"><span>地址:{{address.value.addressDetail}}</span></div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+</html>

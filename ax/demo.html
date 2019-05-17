@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <button id="btn">按钮</button>
+  <script>
+    document.getElementById("btn").onclick = function () {
+      // var fso;
+      // try {
+      //   fso = new ActiveXObject('Scripting.FileSystemObject')
+      // } catch (e) {
+      //   alert('当前浏览器不支持');
+      //   return;
+      // }
+
+      // var f1 = fso.createtextfile("C:\\Users\\pytho\\Desktop\\a\\1.txt", true)
+      var fso, drv, s = "";
+
+      fso = new ActiveXObject("Scripting.FileSystemObject");
+
+      drv = fso.GetDrive(fso.GetDriveName("c:\\"));
+
+      s += "Drive C:" + " - ";
+
+      s += drv.VolumeName + "\n";
+
+      s += "Total Space: " + drv.TotalSize / 1024;
+
+      s += " Kb" + "\n";
+
+      s += "Free Space: " + drv.FreeSpace / 1024;
+
+      s += " Kb" + "\n";
+
+      alert(s);
+    }
+  </script>
+</body>
+
+</html>

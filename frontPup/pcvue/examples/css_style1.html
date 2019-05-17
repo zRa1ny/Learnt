@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head> 
+      <meta charset="utf-8" /> 
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+      <title>样式说明</title> 
+      <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" /> 
+      <link rel="stylesheet" href="/components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css" /> 
+      <link rel="stylesheet" href="/components/font-awesome/css/font-awesome.min.css" /> 
+      <link rel="stylesheet" href="/components/ionicons/css/ionicons.min.css" /> 
+      
+      <link rel="stylesheet" href="/cig/common/css/style.css" />
+      <link rel="stylesheet" href="/components/cig-adminlte/dist/css/AdminLTE.min.css" /> 
+      <link rel="stylesheet" href="/components/cig-adminlte/dist/css/skins/skin-blue.min.css" />
+      <link rel="stylesheet" href="/cig/common/css/admin-lte-fix.css" />
+      <link rel="stylesheet" href="/cig/common/css/common2frame-fix.css" />
+      <link rel="stylesheet" href="/cig/common/css/control-style2017.css" />
+  </head>
+<body class="skin-blue frame-body">
+  <div class="wrapper"> 
+    <div class="l-content">
+    
+
+<div class="content-wrapper" id="css">
+        <h4>表格</h4>
+        <!--下面是queryTable.tpl的内容-->
+        <div id="mainTable" v-cloak class="content-item content-padding">
+            <cig-table-filter v-if="glb_proxy_filters.length > 0" :mode="glb_proxy_filtermode" 
+                :filters="glb_proxy_filters" 
+                :domain-ajax-options="glb_proxy_domainAjaxOptions" 
+                v-model="glb_proxy_filter" 
+                :pop-model="glb_proxy_filterPopModel"
+                @popmodelchange="glb_proxy_filterPopModelChange"
+                @input="glb_proxy_doSearch()"></cig-table-filter>
+            <div class="bootstrap-table">
+                <div class="fixed-table-toolbar clearfix">
+                    <div class="bs-bars pull-left cig-bars">
+                        <template v-for="btn in glb_proxy_btns">
+                            <button v-if="btn.visible !== false"
+                                :class="['btn btn-sm',btn.baseClass, btn.disabled ? 'disabled' : btn.enableClass]" 
+                                :disabled="btn.disabled" 
+                                @click="glb_proxy_executeCommand(btn.id)">{{btn.name}}</button>
+                        </template>
+                    </div>
+                    <div class="columns columns-right btn-group pull-right">
+                        <div class="form-inline">
+                            <select v-if="glb_proxy_keywordTypes.length" v-model="glb_proxy_keywordType" class="form-control">
+                                <option value="" disabled selected>按条件搜索</option>
+                                <option :value="keywordType.value" v-for="keywordType in glb_proxy_keywordTypes">{{keywordType.text}}</option>
+                            </select>
+                            <div class="input-group">
+                                <input class="form-control" v-model.trim="glb_proxy_keyword" @keyup.enter="glb_proxy_doSearch()" type="text" placeholder="搜索">
+                                <span class="input-group-btn"> 
+                                    <button class="btn btn-default" type="button" @click="glb_proxy_doSearch()">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button> 
+                                </span> 
+                            </div>
+                            <button v-if="glb_proxy_filters.length > 0 && glb_proxy_filtermode =='pop'" 
+                                class="btn btn-primary" type="button"
+                                @click="glb_proxy_openFilterPop">
+                                高级搜索
+                            </button> 
+                        </div>
+                    </div>
+                </div>
+                <cig-table ref="table"
+                    :config="glb_proxy_tableConfig"
+                    :columns="glb_proxy_tableColumns"
+                    @selectchange="glb_proxy_tableSelectChange"
+                    :ajax-options="glb_proxy_tableAjaxOptions">
+                </cig-table>
+            </div>
+        </div>
+
+        <h4>.content-item</h4>
+        <div class="content-item">CONTENT-ITEM会包括白色背景和边框</div>
+        <h4>.content-item.content-padding</h4>
+        <div class="content-item content-padding">CONTENT-PADDING会加上基础的内边距</div>
+        <h4>块标题 .content-title h4,.content-title h4.border-left</h4>
+        <div class="content-item content-padding">
+            <div class="content-title"><h4>我是标题</h4></div>
+            我是内容
+            <p>我是内容</p>
+        </div>
+        <div class="content-item content-padding">
+            <div class="content-title"><h4 class="border-left">我是高亮标题</h4></div>
+            我是内容
+            <p>我是内容</p>
+        </div>
+        <h4>TAB标签</h4>
+        <bs-tab class="content-item" :tabs="[{name:'tab1',text:'tab1标题'},{name:'tab2',text:'tab2标题'}]">
+            <div slot="tab1">tab1的内容，默认是有内边距的</div>
+            <div slot="tab2">tab2的内容<button>按钮</button></div>
+        </bs-tab>
+
+        <h4>TAB标签，内部无边距</h4>
+        <bs-tab class="content-item tab-no-padding" :tabs="[{name:'tab1',text:'tab1标题'},{name:'tab2',text:'tab2标题'}]">
+            <div slot="tab1">如果直接是不要边距，可以在tab上加 tab-no-padding</div>
+            <div slot="tab2" class="content-padding">又需要边距，就自己加回来</div>
+        </bs-tab>
+
+        <h4>TAB套个表单</h4>
+        <bs-tab class="content-item" :tabs="[{name:'tab1',text:'tab1标题'},{name:'tab2',text:'tab2标题'}]">
+            <div slot="tab1" class="form-horizontal form-group-sm">
+                <cig-form :fields="[{name:'a',label:'字段1',type:'text'},{name:'b',label:'字段2',type:'text'}]" data-path="data" ref="form">
+                </cig-form>
+            </div>
+            <div slot="tab2">又需要边距，就自己加回来</div>
+        </bs-tab>
+
+        <h4>标题加表单</h4>
+        <div class="content-item content-padding">
+            <div class="content-title"><h4 class="border-left">我是高亮标题</h4></div>
+            <div class="form-horizontal form-group-sm">
+                <cig-form :fields="[{name:'a',label:'字段1',type:'display'},{name:'b',label:'字段2',type:'display'}]" data-path="data" ref="form">
+                </cig-form>
+            </div>
+        </div>
+
+        <h4>TAB标签再套二级标签，和多个content-item</h4>
+        <bs-tab class="tab-no-padding" 
+            :tabs="[{name:'tab1',text:'tab1标题'},{name:'tab2',text:'tab2标题'},{name:'tab3',text:'tab3标题'}]">
+            <div slot="tab1">
+                <bs-tab style="margin-top:10px;"
+                    class="content-item"
+                    :tabs="[{name:'tab1',text:'二级标题'}]">
+                    <div slot="tab1">二级内容</div>
+                </bs-tab>
+                <bs-tab class="content-item"
+                    :tabs="[{name:'tab1',text:'二级标题2'}]">
+                    <div slot="tab1">二级内容</div>
+                </bs-tab>
+            </div>
+            <div slot="tab2" class="content-padding content-item">
+                <div>
+                    只有一个内容
+                </div>
+            </div>
+            <div slot="tab3">
+                <div style="margin-top:10px;" class="content-padding content-item">
+                    <div class="content-title"><h4>子标题1</h4></div>
+                    内容1
+                </div>
+                <div class="content-padding content-item">
+                    <div class="content-title"><h4>子标题2</h4></div>
+                    内容1
+                </div>
+                <div class="content-padding content-item">
+                    <div class="content-title"><h4>子标题3</h4></div>
+                    内容1
+                </div>
+                <div class="content-padding content-item">
+                    <div class="content-title"><h4>子标题4</h4></div>
+                    内容1
+                </div>
+            </div>
+        </bs-tab>
+
+        <h4>页面分块 用bootstrap的row和col来分</h4>
+        <div class="row" id="block1">
+            <div class="col-sm-4 block-item content-item">我是图片、或者图表，我不加padding</div>
+            <div class="col-sm-8 block-item content-item content-padding">
+                <div class="content-title">
+                    <h4>我需要padding</h4>
+                </div>
+                我们是通过 #block1 .block-item 来设置的高度
+            </div>
+        </div>
+ 
+        <h4>内部分块 用bootstrap的row和col来分</h4>
+        <div class="content-item content-padding">
+            <div class="content-title"><h4 class="border-left">我是高亮标题</h4></div>
+            <div class="row" id="block2">
+                <div class="col-sm-4 block-item content-padding">
+                    <div class="content-item">我是图片、或者图表，我不加padding</div>
+                </div>
+                <div class="col-sm-8 block-item content-padding">
+                    <div class="content-item content-padding">
+                        <div class="content-title">
+                            <h4>我需要padding</h4>
+                        </div>
+                        我们是通过 #block1 .block-item 来设置的高度
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+<style>#block1 .block-item {height: 200px;}</style>
+<style>#block2 .block-item > .content-item {height: 100px;}</style>
+
+    </div> 
+  </div> 
+   
+
+    
+    <script type="text/javascript" src="/zhzl/parent/js/common.js"></script> 
+    <script type="text/javascript" src="/zhzl/parent/js/config.js"></script> 
+    <script type="text/javascript" src="/components/requirejs/require.js"></script>
+
+<script type="text/javascript" src="/cig/require-config-dev.js"></script>
+
+    <script>
+        requirejs(["/zhzl/parent/js/layout-frame.js","/zhzl/main.js"],function(frame,main){
+            frame.bind(main);
+        })
+    </script>
+    
+   
+   
+    
+<script type="text/javascript">
+    requirejs(["css_style1.js"], function () {
+    });
+</script>
+ 
+ 
+ </body>
+</html>
+

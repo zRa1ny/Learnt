@@ -1,0 +1,38 @@
+.delete-unit{ display: none; }
+.row-del .delete-unit{ display: block; }
+.row-del .normal-unit{display: none;}
+.row-del span{
+    color: gray; 
+    text-decoration: line-through;
+}
+.no-wrap{
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 400px;
+    white-space: nowrap;
+    margin: 0 auto;
+}
+
+.fixed-table-container tbody .selected td{
+    background-color: #eee;
+}
+.bootstrap-table .table thead>tr>th{
+    position: relative;
+}
+.bootstrap-table .table thead>tr>th .sort_icon {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    line-height: 20px;
+    color: #333;
+}
+.fixed-table-toolbar .columns label.queryTable{
+    display: inline-block;
+    padding: 0;
+    vertical-align: middle;
+    margin-bottom: 0;
+    padding-top: 2px;
+}

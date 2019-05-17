@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="application/x-www-form-urlencoded;charset=UTF-8">
+    <link rel="stylesheet" href="../../../../components/bootstrap-3.3.5-dist/dist/css/bootstrap.min.css">
+    <title>vue-depmap</title>
+    <style>
+        canvas {
+            height: 760px !important;
+            width: 1366px !important;
+        }
+
+        .cig-dep-map {
+            height: 760px !important;
+            width: 1366px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>地图插件</h2>
+    <div id="depmap">
+        <cig-dep-map ref="map" :map="map" @itemclick="mapClick" :random-color="true" :roam="true"></cig-dep-map>
+    </div>
+    <script type="text/javascript" src="../../../../components/requirejs/require.js"></script>
+    <script type="text/javascript" src="../require-config.js"></script>
+
+    <script>
+        requirejs(["./demo.js"], function () { });
+    </script>
+</body>
+
+</html>
