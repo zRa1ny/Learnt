@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="toolbar">
+    <button id="savebutton" onclick="save()">Save</button>
+    <button onclick="sync()">Sync Note</button>
+    <button onclick="applicationCache.update()">Update.Application</button>
+  </div>
+  <textarea id="editor" cols="30" rows="10"></textarea>
+  <div id="statusline"></div>
+  <script src="permanote.js"></script>
+</body>
+
+</html>

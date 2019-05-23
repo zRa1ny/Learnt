@@ -17,17 +17,22 @@
       font-size: 18px;
       color: #000;
     }
+
+    .img {
+      width: 150px;
+      height: auto;
+    }
   </style>
 </head>
 
 <body>
-
+  <a href="https://www.baidu.com/">百度一下</a>
   <div id="app">
     <div id="css" style="width:20px;height:20px;background:#000"></div>
 
     <img src="http://pic31.nipic.com/20130804/7487939_090818211000_2.jpg"
       style="position: absolute;left:100px;top:100px;width: 100px;height: auto;"
-      onmousedown="if(!event.shiftKey)drag(this,event)">
+      onmousedown="if(!event.shiftKey)drag(this,event)" />
     <div id="drag" style="width:200px;position: absolute;left: 100px;top:200px;">
       <div class="title" style="height: 30px;background:yellow;" onmousedown="drag(this.parentNode,event)"></div>
       <div class="main" style="height: 200px;background: greenyellow"></div>
@@ -46,7 +51,7 @@
     <div>
       <h1>从时钟中拖出时间戳</h1>
       <span id="clock"></span>
-      <textarea cols=60 rows=20></textarea>
+      <textarea cols="60" rows="20"></textarea>
     </div>
   </div>
   <ul class="bdnd">
@@ -54,8 +59,77 @@
     <li>2</li>
     <li>3</li>
   </ul>
-  <input type="text" data-allowed-chars="0123456789" data-messageid="zipwarn">
+  <input type="text" data-allowed-chars="0123456789" data-messageid="zipwarn" />
   <span id="zipwarn" style="color: red;visibility: hidden"></span>
+
+  <img src="c21/1.jpg" class="img" onmouseover="this.src='c21/6.jpeg'" onmouseout="this.src='c21/1.jpg'" />
+  <img src="c21/4.jpg" id="i1" class="img" data-rollover="c21/5.jpeg" />
+  <img src="c21/3.jpg" class="img" data-canvas="广告位招租" />
+  <img src="c21/2.jpg" class="img" data-canvas="杨幂" />
+  <img src="c21/5.jpeg" class="img" onclick="smear(this)" />
+
+  <canvas id="testWMcanvas" style="display: none"></canvas>
+  <svg width="10" height="10">
+    <rect x="0" y="0" width="10" height="10" fill="red" />
+  </svg>
+  <canvas id="square"></canvas>
+  <canvas id="circle"></canvas>
+  <canvas id="canvas" width="400" height="400"></canvas>
+  <style>
+    .sparkline {
+      background-color: #ddd;
+      color: red;
+    }
+  </style>
+  <span class="sparkline" data-height="400" data-width="200">3 5 7 6 6 9 11 15</span>
+  <style>
+    #prompt {
+      font-size: 16pt;
+    }
+
+    table {
+      width: 90%;
+      margin: 10px;
+      margin-left: 5%;
+    }
+
+    #low,
+    #high {
+      background-color: lightgray;
+      height: 1em;
+    }
+
+    #mid {
+      background-color: green;
+    }
+  </style>
+  <h1 id="heading">I'm thinking of a number...</h1>
+  <table>
+    <tr>
+      <td id="low"></td>
+      <td id="mid"></td>
+      <td id="high"></td>
+    </tr>
+  </table>
+  <label id="prompt"></label><input id="input" type="text">
+  <input multiple type="file" onchange="fileinfo(this.files)">
+  <!-- <video controls width="10" onmouseenter="this.width=400" autoplay loop>
+    <source src="static/1.mp4" type="video/mp4" />
+  </video> -->
+  <!-- <audio src="static/1.mp3" autoplay loop></audio> -->
+  <style>
+    /* Simple styles for the file drop target */
+    #droptarget {
+      border: solid black 2px;
+      width: 200px;
+      height: 200px;
+    }
+
+    #droptarget.active {
+      border: solid red 4px;
+    }
+  </style>
+  <div id="droptarget">Drop Image Files Here</div>
   <script src="c6/index.js"></script>
   <script src="c8/index.js"></script>
   <script src="c9/index.js"></script>
@@ -71,9 +145,8 @@
   <!-- <script src="https://cdn.bootcss.com/jquery/1.4.4/jquery.min.js"></script>
   <script src="c19/index.js"></script> -->
   <script src="c20/index.js"></script>
-
-
-
+  <script src="c21/index.js"></script>
+  <script src="c22/index.js"></script>
 </body>
 
 </html>

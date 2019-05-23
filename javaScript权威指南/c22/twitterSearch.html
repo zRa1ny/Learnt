@@ -5,7 +5,7 @@
   postMessage(). Since it is in an <iframe> and not a <script>, it can't
   mess around with the containing document.
 -->
-<html>
+
 
 <head>
   <style>
@@ -25,19 +25,24 @@
       window.attachEvent("onmessage", handleMessage); // For IE8
 
     function handleMessage(e) {
+      console.log('onmessage')
       // We don't care what the origin of this message is: we're willing
       // to search Twitter for anyone who asks us. We do expect the message
       // to come from the window that contains us, however.
+
+
       if (e.source !== window.parent) return;
 
       var searchterm = e.data; // This is what we were asked to search for
 
       // Use jQuery Ajax utlities and the Twitter search API to find
       // tweets matching the message.
+      console.log('x')
       jQuery.getJSON("http://search.twitter.com/search.json?callback=?", {
           q: searchterm
         },
         function (data) { // Called with request results
+
           var tweets = data.results;
           // Build an HTML document to display these results
           var escaped = searchterm.replace("<", "<");
