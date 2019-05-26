@@ -330,38 +330,84 @@
 
   function indexDB() {
 
-    var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB;
-    var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction;
-    var IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange;
 
     function logerr(e) {
       console.log("IndexedDB error :" + e.code + ":" + e.message)
     }
     //次函数异步的获取数据对象(需要的时候,用于穿件和初始化数据)
     //然后将其传递给f()函数
-    withDB()
+    withDB('zipcodes')
 
-    function withDB() {
-      var request = indexedDB.open('zipcodes', 1); //获取储存邮政编码的数据库
-      request.onerror = logerr;
+    function withDB(DBName) {
+      //      获取indexedDB对象
+      const version = 1;
+      const indexedDB = window.indexedDB || window.webkitIndexedDB ||
+        window.mozIndexedDB; // 打开数据库， 在回调中创建store object
+      const request = indexedDB.open(DBName, version);
+      request.onsuccess = (e) => {
+        console.log('onsuccess')
+        this.db = e.target.result;
+        if (this.db.version === 1) {
+          //版本号为1默认为魏添加数据,新建触发的sucess
+          initdb(this.db, DBName)
+          // console.log('onsuccess')
+          // var transaction = this.db.transaction(['zipcodes'], 'readwrite')
+          // var objectStore = transaction.objectStore('zipcodes')
+          // var objectStoreRequst1 = objectStore.add({
+          //   zipcode: 'ss',
+          //   city: '张三',
+          //   age: 24,
+          //   email: 'zhangsan@example.com'
+          // })
+          //   var objectStoreRequst2 = objectStore.add({
+          //     zipcode: 11,
+          //     city: '张三2',
+          //     age: 224,
+          //     email: 'zhang2san@example.com'
+          //   })
+          //   objectStore.put({
+          //     zipcode: 11,
+          //     city: '张三2',
+          //     age: 224,
+          //     email: 'zhang2san@example.com'
+          //   })
+          //   objectStoreRequst1.onsuccess = function (event) {
+          //     console.log('数据写入成功1');
+          //   };
 
-      request.onsuccess = function () {
-        var db = request.result;
+          //   objectStoreRequst1.onerror = function (event) {
+          //     console.log('数据写入失败1');
+          //     console.log(objectStoreRequst);
+          //   }
+          //   objectStoreRequst2.onsuccess = function (event) {
+          //     console.log('数据写入成功2');
+          //   };
 
-        console.log(db)
-        //即使数据路不存在,也总能够打开它
-        //通过检查版本号来确定数据库是否已经创建或者初始化
-        //如果没有,就做响应的穿件和初始化工作
-        //如果db已经存在,就只需要把它传递给回调函数f
-        f(db);
+          //   objectStoreRequst2.onerror = function (event) {
+          //     console.log('数据写入失败2');
+          //     console.log(event.target.error.name)
+          //   }
+        }
+
+      };
+      request.onupgradeneeded = (e) => {
+        this.db = e.target.result;
+        if (!this.db.objectStoreNames.contains("zipcodes")) {
+          this.store = this.db.createObjectStore("zipcodes", {
+            // autoIncrement: true
+            keyPath: "zipcode"
+          });
+          // this.store.createIndex("cities", "city")
+        }
+        console.log('onupgradeneeded')
       }
-      request.onupgradeneeded = function () {
-        var db = request.result;
-        initdb(db, f)
-      }
+      request.onerror = (e) => {
+        console.log('Can not open indexedDB', e);
+      };
+
     }
 
-    function initdb(db, f) {
+    function initdb(db, DBName) {
       var statusline = document.createElement('div');
       statusline.style.cssText = "position:fixed; left:0px; top:0px; width:100%;" +
         "color:white; background-color: black; font: bold 18pt sans-serif;" +
@@ -372,70 +418,46 @@
         statusline.innerHTML = msg.toString()
       }
       status('Initializing zipcod datebase')
-
-      // var request = db.setVersion('1.0.0');
-
-      //这里邮政编码数据只包含一个对象存储区
-      //该存储区包含如下形式的对象{
-      //   zipcode: "02134",
-      //   city: "Allston",
-      //   state: "MA",
-      //   latitude: "42.355167",
-      //   longitude: "-71.13164"
-      // }
-      //使用对象的zipcode属性来作为数据库的键
-      //同时 使用城市名称来创建索引
-      //如果生虐键路径,indexedDB会定义他自己的唯一的整形键
-      var store = db.createObjectStore("zipcodes", //储存区的名字
-        {
-          keyPath: "zipcode"
-        })
-      //通过城市名一级邮政编码来索引对象存储区
-      //是通此方法,表示检录的字符串要直接穿进去
-      //并且是作为必须的参数而不是可选对象的一部分
-      store.createIndex("cities", "city")
-      //现在 需要下载邮政编码数据,将他们解析为对象
-      //并将他们存在到之前创建的对象存储区中
       var xhr = new XMLHttpRequest();
       xhr.open("GET", "./c22/db.json")
       xhr.send()
-      console.log('x')
+
       xhr.onerror = status;
       var lastChar = 0,
         numlines = 0;
-      xhr.onprogress = xhr.onload = function (e) {
-        var lastNewline = xhr.responseText.indexOf("\n");
-        if (lastNewline > lastChar) {
-          var chunk = xhr.responseText.substring(lastChar, lastNewline)
-          lastChar = lastNewline + 1;
-          var lines = chunk.split('\n');
-          numlines += lines.length;
-          //将数据春村到数据库中
-          //这里需要食物
-          //在盖茨函数返回
-          //浏览器返回时间循环时,向数据提交所有使用该对象进行的所有数据库出入操作
-          //要创建事务对象,需要制定要使用的对象存储区
-          //并且告诉该对象存储区
-          //需要对象数据进行写操作 而不只是读操作
-          var transaction = db.transaction(['zipcodes'], //对象存储区
-            IDBTransaction.READ_WRITE)
-          var store = transaction.objectStore("zipcodes") //从事务中获取对象存储区
-          for (var i = 0; i < lines.length; i++) {
-            var fields = lines[i].split(","); // Comma-separated values
-            var record = { // This is the object we'll store
-              zipcode: fields[0], // All properties are string
-              city: fields[1],
-              state: fields[2],
-              latitude: fields[3],
-              longitude: fields[4]
-            };
-            //IndexedDB最好的部分就对象存储区真的非常简单
-            //下面就在数据库中增肌俺一跳记录的方式
-            store.put(record) //或者使用add避免覆盖
-          }
+
+      xhr.onprogress = function (e) {
+        console.log(xhr.responseText)
+        console.log(JSON.parse(xhr.responseText))
+        console.log("-------------------------------------------------")
+
+        var transaction = db.transaction(['zipcodes'], //对象存储区
+          'readwrite')
+        var store = transaction.objectStore("zipcodes") //从事务中获取对象存储区
+
+
+        var lines = JSON.parse(xhr.responseText)
+        for (var i = 0; i < lines.length; i++) {
+          var fields = lines[i] // Comma-separated values
+          var record = { // This is the object we'll store
+            "zipcode": fields[0], // All properties are string
+            "city": fields[1],
+            "state": fields[2],
+            "latitude": fields[3],
+            "longitude": fields[4]
+          };
+          console.log(record)
+
+          store.put(record) //或者使用add避免覆盖
+          //IndexedDB最好的部分就对象存储区真的非常简单
+          //下面就在数据库中增肌俺一跳记录的方式
+
+          numlines++;
           status("Initalizing zipcode database:loaded:" + numlines + "records")
         }
         if (e.type == "load") {
+          console.log("end")
+
           //如果是最后的载入时间
           //就将所有数据发给数据库
           //但是刚刚处理了4w数据,可能他还在处理中
@@ -443,14 +465,20 @@
           //当查询成功了,就代表数据库已经就绪了
           //就可以吧状态条移除
           //最后调动此前传递withDB的f()函数
-          lookupCity("02134", function (s) {
-            document.body.removeChild(statusline)
-            withDB(f)
-          })
+          // lookupCity("02134", function (s) {
+          //   document.body.removeChild(statusline)
+          //   withDB(f)
+          // })
         }
       }
       xhr.onsuccess = function () {}
 
     }
   }
+
+  function delItem() {}
+
+  function get() {}
+
+  function update() {}
 }

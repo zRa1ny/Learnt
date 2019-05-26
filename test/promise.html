@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    const promise = new Promise(function (resolve) {
+      console.log("1")
+      resolve("2");
+      console.log("3")
+    });
+    promise.then((val) => {
+      console.log(val)
+    })
+    console.log("4")
+
+    function abs(fun) {
+      var self = this;
+
+      function resolve(data) {
+        self.data = data
+      }
+      fun && fun(resolve)
+      this.pipe = function (fn) {
+        fn && fn(self.data)
+      }
+
+    }
+
+    new abs(function (resolve) {
+      console.log(5)
+      resolve(6)
+    }).pipe(function (value) {
+      console.log(value)
+    })
+    console.log(7)
+  </script>
+</body>
+
+</html>
