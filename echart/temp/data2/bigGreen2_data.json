@@ -1,0 +1,244 @@
+{
+    "success": 1,
+    "data": {
+        "wrap1Data": {
+            "num1": 82978,
+            "num2": 7428,
+            "num3": 99.5,
+            "num4": 1178
+        },
+        "wrap2Data": {
+            "chart": null,
+            "list": [
+                {
+                    "name": "五水共治-治污水",
+                    "area": "浙江-江干",
+                    "stateText": "办理中",
+                    "state": "1",
+                    "happendTime": "04-26 12:45"
+                },
+                {
+                    "name": "市容环境-违法违规",
+                    "area": "湖州-长兴",
+                    "stateText": "已办结",
+                    "state": "2",
+                    "happendTime": "04-26 12:45"
+                },
+                {
+                    "name": "五水共治-治污水",
+                    "area": "浙江-江干",
+                    "stateText": "办理中",
+                    "state": "1",
+                    "happendTime": "04-26 12:45"
+                },
+                {
+                    "name": "市容环境-违法违规",
+                    "area": "浙江-江干",
+                    "stateText": "已超时",
+                    "state": "3",
+                    "happendTime": "04-26 12:45"
+                },
+                {
+                    "name": "市容环境-违法违规",
+                    "area": "浙江-江干",
+                    "stateText": "办理中",
+                    "state": "1",
+                    "happendTime": "04-26 12:45"
+                }
+            ]
+        },
+        "wrap3Data": [
+            {
+                "index": "01",
+                "text": "生活垃圾"
+            },
+            {
+                "index": "02",
+                "text": "消防安全"
+            },
+            {
+                "index": "03",
+                "text": "非法捕鱼"
+            },
+            {
+                "index": "04",
+                "text": "机动车乱停"
+            },
+            {
+                "index": "05",
+                "text": "治污水"
+            }
+        ],
+        "wrap4Data":[
+            {"name":"杭州市","num":[82,"35.6%","3.9h",17389]},
+            {"name":"宁波市","num":[63,"75.6%","9h",7389]},
+            {"name":"温州市","num":[99,"26%","4h",5389]},
+            {"name":"绍兴市","num":[17,"97%","9h",26389]},
+            {"name":"湖州市","num":[77,"77.6%","6h",4566]},
+            {"name":"嘉兴市","num":[34,"54.8%","2h",8764]},
+            {"name":"金华市","num":[52,"73%","3.9h",9738]},
+            {"name":"衢州市","num":[11,"73%","8h",12357]},
+            {"name":"台州市","num":[49,"81.8%","4.5h",9897]},
+            {"name":"丽水市","num":[28,"17.4%","7.5h",4567]},
+            {"name":"舟山市","num":[58,"47.4%","7.5h",17829]}
+        ],
+        "wrap5Data": {
+            "list":[
+                {
+                    "name":"wsgz",
+                    "text":"五水共治",
+                    "value":1257,
+                    "curYearTotal":39103,
+                    "curMonthTotal":3134,
+                    "curYearDealpercent":"87.3%",
+                    "curMonthDealPercent":"39.3",
+                    "zhzfjl":"31%"
+                },
+                {
+                    "name":"sbsh",
+                    "text":"四边三化",
+                    "value":1257,
+                    "curYearTotal":39103,
+                    "curMonthTotal":3134,
+                    "curYearDealpercent":"87.3%",
+                    "curMonthDealPercent":"39.3",
+                    "zhzfjl":"32%"
+                },
+                {
+                    "name":"srhj",
+                    "text":"市容环境",
+                    "value":1257,
+                    "curYearTotal":39103,
+                    "curMonthTotal":3134,
+                    "curYearDealpercent":"87.3%",
+                    "curMonthDealPercent":"39.3",
+                    "zhzfjl":"33%"
+                },
+                {
+                    "name":"sgyc",
+                    "text":"三改一拆",
+                    "value":1257,
+                    "curYearTotal":39103,
+                    "curMonthTotal":3134,
+                    "curYearDealpercent":"87.3%",
+                    "curMonthDealPercent":"39.3",
+                    "zhzfjl":"34%"
+                },
+                {
+                    "name":"aqsc",
+                    "text":"安全生产",
+                    "value":1257,
+                    "curYearTotal":39103,
+                    "curMonthTotal":3134,
+                    "curYearDealpercent":"87.3%",
+                    "curMonthDealPercent":"39.3",
+                    "zhzfjl":"35%"
+                },
+                {
+                    "name":"zwcw",
+                    "text":"治危拆违",
+                    "value":1257,
+                    "curYearTotal":39103,
+                    "curMonthTotal":3134,
+                    "curYearDealpercent":"87.3%",
+                    "curMonthDealPercent":"39.3",
+                    "zhzfjl":"36%"
+                }
+            ],
+            "defaultTotal":"78.9%"
+        },
+        "wrap6Data": {
+            "chart":[
+                {"date":"18-01","num":20},
+                {"date":"18-02","num":40},
+                {"date":"18-03","num":100},
+                {"date":"18-04","num":76},
+                {"date":"18-05","num":95},
+                {"date":"18-06","num":30},
+                {"date":"18-07","num":51},
+                {"date":"18-08","num":17},
+                {"date":"18-09","num":32},
+                {"date":"18-10","num":66},
+                {"date":"18-11","num":112},
+                {"date":"18-12","num":46}
+            ],
+            "event":{
+                "qxxtsjs":"93210",
+                "xzxtsjs":"12989",
+                "zclsjs":"7872"
+            }
+        },
+        "wrap7Data": [
+            {
+            "name": "城管",
+            "add": 31,
+            "done": 43,
+            "bjl": 21
+        }, {
+            "name": "公安",
+            "add": 133,
+            "done": 24,
+            "bjl": 2
+        }, {
+            "name": "国土",
+            "add": 374,
+            "done": 62,
+            "bjl": 13
+        }, {
+            "name": "规划",
+            "add": 313,
+            "done": 11,
+            "bjl": 0.89
+        }, {
+            "name": "住建",
+            "add": 38,
+            "done": 10,
+            "bjl": 13.1
+        }, {
+            "name": "拆迁办",
+            "add": 29,
+            "done": 3,
+            "bjl": 0
+        }, {
+            "name": "市场监管",
+            "add": 15,
+            "done": 3,
+            "bjl": 33.1
+        }],
+        "wrap8Data": [
+            {
+            "name": "杭州",
+            "value": 57
+        }, {
+            "name": "宁波",
+            "value": 69
+        }, {
+            "name": "温州",
+            "value": 62
+        }, {
+            "name": "绍兴",
+            "value": 29
+        }, {
+            "name": "湖州",
+            "value": 60
+        }, {
+            "name": "嘉兴",
+            "value": 33
+        }, {
+            "name": "金华",
+            "value": 71
+        }, {
+            "name": "衢州",
+            "value": 22
+        }, {
+            "name": "台州",
+            "value": 45
+        }, {
+            "name": "丽水",
+            "value": 22
+        }, {
+            "name": "舟山",
+            "value": 45
+        }]
+    }
+}

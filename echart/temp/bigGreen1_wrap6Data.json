@@ -1,0 +1,9 @@
+{
+    "success": 1,
+    "data": [
+        {"title":"消防安全事件","num":3251,"percent":"12.4%","state":1},
+        {"title":"公安管理事件","num":84301,"percent":"23.7%","state":0},
+        {"title":"消防安全事件","num":2463,"percent":"13.2%","state":1},
+        {"title":"消防安全事件","num":7632,"percent":"19.5%","state":0}
+    ]
+}

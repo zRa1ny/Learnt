@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body {
+      background-color: aliceblue;
+    }
+
+    div {
+      width: 400px;
+      height: 400px;
+      float: left;
+      margin: 10px;
+      border: 1px solid #d7dae2;
+      background-color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="echart1"></div>
+  <div id="echart2"></div>
+  <div id="echart3"></div>
+  <div id="echart4"></div>
+  <div id="echart5"></div>
+  <div id="echart6"></div>
+  <div id="echart7"></div>
+  <div id="echart8"></div>
+  <div id="echart9"></div>
+
+  <script src="js/echarts-4.js"></script>
+  <script>
+    let echart1 = echarts.init(document.getElementById("echart1"));
+    echart1.showLoading({
+      text: 'loading',
+      color: '#c23531',
+      textColor: '#000',
+      maskColor: 'rgba(255, 255, 255, 0.8)',
+      zlevel: 0
+    })
+    let opts1 = {
+      title: {
+        id: "title1",
+        show: true,
+        text: "标题1",
+        link: "#",
+        target: "blank",
+        textStyle: {
+          color: "red"
+        },
+        subtext: "副标题1",
+        textAlign: "left",
+        textVerticalAlign: "top",
+        triggerEvent: false,
+        padding: 10,
+        itemGap: 5
+      },
+      legend: {
+        type: "plain",
+        id: "",
+        formatter: 'Legend {name}',
+        data: ['折线图', '预算分配（Allocated Budget）', '实际开销（Actual Spending）']
+      },
+      grid: [{
+        id: "grid1",
+        show: true,
+        // containLabel: true,
+        tooltip: {
+          show: true,
+          trigger: "aixs", //aixs none
+        }
+      }],
+      xAxis: {
+        // show: false
+        // type: "category", //value cetegory time log
+        // name: "x",
+        // nameLocation: "end", //start middle
+        // nameTextStyle: {
+        //   color: "red",
+        // },
+        // // inverse: true
+        // boundaryGap: false, // ['20%', '30%']
+        // // min: function (value) {
+        // //   return value.min - 20
+        // // }
+        // // max：
+        // // scale: true
+        // solitNumber: 6,
+        // minInterval: 1,
+        // // maxInterval:3600*24*100
+        // axisLine: {
+        //   onZero: true,
+        //   // onZeroAxisIndex
+        //   symbol: ["none", "arrow"], //"arrow" 两边都显示
+        //   // lineStyle: {
+        //   //   color: '#fff'
+        //   // }
+        // },
+        // axisTick: {
+        //   alignWithLabel: false,
+        //   interval: 1,
+        //   inside: true,
+        //   length: 6,
+        //   lineStyle: {}
+        // },
+        // splitLine: {
+
+        // },
+        // splitArea: {},
+        // axisPointer: {
+        //   type: "line", //shadow
+        //   snap: true,
+        //   label: {
+        //     formatter: "{value}"
+        //   }
+        // },
+        data: [{
+          value: '周一',
+          // 突出周一
+          textStyle: {
+            fontSize: 20,
+            color: 'red'
+          }
+        }, '周二', '周三', '周四', '周五', '周六', '周日']
+      },
+      yAxis: {
+        // type: "value"
+      },
+      polar: {
+        center: ["50%", "50%"],
+        radius: [10, 40],
+        // tooltip: { }
+      },
+      radiusAxis: {},
+      angleAxis: {
+        startAngle: 120,
+      },
+      radar: {
+        center: ["50%", "50%"],
+        startAngle: 180,
+        indicator: [{
+            name: '销售（sales）',
+            max: 6500
+          },
+          {
+            name: '管理（Administration）',
+            max: 16000
+          },
+          {
+            name: '信息技术（Information Techology）',
+            max: 30000
+          },
+          {
+            name: '客服（Customer Support）',
+            max: 38000
+          },
+          {
+            name: '研发（Development）',
+            max: 52000
+          },
+          {
+            name: '市场（Marketing）',
+            max: 25000
+          }
+        ]
+      },
+      dataZoom: [{
+        type: 'inside',
+        disabled: true,
+        xAxisIndex: 0,
+        yAxisIndex: 0
+      }],
+      visualMap: [{
+        type: "continuous",
+        min: 800,
+        manx: 1400,
+        range: [0, 100],
+        // calculable: true,
+        // dimension: 0,
+        inRange: [{
+          color: ["#fff", "red", "blue", "#000"],
+          symbolSize: [30, 100],
+          symbol: ['circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow']
+        }],
+        seriesIndex: 0
+      }, {
+        type: 'piecewise',
+        seriesIndex: 1,
+        // categories 定义了 visualMap-piecewise 组件显示出来的项。
+        categories: [4300],
+        inRange: {
+          opacity: [0, 1]
+          // visual value 可以配成 Object：
+          // color: {
+          //   'Warden': 'red',
+          //   'Demon Hunter': 'black',
+          //   '': 'green' // 空字串，表示除了'Warden'、'Demon Hunter'外，都对应到 'green'。
+          // }
+          // visual value 也可以只配一个单值，表示所有都映射到一个值，如：
+          // color: 'green',
+          // // visual value 也可以配成数组，这个数组须和 categories 数组等长，
+          // // 每个数组项和 categories 数组项一一对应：
+          // color: ['red', 'black', 'green', 'yellow', 'white']
+        }
+      }],
+      series: [{
+        name: "折线图",
+        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        type: 'line',
+        smooth: true,
+        tooltip: {
+          trigger: "axis"
+        }
+      }, {
+        name: '预算 vs 开销（Budget vs spending）',
+        type: 'radar',
+        // areaStyle: {normal: {}},
+        data: [{
+            value: [4300, 10000, 28000, 35000, 50000, 19000],
+            name: '预算分配（Allocated Budget）'
+          },
+          {
+            value: [5000, 14000, 28000, 31000, 42000, 21000],
+            name: '实际开销（Actual Spending）'
+          }
+        ]
+      }]
+    }
+    echart1.setOption(opts1)
+    echart1.hideLoading()
+  </script>
+  <script>
+    let echart2 = echarts.init(document.getElementById("echart2"))
+    let opts2 = {
+      title: {
+        text: 'Beijing AQI'
+      },
+      tooltip: {
+        trigger: 'axis'
+      },
+      xAxis: {
+        data: [4300, 10000, 28000, 35000, 50000, 19000]
+      },
+      yAxis: {
+        // splitLine: {
+        //   show: false
+        // }
+      },
+      toolbox: {
+        left: 'center',
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          restore: {},
+          saveAsImage: {}
+        }
+      },
+      dataZoom: [{
+        startValue: '2014-06-01'
+      }, {
+        type: 'inside'
+      }],
+      visualMap: {
+        top: 10,
+        right: 10,
+        pieces: [{
+          gt: 0,
+          lte: 50,
+          color: '#096'
+        }, {
+          gt: 50,
+          lte: 100,
+          color: '#ffde33'
+        }, {
+          gt: 100,
+          lte: 150,
+          color: '#ff9933'
+        }, {
+          gt: 150,
+          lte: 200,
+          color: '#cc0033'
+        }, {
+          gt: 200,
+          lte: 300,
+          color: '#660099'
+        }, {
+          gt: 300,
+          color: '#7e0023'
+        }],
+        outOfRange: {
+          color: '#999'
+        }
+      },
+      series: {
+        name: 'Beijing AQI',
+        type: 'line',
+        data: [4300, 10000, 28000, 35000, 50000, 19000],
+        areaStyle: {},
+        symbol: "diamond",
+        markLine: {
+          silent: true,
+          data: [{
+            yAxis: 50
+          }, {
+            yAxis: 100
+          }, {
+            yAxis: 150
+          }, {
+            yAxis: 200
+          }, {
+            yAxis: 300
+          }]
+        }
+      }
+    }
+
+    echart2.setOption(opts2)
+  </script>
+  <script>
+    var echart3 = echarts.init(document.getElementById("echart3"))
+    var opts3 = {
+      xAxis: {
+        data: [1, 2, 3, 4, 5, 6]
+      },
+      tooltip: {
+        trigger: 'axis'
+      },
+      yAxis: {
+        data: [1, 2, 3, 4, 5, 6]
+      },
+      series: [{
+        type: 'bar',
+        data: [4300, 10000, 28000, 35000, 50000, 19000],
+      }, {
+        type: 'bar',
+        data: [4300, 10000, 28000, 35000, 50000, 19000],
+      }]
+    }
+    echart3.setOption(opts3)
+  </script>
+  <script>
+    var echart4 = echarts.init(document.getElementById("echart4"))
+    var opts4 = {
+      tooltip: {
+        trigger: "item"
+      },
+      series: [{
+        type: 'pie',
+        // radius: '50%',
+        radius: ['50%', '70%'],
+        // roseType: 'radius',
+        data: [4300, 10000, 28000, 35000, 50000, 19000],
+        avoidLabelOverlap: false,
+        label: {
+          normal: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            formatter: "{a}",
+            show: true,
+            textStyle: {
+              fontSize: '30',
+              fontWeight: 'bold'
+            }
+          }
+        },
+      }]
+    }
+    echart4.setOption(opts4)
+  </script>
+  <script>
+    var echart5 = echarts.init(document.getElementById("echart5"))
+    var opts3 = {
+      xAxis: {
+        data: [1, 2, 3, 4, 5, 6]
+      },
+      tooltip: {
+        trigger: 'axis',
+        formatter: "{a}={b}={c}",
+        textStyle: {},
+        extraCssText: 'height:60px;'
+      },
+      yAxis: {},
+      series: [{
+        type: "scatter", //effectScatter 
+        symbolSize(data) {
+          return data[2]
+        },
+        symbol: "circle", //'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none'
+        data: [
+          [0, 0, 10],
+          [2, 2, 50],
+          [5, 5, 100]
+        ]
+      }]
+    }
+    echart5.setOption(opts3)
+  </script>
+  <script>
+    var echart6 = echarts.init(document.getElementById("echart6"))
+    var planePath =
+      'path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z';
+    var opts6 = {
+      xAxis: {
+        data: [1, 2, 3, 4, 5, 6]
+      },
+      tooltip: {
+
+      },
+      yAxis: {
+        data: [1, 2, 3, 4, 5, 6]
+      },
+      series: [{
+        type: "lines",
+        coordinateSystem: "cartesian2d",
+        effect: {
+          show: true,
+          period: 4,
+          symbol: planePath,
+          symbolSize: 20,
+        },
+        data: [{
+          coords: [
+            [0, 0],
+            [5, 5]
+          ],
+          lineStyle: {
+            curveness: 0.5
+          }
+        }]
+      }, {
+        type: "lines",
+        coordinateSystem: "cartesian2d",
+        effect: {
+          show: true,
+          period: 4,
+          symbol: planePath,
+          symbolSize: 20,
+        },
+        polyline: true,
+        data: [{
+          coords: [
+            [0, 0],
+            [1, 0],
+            [1, 1],
+            [2, 1],
+            [2, 2],
+            [3, 2],
+            [3, 3],
+            [4, 3],
+            [4, 4],
+            [5, 4],
+            [5, 5]
+          ],
+          lineStyle: {}
+        }]
+      }]
+    }
+
+    echart6.setOption(opts6)
+  </script>
+</body>
+
+</html>

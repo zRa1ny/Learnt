@@ -1,0 +1,15 @@
+{
+    "success": 1,
+    "data": [
+            {"word":"矛盾纠纷", "level":1},
+            {"word":"市政公共", "level":3},
+            {"word":"交通安全", "level":1},
+            {"word":"四边三化", "level":2},
+            {"word":"民生服务", "level":2},
+            {"word":"消防安全", "level":4},
+            {"word":"五水共治", "level":2},
+            {"word":"市容环境", "level":2},
+            {"word":"民政", "level":2},
+            {"word":"食品安全", "level":1}
+        ]
+}

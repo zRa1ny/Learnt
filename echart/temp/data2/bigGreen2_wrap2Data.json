@@ -1,0 +1,43 @@
+{
+    "success":1,
+    "data":{
+        "chart": null,
+        "list": [
+            {
+                "name": "五水共治-治污水",
+                "area": "浙江-江干",
+                "stateText": "办理中",
+                "state": "1",
+                "happendTime": "04-26 12:45"
+            },
+            {
+                "name": "市容环境-违法违规",
+                "area": "湖州-长兴",
+                "stateText": "已办结",
+                "state": "2",
+                "happendTime": "04-26 12:45"
+            },
+            {
+                "name": "五水共治-治污水",
+                "area": "浙江-江干",
+                "stateText": "办理中",
+                "state": "1",
+                "happendTime": "04-26 12:45"
+            },
+            {
+                "name": "市容环境-违法违规",
+                "area": "浙江-江干",
+                "stateText": "已超时",
+                "state": "3",
+                "happendTime": "04-26 12:45"
+            },
+            {
+                "name": "市容环境-违法违规",
+                "area": "浙江-江干",
+                "stateText": "办理中",
+                "state": "1",
+                "happendTime": "04-26 12:45"
+            }
+        ]
+    }
+}

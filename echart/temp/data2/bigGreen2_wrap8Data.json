@@ -1,0 +1,38 @@
+{
+    "success":1,
+    "data":[
+        {
+        "name": "杭州",
+        "value": 57
+    }, {
+        "name": "宁波",
+        "value": 69
+    }, {
+        "name": "温州",
+        "value": 62
+    }, {
+        "name": "绍兴",
+        "value": 29
+    }, {
+        "name": "湖州",
+        "value": 60
+    }, {
+        "name": "嘉兴",
+        "value": 33
+    }, {
+        "name": "金华",
+        "value": 71
+    }, {
+        "name": "衢州",
+        "value": 22
+    }, {
+        "name": "台州",
+        "value": 45
+    }, {
+        "name": "丽水",
+        "value": 22
+    }, {
+        "name": "舟山",
+        "value": 45
+    }]
+}
