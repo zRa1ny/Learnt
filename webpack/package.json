@@ -1,0 +1,15 @@
+{
+  "name": "webpack",
+  "version": "1.0.0",
+  "description": "learn webpack ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.34.0",
+    "webpack-cli": "^3.3.4"
+  }
+}

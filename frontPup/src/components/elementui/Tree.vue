@@ -1,6 +1,12 @@
 <template>
   <div class="tree">
     <el-row>
+      <p>{{input}}</p>
+      <v-input :name="input"
+               v-model="input">
+      </v-input>
+    </el-row>
+    <el-row>
       <el-card>
         <div slot="header">普通树模型</div>
         <el-tree :data="data"
@@ -29,9 +35,12 @@
 </template>
 
 <script>
+import VInput from './testVModel.vue'
 export default {
+  components: { VInput },
   data () {
     return {
+      input: 'inputtest',
       data: [{
         id: 1,
         label: '一级 2',
