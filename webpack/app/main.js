@@ -1,6 +1,5 @@
 import _ from "lodash";
-const greeter = require('./Greeter.js');
-
-console.log(_)
-document.querySelector("#root").appendChild(greeter())
 import './style.css'
+import Data from './data.xml';
+const greeter = require('./Greeter.js');
+document.querySelector("#root").appendChild(greeter(Data))
