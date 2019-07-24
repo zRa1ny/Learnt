@@ -1,52 +1,66 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin'); //默认添加输出路径到html
-const {
-  CleanWebpackPlugin
-} = require('clean-webpack-plugin'); //清理文件夹
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
+
 module.exports = {
-  // entry: './app/main.js',
   entry: {
-    app: './app/index.js',
-    print: './app/print.js'
+    app: './app/main.js',
+    // main: './app/main.js'
+    vendor: [
+      'lodash'
+    ]
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      title: "Output Managemnt"
-    }),
-    new CleanWebpackPlugin()
-  ],
-  devtool: 'inline-source-map', //配置source-map
+  devtool: 'inline-source-map',
   devServer: {
-    contentBase: "./public"
+    contentBase: './public',
+    hot: true
   },
-  output: {
-    // filename: 'bundle.js',
-    filename: '[name].bundle.js',
-    path: path.resolve('./public')
-  },
-  mode: 'development', // 设置mode
   module: {
     rules: [{
       test: /\.css$/,
-      use: [
-        'style-loader',
-        'css-loader'
-      ]
-    }, {
-      test: /\.(png|svg|jpg|gif)$/,
-      use: [
-        'file-loader'
-      ]
-    }, {
-      test: /\.(woff|woff2|eot|ttf|otf)$/,
-      use: [
-        "file-loader"
-      ]
-    }, {
-      test: /\.xml$/,
-      use: [
-        "xml-loader"
-      ]
+      use: ['style-loader', 'css-loader']
     }]
+  },
+  plugins: [
+    new CleanWebpackPlugin(['dist']),
+    new HtmlWebpackPlugin({
+      title: 'Caching'
+    }),
+    new webpack.NamedModulesPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'manifest' // 指定公共 bundle 的名称。
+    // })
+  ],
+  output: {
+    filename: '[name].[chunkhash].js',
+    // chunkFilename: '[name].[hash].bundle.js',
+    path: path.resolve(__dirname, '../public')
+  },
+  mode: "development",
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          name: "commons",
+          chunks: "initial",
+          minChunks: 2
+        },
+        vendor: {
+          name: "vendor",
+          chunks: "initial",
+          minChunks: 2
+        },
+        manifest: {
+          name: "manifest",
+          chunks: "initial",
+          minChunks: 2
+        }
+      }
+    }
+    // providedExports: true,
+    // usedExports: false, //实际控制是否删除无用模块
+    // sideEffects: false, // 是否识别第三方库 package.json 中的 sideEffects 以剔除无用的模块。生产模式下默认开启，其他模式不开启。
   }
 };
