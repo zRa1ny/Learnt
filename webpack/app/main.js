@@ -39,4 +39,4 @@
 
 
 // document.body.appendChild(component())
-console.log("xxx")
+// console.log("xax")
