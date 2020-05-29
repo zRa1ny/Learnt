@@ -11,6 +11,9 @@
 <body>
     <div id="app">
         {{title}}
+        {{num}}
+        <button @click="setData('num',2)">num</button>
+        <test-event @test="catchEvent" ref="test"></test-event>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script>
@@ -22,8 +25,19 @@
 
         new Vue({
             el: "#app",
+            components: {
+                testEvent: {
+                    template: "<button @click='$emit(\"test\")'>按钮</button>",
+                    mounted() {
+                        this.$on('test', () => { console.log('testEvent on') })
+                        this.$emit('test')
+                    }
+
+                }
+            },
             data: {
-                title: "vue 生命周期"
+                title: "vue 生命周期",
+                num:1,
             },
             watch: {
                 title() {
@@ -36,14 +50,34 @@
                 }
             },
             methods: {
+                catchEvent() {
+                    console.log('@test')
+                },
                 setTitle() {
                     this.title = "vue ——  set Title"
+                },
+                setData(key,value){
+                    this[key]=value
+                    setTimeout(()=>{
+                        console.log('setTimeOut 0')
+                    },0)
+                    this.$nextTick(()=>{
+                        console.log('nextTick')
+                    })
+
+                    console.log('直接console.log')
+                    // this.$forceUpdate()
                 }
             },
             beforeCreate: function () { console.log('---- ---- Before Create'); },
             created: function () { console.log('---- ---- Created'); },
-            beforeMount: function () { console.log('---- ---- Before Mount'); },
-            mounted: function () { console.log('---- ---- Mounted'); },
+            beforeMount: function () {
+                console.log('---- ---- Before Mount');
+            },
+            mounted: function () {
+                console.log('---- ---- Mounted');
+                this.$refs['test'].$on('test', () => { console.log('vm use ref on') })
+            },
             beforeUpdate: function () { console.log('---- ---- Before Update'); },
             updated: function () { console.log('---- ---- Updated'); },
             beforeDestroy: function () { console.log('---- ---- Before Destroy'); },

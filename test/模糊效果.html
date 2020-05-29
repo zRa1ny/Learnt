@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .blur {
+            filter: url(blur.svg#blur);
+            /* IE10, IE11 */
+
+            -webkit-filter: blur(10px);
+            /* Chrome, Opera */
+            -moz-filter: blur(10px);
+            -ms-filter: blur(10px);
+            filter: blur(10px);
+
+            filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=10, MakeShadow=false);
+            /* IE6~IE9 */
+            background-image: url(blur.svg);
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://wow.techbrood.com/libs/jquery/jquery-1.11.1.min.js"></script>
+    <div class="wrapper">
+        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590669749280&di=3b5b7c566afca1c0178f5cff4d81ff6d&imgtype=0&src=http%3A%2F%2Fimage.biaobaiju.com%2Fuploads%2F20190703%2F18%2F1562150599-kigxcIHfst.jpeg" />
+        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590669749280&di=3b5b7c566afca1c0178f5cff4d81ff6d&imgtype=0&src=http%3A%2F%2Fimage.biaobaiju.com%2Fuploads%2F20190703%2F18%2F1562150599-kigxcIHfst.jpeg" class="blur" />
+    </div>
+</body>
+
+</html>
