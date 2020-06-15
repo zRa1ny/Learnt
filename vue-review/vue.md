@@ -85,10 +85,8 @@ export function initGlobalAPI (Vue: GlobalAPI) {
 这部分主要是给Vue构造函数上增加全局静态方法和属性。通过`Object.getOwnPropertyNames(Vue)` 可以查看。
 >  `Vue.set( target, key, value )`   修改对象或者数组的指并触发数据监测。(跟this.$set一样) 
 
-> `Vue.delete(target,key/index)`  删除对象的 property。如果对象是响应式的，确保删除能触发更新视图。这个方法主要用于避开 Vue 不能检测到 property 被删除的限制，但是你应该很少会使用它。(跟this.$delete一样).  [§] (https://www.runoob.com))
-```
+> `Vue.delete(target,key/index)`  删除对象的 property。如果对象是响应式的，确保删除能触发更新视图。这个方法主要用于避开 Vue 不能检测到 property 被删除的限制，但是你应该很少会使用它。(跟this.$delete一样).   [§](./demos/Vue.delete&&set&&nextTick.html 'Vue.delete && set && nextTick.html')
 
-```
 
 > `Vue.nextTick` 在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。
 

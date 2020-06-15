@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.delete && set && nextTick</title>
+</head>
+
+<body>
+    <div id="app">
+        <h3>测试删除</h3>
+        <div>{{testDel}}</div>
+        <div>testDel.a：{{testDel.a}} <button @click="_delete(1)">普通删除 delete</button></div>
+        <div>testDel.b：{{testDel.b}} <button @click="_delete(2)">Vue删除 Vue.delete</button></div>
+        <div>testDel.c：{{testDel.c}} </div>
+        <h3>测试设置</h3>
+        <div>{{testSet}}</div>
+        <ul>
+            <li v-for="(value,index) in testSet.arr" :key="index">
+                <span>{{value}}</span>
+                <!-- <a v-for="(v,i) in value" v-if="value&&value.length>0" href="#">{{v}}<br></a> -->
+            </li>
+            <li><button @click="_add_arr()"> 增加</button></li>
+            <li><button @click="_del_arr()"> 删除</button></li>
+        </ul>
+
+        <div>testSet.obj.a : {{testSet.obj.a}}</div>
+        <div>testSet.obj.b : {{testSet.obj.b}}</div>
+        <div>testSet.obj.c : {{testSet.obj.c}}</div>
+        <div>testSet.obj.A : {{testSet.obj.A}}</div>
+        <div>testSet.obj.arr : <span v-for="(value,index) in testSet.obj.arr"
+                v-if="testSet.obj.arr&&testSet.obj.arr.length>0">{{value}} &nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+        <div><button @click="_add_obj()"> 改变</button></div>
+        <br>
+
+        <fieldset>
+            <legend>总结</legend>
+            <p>1.数组：数组无法通过"下标"进行增删改,必须通过js操作数组，才能触发双向绑定的数据监测。</p>
+            <p>2.对象：对象可以通过 “.”的方式进行修改，触发双向绑定的数据监测。</p>
+            <p>3.都能通过Vue.set 和 Vue.delete 进行删和增&改</p>
+            <p>4.数组和对象嵌套：参照1，2的规则，如果对进行嵌套这个动作（即给数组或者对象增加一个属性，指向一个数组或者对象）可以触发双向绑定，那么增加的这个属性，可以继续按照1，2的规则进行响应。否则
+                某一个环节不能进行响应，后续基于这个属性的操作也不能进行响应。</p>
+            <p>5.当一个值得变化，引起视图变化的时候，如这之前有使用不规范的方式，使得值改变了，但是未改变试图这种情况，会随着这一次数据的正确改变导致的视图改变让之前这些没有改动的值也映射到页面上，但是该值乃不会与视图绑定。<button
+                    @click="test">test</button></p>
+            <p>6. nextTick会在视图改变完成之后调用，先于异步。（promise（nextTick）属于微任务，会在当前宏任务执行之后，下一次宏任务执行之前执行，当前的异步任务会被加入宏任务队列供下次时间循环调用）</p>
+        </fieldset>
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                testDel: {
+                    a: "a",
+                    b: "b"
+                },
+                testSet: {
+                    arr: ["1", "2", ["3-1", "3-2"]],
+                    obj: {
+                        a: "a",
+                        arr: null
+                    }
+                }
+            },
+            methods: {
+                _delete(type) {
+                    if (type === 1) {
+                        delete this.testDel.a;
+                    }
+
+                    if (type === 2) {
+                        delete Vue.delete(this.testDel, 'b');
+                    }
+                    this.testDel.c = "c";
+                    console.log(this.testDel)
+                    // 绑定在这个属性上所有子属性属性会刷新
+                },
+                _add_arr() {
+                    // this.testSet.arr.push(1);
+                    // this.testSet.arr.unshift(1);
+
+                    // this.testSet.arr[2] ='set 2 == self';  // 修改已有数据 数据更新 但是双向绑定不更新
+                    // Vue.set(this.testSet.arr,2,'set 3 == self') 
+
+                    // this.testSet.arr[3] ='set 3 == self';  // 新增数据 数据更新 但是双向绑定不更新
+                    // Vue.set(this.testSet.arr,3,'set 3 == self') 
+
+                    // this.testSet.arr = ["整体替换1", "整体替换2", "整体替换3", ["a", "b"]];
+                    // this.testSet.arr[3].push("x")
+                    // this.testSet.arr.splice(1,1)
+                    // this.testSet.arr.push('整体替换后push')
+                    // this.testSet.arr[2].push('xxx')
+                    console.log(this.testSet.arr)
+                },
+                _del_arr() {
+                    // this.testSet.arr.pop(1);
+                    // this.testSet.arr.shift()
+
+                    // Vue.delete(this.testSet.arr,1)
+                },
+                _add_obj() {
+                    // 修改
+                    // this.testSet.obj.a="修改之后的a";
+                    // this.testSet.obj.a={_a:"把a改成对象"};
+                    // this.testSet.obj.a._a="把a的内部_a在改变一下";
+
+                    //增加一个b
+
+                    // this.testSet.obj.b="增加一个b"; // 失败
+                    // Vue.set(this.testSet.obj,'b',"新增b")
+
+                    // 增加一个数组
+                    // Vue.set(this.testSet.obj,'c',[1,2,3]);
+                    // this.testSet.obj.c.push('aa')
+
+                    // 整体覆盖
+                    // this.testSet.obj = { A: "A", B: "B" }
+
+                    // this.testSet.obj.arr=[1,2]
+
+
+                    console.log(this.testSet.obj)
+
+                },
+                test() {
+                    this.testDel.c = "我 test 增加的 c （不响应）";
+                    this.testSet.arr[4] = "我 test 增加的  （不响应）";
+                    this.testDel.a = "我 test 改变的 a （响应）";
+                    setTimeout(() => {
+                        console.log('setTimeout')
+                        this.testDel.c = "我 test  setTimeout 增加的 c ";
+                        this.testSet.arr[4] = "我 test setTimeout 增加的  ";
+                    },0)
+                    this.$nextTick(() => {
+                        console.log('nextTick')
+                        this.testDel.c = "我 test  nextTick 增加的 c ";
+                        this.testSet.arr[4] = "我 test nextTick 增加的  ";
+                    })
+                    // 数据全部改变之后
+                    // 视图更新
+                    // 触发nextTick
+                    // 异步
+
+                },
+            },
+            beforeUpdate() {
+                console.log("beaforeUpdate");
+                this.testDel.c = "我   beaforeUpdate 增加的 c ";
+                this.testSet.arr[4] = "我  beaforeUpdate 增加的 ";
+            },
+            updated: function () {
+                console.log('Updated');
+                this.testDel.c = "我   Updated 增加的 c ";
+                this.testSet.arr[4] = "我  Updated 增加的  ";
+            },
+        })
+
+
+    </script>
+</body>
+
+</html>
