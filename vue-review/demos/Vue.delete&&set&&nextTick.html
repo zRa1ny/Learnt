@@ -6,43 +6,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Vue.delete && set && nextTick</title>
+    <style>
+        body{
+           
+        }
+        div{
+            margin: 10px 0;
+        }
+
+        .red{
+            color: red;
+        }
+        .green{
+            color: green;
+        }
+    </style>
 </head>
 
 <body>
     <div id="app">
         <h3>测试删除</h3>
         <div>{{testDel}}</div>
-        <div>testDel.a：{{testDel.a}} <button @click="_delete(1)">普通删除 delete</button></div>
-        <div>testDel.b：{{testDel.b}} <button @click="_delete(2)">Vue删除 Vue.delete</button></div>
-        <div>testDel.c：{{testDel.c}} </div>
+        <div>对象：
+            <button @click="obj_delete(1)">delete this.testDel.obj.a</button> <button @click="obj_delete(2)">Vue.delete(this.testDel.obj, 'b')</button>
+        </div>
+        <div>数组：
+            <button @click="arr_delete(1)">delete this.testDel.arr[0]</button>
+            <button @click="arr_delete(2)">Vue.delete(this.testDel.arr, 1)</button>
+        </div>
+        <hr>
         <h3>测试修改</h3>
         <div>{{testSet}}</div>
-        <br>
-        <div>数组：{{testSet.arr}}</div>
-        <ul>
-            <li><button @click="_add_arr()"> 增加</button></li>
-            <li><button @click="_del_arr()"> 删除</button></li>
-        </ul>
+        <div>
+            <p>数组：{{testSet.arr}}</p>
+            <div class="green">
+                可以实现vue双向绑定数据变化的数组操作：
+            </div>
+            <div>
+             直接改变的原数组：
+             <button @click="arr_control('push')">push</button>
+             <button @click="arr_control('pop')">pop</button>
+             <button @click="arr_control('unshift')">unshift</button>
+             <button @click="arr_control('shift')">shift</button>
+             <button @click="arr_control('splice')">splice</button>
+             <button @click="arr_control('sort')">sort</button>
+             <button @click="arr_control('reverse')">reverse</button>
+            </div>
+            <div>
+                需要重新赋值： filter(), concat() 和 slice()。
+                <div><button @click="testSet.arr=[100,200]">testSet.arr=[100,200]</button></div>
+                可以直接用在模板语法中。
+                <div>testSet.arr.filter(v=>v>2)===》{{testSet.arr.filter(v=>v>2)}}</div>
+                <div>testSet.arr.concat(['concat'])===》{{testSet.arr.concat(['concat'])}}</div>
+                <div>testSet.arr.slice(1,3)===》{{testSet.arr.slice(1,3)}}</div>
+            </div>
+            <div class="red">
+                无法引起vue双向绑定数据变化的数组操作：
+            </div>
+            <div @click.stop="consolelog(testSet.arr)">
+              <button @click="testSet.arr[0]='使用=设置的值'">testSet.arr[0]='使用=设置的值'</button><br><br>
+              <button @click="testSet.arr.length=0">testSet.arr.length=0</button><br>
+            </div>
 
-        <div>testSet.obj.a : {{testSet.obj.a}}</div>
-        <div>testSet.obj.b : {{testSet.obj.b}}</div>
-        <div>testSet.obj.c : {{testSet.obj.c}}</div>
-        <div>testSet.obj.A : {{testSet.obj.A}}</div>
-        <div>testSet.obj.arr : <span v-for="(value,index) in testSet.obj.arr"
-                v-if="testSet.obj.arr&&testSet.obj.arr.length>0">{{value}} &nbsp;&nbsp;&nbsp;&nbsp;</span></div>
-        <div><button @click="_add_obj()"> 改变</button></div>
-        <br>
+            <div class="green">Vue 提供的方法</div>
+            <div>
+                <button @click="_set_arr()">Vue.set(this.testSet.arr,2,'set 3 == self') </button>
+            </div>
+        </div>
+        <div>
+            <p>对象：{{testSet.obj}}</p>
+            <div @click.stop="consolelog(testSet.obj)">
+                <button @click="testSet.obj.a= 'b' ">改变已有属性：testSet.obj.a='b'</button>
+                <button @click="testSet.obj.A= 'A' ">增加属性：testSet.obj.A='A'</button>
+                <br>
+                <br>
+                <button @click="_add_obj">Vue方法增加属性：Vue.set(this.testSet.obj,'A',[1,2,3])</button>
+                <button @click="testSet.obj.A.push('测试')">测试Vue.set增加的数组是否响应变化：testSet.obj.A.push('测试')</button>
+            </div>
+        </div>
+         <hr>
+         <div>
+             <p>nextTick {{test}} </p>
+             <p></p>
+             
+             
+         </div>
 
         <fieldset>
             <legend>总结</legend>
             <p>1.数组：数组无法通过"下标"进行增删改,必须通过js操作数组，才能触发双向绑定的数据监测。</p>
-            <p>2.对象：对象可以通过 “.”的方式进行修改，触发双向绑定的数据监测。</p>
+            <p>2.对象：对象可以通过 “.”的方式进行修改，触发双向绑定的数据监测;无法通过“.”的方式进行增加。</p>
             <p>3.都能通过Vue.set 和 Vue.delete 进行删和增&改</p>
             <p>4.数组和对象嵌套：参照1，2的规则，如果对进行嵌套这个动作（即给数组或者对象增加一个属性，指向一个数组或者对象）可以触发双向绑定，那么增加的这个属性，可以继续按照1，2的规则进行响应。否则
                 某一个环节不能进行响应，后续基于这个属性的操作也不能进行响应。</p>
-            <p>5.当一个值得变化，引起视图变化的时候，如这之前有使用不规范的方式，使得值改变了，但是未改变试图这种情况，会随着这一次数据的正确改变导致的视图改变让之前这些没有改动的值也映射到页面上，但是该值乃不会与视图绑定。<button
-                    @click="test">test</button></p>
-            <p>6. nextTick会在视图改变完成之后调用，先于异步。（promise（nextTick）属于微任务，会在当前宏任务执行之后，下一次宏任务执行之前执行，当前的异步任务会被加入宏任务队列供下次时间循环调用）</p>
+            <p>5.当一个值得变化，引起视图变化的时候，如这之前有使用不规范的方式，使得值改变了，但是未改变试图这种情况，会随着这一次数据的正确改变导致的视图改变让之前这些没有改动的值也映射到页面上，但是该值乃不会与视图绑定。<button  @click="validation1">验证</button>
+            <p>6. 在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。（改变数据=》 开启一个队列，收集这次事件循环中的所有数据变化 =》更新dom =》nextTick）（注意nextTick 回调有可能是在当前的Tick微任务执行阶段执行，也可能是在下一个Tick执行，主要取决于nextTick函数到底是使用Promise/MutationObserver还是setTimeout）<button  @click="validation2">验证</button></p>
         </fieldset>
 
 
@@ -53,36 +111,68 @@
             el: "#app",
             data: {
                 testDel: {
+                   obj:{
                     a: "a",
                     b: "b"
+                   },
+                   arr:["a","b"]
                 },
                 testSet: {
-                    arr: ["1", "2", ["3-1", "3-2"]],
+                    arr: ["1", "2", "4","3",["3-1", "3-2"]],
                     obj: {
-                        a: "a",
-                        arr: null
+                        a: "a"
                     }
+                },
+                test:{
+                    normal:"normal",
+                    nextTick:"nextTick",
+                    setTimeout:"setTimeout",
+                    arr:[]
+
                 }
             },
             methods: {
-                _delete(type) {
+                consolelog(data){
+                    console.log(data)
+                },
+                obj_delete(type) {
                     if (type === 1) {
-                        delete this.testDel.a;
+                        delete this.testDel.obj.a;
                     }
 
                     if (type === 2) {
-                        delete Vue.delete(this.testDel, 'b');
+                         Vue.delete(this.testDel.obj, 'b');
                     }
-                    this.testDel.c = "c";
-                    console.log(this.testDel)
-                    // 绑定在这个属性上所有子属性属性会刷新
+                    console.log("this.testDel.obj",this.testDel.obj)
                 },
-                _add_arr() {
+                arr_delete(type) {
+                    if (type === 1) {
+                        delete this.testDel.arr[0];
+                    }
+
+                    if (type === 2) {
+                         Vue.delete(this.testDel.arr, 1);
+                    }
+                    console.log("this.testDel.arr",this.testDel.arr)
+                   
+                },
+                arr_control(method){
+                    switch(method){
+                       case "push":this.testSet.arr.push("push");break;
+                       case "pop":this.testSet.arr.pop();break;
+                       case "unshift":this.testSet.arr.unshift("unshift");break;
+                       case "shift":this.testSet.arr.shift();break;
+                       case "splice":this.testSet.arr.splice(1,2,"splice");break;
+                       case "sort":this.testSet.arr.sort();break;
+                       case "reverse":this.testSet.arr.reverse();break;
+                    }
+                },
+                _set_arr() {
                     // this.testSet.arr.push(1);
                     // this.testSet.arr.unshift(1);
 
                     // this.testSet.arr[2] ='set 2 == self';  // 修改已有数据 数据更新 但是双向绑定不更新
-                    // Vue.set(this.testSet.arr,2,'set 3 == self') 
+                    Vue.set(this.testSet.arr,2,'set 3 == self') 
 
                     // this.testSet.arr[3] ='set 3 == self';  // 新增数据 数据更新 但是双向绑定不更新
                     // Vue.set(this.testSet.arr,3,'set 3 == self') 
@@ -112,7 +202,7 @@
                     // Vue.set(this.testSet.obj,'b',"新增b")
 
                     // 增加一个数组
-                    // Vue.set(this.testSet.obj,'c',[1,2,3]);
+                    Vue.set(this.testSet.obj,'A',[1,2,3]);
                     // this.testSet.obj.c.push('aa')
 
                     // 整体覆盖
@@ -124,37 +214,51 @@
                     console.log(this.testSet.obj)
 
                 },
-                test() {
-                    this.testDel.c = "我 test 增加的 c （不响应）";
-                    this.testSet.arr[4] = "我 test 增加的  （不响应）";
-                    this.testDel.a = "我 test 改变的 a （响应）";
-                    setTimeout(() => {
-                        console.log('setTimeout')
-                        this.testDel.c = "我 test  setTimeout 增加的 c ";
-                        this.testSet.arr[4] = "我 test setTimeout 增加的  ";
-                    },0)
+                validation1() {
+                    console.log("normal");
+                    this.test.normal = "normal changed";
+                    this.test.arr[0] = 0;
+                    this.test.errorradd="errorradd";
+                    // setTimeout(() => {
+                    //     console.log('setTimeout');
+                    //     this.test.normal = "setTimeout changed";
+
+                    // },0)
                     this.$nextTick(() => {
                         console.log('nextTick')
-                        this.testDel.c = "我 test  nextTick 增加的 c ";
-                        this.testSet.arr[4] = "我 test nextTick 增加的  ";
+                        // this.test.normal = "nextTick changed";
+                        this.test.errorradd = "nextTick changed errorradd";
                     })
                     // 数据全部改变之后
                     // 视图更新
                     // 触发nextTick
                     // 异步
-
+                },
+                validation2() {
+                    console.log("normal");
+                    this.test.normal = "normal changed";
+                    
+                    setTimeout(() => {
+                        console.log('setTimeout');
+                        this.test.normal = "setTimeout changed";
+                    },0)
+                    this.$nextTick(() => {
+                        console.log('nextTick')
+                        // this.test.normal = "nextTick changed";
+                    })
+                    // 数据全部改变之后
+                    // 视图更新
+                    // 触发nextTick
+                    // 异步
                 },
             },
             beforeUpdate() {
                 console.log("beaforeUpdate");
-                this.testDel.c = "我   beaforeUpdate 增加的 c ";
-                this.testSet.arr[4] = "我  beaforeUpdate 增加的 ";
             },
             updated: function () {
                 console.log('Updated');
-                this.testDel.c = "我   Updated 增加的 c ";
-                this.testSet.arr[4] = "我  Updated 增加的  ";
             },
+           
         })
 
 
