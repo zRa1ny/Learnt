@@ -85,13 +85,47 @@ export function initGlobalAPI (Vue: GlobalAPI) {
 这部分主要是给Vue构造函数上增加全局静态方法和属性。通过`Object.getOwnPropertyNames(Vue)` 可以查看。
 >  `Vue.set( target, key, value )`   修改对象或者数组的指并触发数据监测。(跟this.$set一样) 
 
-> `Vue.delete(target,key/index)`  删除对象的 property。如果对象是响应式的，确保删除能触发更新视图。这个方法主要用于避开 Vue 不能检测到 property 被删除的限制，但是你应该很少会使用它。(跟this.$delete一样).   [§](./demos/Vue.delete&&set&&nextTick.html 'Vue.delete && set && nextTick.html')
+> `Vue.delete(target,key/index)`  删除对象的 property。如果对象是响应式的，确保删除能触发更新视图。这个方法主要用于避开 Vue 不能检测到 property 被删除的限制，但是你应该很少会使用它。(跟this.$delete一样).  
 
 
-> `Vue.nextTick` 在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。
+> `Vue.nextTick` 在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。 [§](./demos/Vue.delete&&set&&nextTick.html 'Vue.delete && set && nextTick.html')
 
-> `Vue.use` 用于安装 Vue.js 插件。如果插件是一个对象，必须提供 install 方法。如果插件是一个函数，它会被作为 install 方法。install 方法调用时，会将 Vue 作为参数传入。当 install 方法被同一个插件多次调用，插件将只会被安装一次,并且通过全局方法 Vue.use() 使用插件。它需要在你调用 new Vue() 启动应用之前完成。
 
+> `Vue.use` 用于安装 Vue.js 插件。如果插件是一个对象，必须提供 install 方法。如果插件是一个函数，它会被作为 install 方法。install 方法调用时，会将 Vue 作为参数传入。当 install 方法被同一个插件多次调用，插件将只会被安装一次,并且通过全局方法 Vue.use() 使用插件。它需要在你调用 new Vue() 启动应用之前完成。 
+
+```
+// plugin install
+// 这个插件必须具有install方法 
+const plugin = {
+ install (Vue, options) { 
+    // 添加全局方法或者属性 
+    Vue.myGlobMethod = function () {}; 
+    // 添加全局指令 
+    Vue.directive(); 
+    // 添加混入 
+    Vue.mixin(); 
+    // 添加实例方法 
+    Vue.prototype.$xxx = function () {}; 
+    // 注册全局组件 
+    Vue.component() 
+ } 
+} 
+
+// plugin 函数
+const plugin =  (Vue)=>{
+  Vue.component(Add.name,Add)
+}
+
+
+// 安装
+import Vue from 'vue'; 
+// Vue.use内部会调用plugin的install方法
+// Vue.use内部会蒋plugin函数当做install方法调用
+Vue.use(plugin);
+
+```
+
+---
 
 ```
 // /vue/src/core/insance/index.js

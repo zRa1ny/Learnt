@@ -15,13 +15,11 @@
         <div>testDel.a：{{testDel.a}} <button @click="_delete(1)">普通删除 delete</button></div>
         <div>testDel.b：{{testDel.b}} <button @click="_delete(2)">Vue删除 Vue.delete</button></div>
         <div>testDel.c：{{testDel.c}} </div>
-        <h3>测试设置</h3>
+        <h3>测试修改</h3>
         <div>{{testSet}}</div>
+        <br>
+        <div>数组：{{testSet.arr}}</div>
         <ul>
-            <li v-for="(value,index) in testSet.arr" :key="index">
-                <span>{{value}}</span>
-                <!-- <a v-for="(v,i) in value" v-if="value&&value.length>0" href="#">{{v}}<br></a> -->
-            </li>
             <li><button @click="_add_arr()"> 增加</button></li>
             <li><button @click="_del_arr()"> 删除</button></li>
         </ul>
