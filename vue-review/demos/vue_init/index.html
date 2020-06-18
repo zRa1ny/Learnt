@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <transition name="fade">
+            <hello-wrod></hello-wrod>  
+        </transition>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+
+        Vue.component("hello-wrod",{
+            template:"<span>hello word!</span>"
+        })
+        function GetRequest() {
+            var fullURL = window.location.href, url = location.search, result = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1), strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    result[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+            }
+
+            return result;
+        }
+
+
+        const mixins1 = {
+            created() {
+                console.log('mixins created');
+            }
+        }
+        const mixins2 = {
+            created() {
+                console.log('mixins2 created')
+            }
+        }
+
+        const extend = {
+            created() {
+                console.log('extends created')
+            }
+        }
+
+
+        new Vue({
+            step: GetRequest().step,
+            el: "#app",
+            //数组模式
+            props: ['title', 'likes'],
+            mixins: [mixins1, mixins2],
+            extends: extend,
+            //对象模式
+            // props:{
+            //     title: {
+            //         type: String,
+            //         default: "this is zte phone"
+            //     },
+            //     likes: {
+            //         type: String,
+            //         default: "this like phone"
+            //     }
+            // },
+            directives: {
+                // color: function (el, binding) {
+                //     el.style.backgroundColor = binding.value
+                // },
+                color: {
+                    bind: function (el, binding) {
+                        el.style.backgroundColor = binding.value
+                    },
+                }
+            },
+            data: {
+                test: "a"
+            },
+            methods: {
+                testFN: function () { }
+            },
+            watch: {
+                test: function () { }
+            },
+            beforeCreate: function () { },
+            created: function () { },
+            beforeMount: function () { },
+            mounted: function () { },
+            beforeUpdate: function () { },
+            updated: function () { },
+            beforeDestroy: function () { },
+            destroyed: function () { },
+            // render(h) {
+                
+            // },
+        })
+    </script>
+</body>
+
+</html>

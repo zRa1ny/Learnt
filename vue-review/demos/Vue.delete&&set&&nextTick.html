@@ -83,6 +83,7 @@
                 <button @click="_add_obj">Vue方法增加属性：Vue.set(this.testSet.obj,'A',[1,2,3])</button>
                 <button @click="testSet.obj.A.push('测试')">测试Vue.set增加的数组是否响应变化：testSet.obj.A.push('测试')</button>
             </div>
+             <div><button @click="testSet.obj={a:'A',b:'B'}">testSet.obj={a:'A',b:'B'}</button></div>
         </div>
          <hr>
          <div>
@@ -106,6 +107,7 @@
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+     <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.1.8/dist/vue.js"></script> -->
     <script>
         var vm = new Vue({
             el: "#app",

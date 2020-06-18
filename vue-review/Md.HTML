@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="./css/markdown.css">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.3/build/styles/default.min.css">
     <style>
+        html,body{
+            height: 100%;
+            overflow: hidden;
+        }
+        #app{
+            height: 100%;
+            overflow: auto;
+        }
         .hljs-deletion,
         .hljs-number,
         .hljs-quote,
@@ -46,7 +54,7 @@
         marked.setOptions({
             renderer: new marked.Renderer(),
             highlight: function (code) {
-                console.log(code)
+                // console.log(code)
                 return hljs.highlightAuto(code).value;
             },
             pedantic: false,
@@ -59,7 +67,14 @@
             xhtml: false
         });
         $.get('./vue.md').then(res => {
-            document.getElementById('app').innerHTML = marked(res)
+            document.getElementById('app').innerHTML = marked(res);
+            $("#app").scrollTop($("#app").get(0).scrollHeight);
+            $('a').click(function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(e.target)
+                window.open($(this).attr('href'))
+            })
         })
     </script>
 </body>
