@@ -3768,6 +3768,7 @@
     vm._hasHookEvent = false;
     // init parent attached events
     var listeners = vm.$options._parentListeners;
+  
     if (listeners) {
       updateComponentListeners(vm, listeners);
     }
@@ -3914,17 +3915,15 @@
 
     // locate first non-abstract parent
     var parent = options.parent;
-    console.log(parent);
-    debugger;
+ 
     if (parent && !options.abstract) {
-        console.log('xxx')
+       
       while (parent.$options.abstract && parent.$parent) {
         parent = parent.$parent;
       }
       parent.$children.push(vm);
     }
-    console.log(parent)
-    debugger;
+ 
     vm.$parent = parent;
     vm.$root = parent ? parent.$root : vm;
 
@@ -5021,6 +5020,10 @@
         debugger;
       }
       initEvents(vm);
+      if(options.step==5){
+        console.log(vm)
+        debugger;
+      }
       initRender(vm);
       callHook(vm, 'beforeCreate');
       initInjections(vm); // resolve injections before data/props

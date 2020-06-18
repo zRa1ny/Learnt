@@ -623,8 +623,8 @@ const handlers = options.render && options.render._withStripped
 
 这里先接着上面的逻辑看，parent是undefined，直接跳过判断语句，执行下面的代码，设置实例的`$parent=parent=undefined`,三目表达式的结果是vm`vm.$root = parent ? parent.$root : vm `，所以设置$root属性为实例本身。
 
-这里我通过new Vue实例化的是根节点的vue实例，
-还有一种情况，是vue的组件的情况，子组件注册的时候会把父实例挂载到自身的parent属性上
+这里是通过new Vue实例化的是根节点的vue实例。
+还有另一种情况，是vue的组件的情况，子组件注册的时候会把父实例挂载到自身的parent属性上。
 ```
   function createComponentInstanceForVnode (
     vnode, // we know it's MountedComponentVNode but flow doesn't
@@ -639,10 +639,9 @@ const handlers = options.render && options.render._withStripped
   }
 
 ```
-在initLifecycle过程中，会反向拿到parent上的父组件vnode,并为其$children属性添加该子组件vnode，如果在反向找父组件过程中，如果父组件有abstract属性，就判断该组件属性为抽象组件，此时利用parent的链条往上寻找，直到组件不是抽象组件为止。
-2 .这样的处理，能让每隔组件都找到上层父组件以及下层的子组件，使得组件之间形成一个紧密的关系树
-
-所以当前为子组件的时候满足上面判断中的parent存在。
+所以子组件在initLifecycle过程中，满足上面判断中的parent存在。
+判断当前组件是否为抽象组件：
+抽象组件:没有真实的节点，在组件渲染的时候不会解析渲染成真实的dom节点，而只是作为中间的数据过度层处理,例如 transition,transition-group,keep-alive。
 ```
   if (parent && !options.abstract) {
       while (parent.$options.abstract && parent.$parent) {
@@ -652,20 +651,57 @@ const handlers = options.render && options.render._withStripped
   }
 
 ```
+如果当前组件不是抽象组件，会反向拿到parent上的父组件vnode，如果父组件没有abstract属性，即为非抽象组件，为其$children属性添加该子组件vnode；如果在反向找父组件过程中，如果父组件有abstract属性，就判断该组件属性为抽象组件，此时利用parent的链条往上寻找，直到找的父组件不是抽象组件为止。
+
+
 如果当前组件是抽象组件（options拥有abstract属性），直接跳过继续执行下面逻辑，即设置$parent为parent和$root为parent.$root.
-例如 transition,transition-group,keep-alive ，抽象组件没有真实的节点，在组件渲染的时候不会解析渲染成真实的dom节点，而只是作为中间的数据过度层处理.
 
 
-如果当前的不是抽象组件。执行while循环,通过parent反向寻找父组件,判断父组件是否是抽象组件（parent.$options.abstract），如果不是，直接跳出循环，并自身实力加到父组件的$children中；如果parent是抽象组件，就将parent更新成parent.$parent，继续循环，向上级寻找，直到找到一个不是抽象组件的父组件跳出来循环，并自身实力加到父组件的$children中。
-
-接着后面一样的设置$parent为parent和$root为parent.$root.
-这样的处理，能让每个组件都找到上层父组件以及下层的子组件，使得组件之间形成一个紧密的关系树。
 总结：
-
+`options.parent` ：
 组件vm（非抽象和抽象）：vm的options.parent属性会存放注册时候的父组件（这里可以是抽象组件也可以。），并且parent属性不会改变，所以就形成了一个由下向上的链接。
 
+`$parent` ：
+抽象组件：vm的$parent属性，因为`parent && !options.abstract`判断不通过，直接跳过向上寻找父组件的过程，直接把options.parent赋给$parent。
 
-vm的$parent属性会存放这个链接上的第一个非抽象组件的父组件，并且这个父组件会将这个组件加入到自己的$children中。
+非抽象组件：vm的$parent属性，因为`parent && !options.abstract`判断通过，接着判断options.parent即父组件是否是抽象组件？如果不是，那么直接把options.parent赋给$parent属性；如果是抽象组件，那么把这个抽象父组件的$parent（上一条已经说明了非抽象组件的$parent就是他的options.parent,所以抽象组件的$parent属性也可能是抽象组件，所以才有循环寻找）属性赋给parent缓存，在进行向上查找非抽象父组件的循环（所以非抽象组件的$parent一定是非抽象组件），当找到这个非抽象的父组件的时候，把自己加到这个父组件的$children中。这是通过$parent和$children,所有的非抽象组件形成了一个紧密的关系树。[§](./demos/vue_init/index.html?step=4) 
+
+
+接下来初始化了生命周期相关的一些属性。
+
+```
+  vm.$refs = {};
+
+  vm._watcher = null;
+  vm._inactive = null;
+  vm._directInactive = false;
+  vm._isMounted = false;
+  vm._isDestroyed = false;
+  vm._isBeingDestroyed = false;
+```
+再回回到_init方法，继续执行`initEvents(vm)`，首先看下`initEvents`的代码：
+```
+  function initEvents (vm) {
+    vm._events = Object.create(null);
+    vm._hasHookEvent = false;
+    // init parent attached events
+    var listeners = vm.$options._parentListeners;
+    if (listeners) {
+      updateComponentListeners(vm, listeners);
+    }
+  }
+
+```
+
+1. 增加了一个_events属性，用Object.create(null)进行创建原型上比较干净。
+2. 增加了一个_hasHookEvent,用来判断是否通过@hook监听组件生命周期函数。
+3. 声明一个变量listeners储存vm.$options._parentListeners，_parentListeners，父组件绑定在当前组件上的事件属性是父组件绑定在当前组件上的事件。
+4. 判断listeners是否存在，存在就执行`updateComponentListeners(vm, listeners)`
+
+
+
+
+
 
 
 
