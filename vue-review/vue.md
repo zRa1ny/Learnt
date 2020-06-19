@@ -874,20 +874,174 @@ initEvents执行完毕，事件（父组件@监听的）相关已经初始化完
     }
    
 ```
-当`createElement`函数 使用作用域插槽的时候，如果只有一个`default`插槽，可以直接使用一个函数。默认插入默认插槽。
+当`createElement`函数 使用作用域插槽的时候，如果只有一个`default`插槽，可以直接使用一个函数。默认插入默认插槽。[§](./demos/slots.html?step=slots) 
+
+```
+    if (normalizationType === ALWAYS_NORMALIZE) {
+      children = normalizeChildren(children);
+    } else if (normalizationType === SIMPLE_NORMALIZE) {
+      children = simpleNormalizeChildren(children);
+    }
+
+```
+接下来我们来看下children的规范化:`normalizationType`不同对`children`做不同的处理，类型不同规范的方法也不同。
+```
+    vm.$createElement = function (a, b, c, d) {
+       return createElement(vm, a, b, c, d, true);
+     };
+
+```
+造成这种类型不同主要是由于`render`函数是用户自己手写的还是`template`生成的。提供给用用户的方法，默认给`createElement`传了`true`,所以会执行`normalizationType = ALWAYS_NORMALIZE`，另一种根据`template`生成的时候`normalizationType = SIMPLE_NORMALIZE`
+
+接下来我们来看下`normalizeChildren`和`simpleNormalizeChildren`的实现:
+```
+ function normalizeChildren (children) {
+    return isPrimitive(children)
+      ? [createTextVNode(children)]
+      : Array.isArray(children)
+        ? normalizeArrayChildren(children)
+        : undefined
+  }
+
+```
+判断children是不是基础类型：
+如果是，即`h('span','xxxx')`这种情况，
+
+```
+ function createTextVNode (val) {
+    return new VNode(undefined, undefined, undefined, String(val))
+  }
+```
+`createTextVNode`会返回一个标准文本`VNode{text:'xxx'}`,所以会返回标准格式的`[VNode]`。
+
+如果不是基础类型，继续继续判断是不是数组，如果不是直接返回`undefined`;
+如果是，执行`normalizeArrayChildren(children)`,再看`normalizeArrayChildren`这个函数,代码比较长，照样拆分开来看。
+```
+ var res = [];
+ var i, c, lastIndex, last;
+ ```
+ 定义了五个局部变量，`res`用来存放的是返回值，`i`是`chilren`的便利的下标，`c`在循环内储存的是每次循环的值，`lastIndex`是`res`最后一个值的下标，`last`是`res`的最后一个值。
+```
+for (i = 0; i < children.length; i++) {
+      c = children[i];
+      if (isUndef(c) || typeof c === 'boolean') { continue }
+      lastIndex = res.length - 1;
+      last = res[lastIndex];
+      ...
+}
+```
+进入循环，每次循环首先 `c = children[i]`,用变量缓存当次循环的值。
+```
+if (isUndef(c) || typeof c === 'boolean') { continue }
+```
+对`c`进行逻辑判断
+```
+  function isUndef (v) {
+    return v === undefined || v === null
+  }
+```
+`isUndef`判断值是否为`null`或`undefined`,所以当`c`为`null`或`undefined`或布尔值的时候，直接跳出这次循环进行下一次循环。
+
+如果不是，继续此次循环，向下执行。
+```
+  lastIndex = res.length - 1;
+  last = res[lastIndex];
+  if (Array.isArray(c)) {
+  } else if (isPrimitive(c)) {
+  }else{
+  }
+
+```
+先对`lastIndex`和`last`进行赋值。
+然后判断当前的`c`是否是一个数组？
+如果不是数组：
+继续判断是否是基础类型的？
+`c`是基础类型(&&不是数组)，则执行下面代码
+```
+  if (isTextNode(last)) {
+      res[lastIndex] = createTextVNode(last.text + c)
+    } else if (c !== '') {
+      res.push(createTextVNode(c));
+    }
+```
+```
+  function isTextNode (node) {
+    return isDef(node) && isDef(node.text) && isFalse(node.isComment)
+  }
+```
+`isTextNode`判断当前传入的对象和对象的`text`属性均部位`undefined`和`null`，且`isComment`属性为`false`，即判断当前节点为`textNode`。
+判断已经加入到`res`的最后一个节点`last`是否为`textNode`节点？如果是，则合并当前`c`的值和最后一个节点的值。如果不是，这继续判断当前的值`c`是否不为空，不为空就以`c`的值创建一个`textNode`加入到`res`中。
+
+`c`不是基础类型（&&不是数组）：
+```
+   if (isTextNode(c) && isTextNode(last)) {
+        res[lastIndex] = createTextVNode(last.text + c.text);
+   } 
+```
+判断`c`和`last`是不是都是`textNode`？如果是就合并这两项，替换`res`现在的最后一位（`last`）。
+如果不是，则继续判断
+```
+    else {
+        if (isTrue(children._isVList) &&
+          isDef(c.tag) &&
+          isUndef(c.key) &&
+          isDef(nestedIndex)) {
+          c.key = "__vlist" + nestedIndex + "_" + i + "__";
+        }
+        res.push(c);
+    }
+```
+如果`v-for`绑定的，判断是否有`tag`和当前是否传入的`nestIndex`并且没有`key`属性，则给`c`加一个`key`,采用`__vlist`+传入的下标+`_` + 当前的下标 + `__`，即这部分是为了没有加`key`属性的`v-for`操作加上`key`属性。
+然后将`c`加入到`res`最后。
 
 
+如果是数组：
+```
+ if (c.length > 0) {
+    c = normalizeArrayChildren(c, ((nestedIndex || '') + "_" + i));
+    if (isTextNode(c[0]) && isTextNode(last)) {
+      res[lastIndex] = createTextVNode(last.text + (c[0]).text);
+      c.shift();
+    }
+    res.push.apply(res, c);
+    console.log(res)
+  }
+```
+判断长度是大于0？如果当前`c`是空数组，直接完成此次循环。
+如果`c`长度大于0，则递归调用`normalizeArrayChildren`处理，然会一个标准的`VNode`数组。
 
+```
+  if (isTextNode(c[0]) && isTextNode(last)) {
+      res[lastIndex] = createTextVNode(last.text + (c[0]).text);
+      c.shift();
+    }
+```
+如果返回的这个数组`c`的第一个节点是`TextNode`并且当前`res`的最后一个也是`TextNode`，合并这两个`TextNode`，并删除`c`的第一个节点。
 
+最后，将`c`这个标准`VNode`数组通过`res.push.apply(res, c)`将每一项加入`res`最后。
 
+当遍历完成的时候，`res`中存放的是标准的`VNode`节点数组，并且打平成一维数组。
 
+另一种情况,由模板编译器`render`,这情况下`html`标签生成的渲染函数保证返回Array，如果是组件的情况下会进行规范。
 
+```
+    else if (normalizationType === SIMPLE_NORMALIZE) {
+      children = simpleNormalizeChildren(children);
+    }
+```
+```
+  function simpleNormalizeChildren (children) {
+    for (var i = 0; i < children.length; i++) {
+      if (Array.isArray(children[i])) {
+        return Array.prototype.concat.apply([], children)
+      }
+    }
+    return children
+  }
+```
+但是函数式组件返回的是 一个数组而不是一个节点`，使用`Array.prototype.concat.apply([], children)`进行一层级的扁平化，而因为组件内部的子组件已经自己正常化了，所以只需要打平一层成一维数组。
 
-
-
-
-
-
+完成children 的规范化以及 VNode 的创建。
 
 
 

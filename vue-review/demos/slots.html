@@ -12,15 +12,27 @@
     <div id="app">
 
     </div>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-     -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+
     <script src="./vue_init/vue.js"></script>
     <script>
+        var query = GetRequest();
+        function GetRequest() {
+            var fullURL = window.location.href, url = location.search, result = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1), strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    result[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+            }
+
+            return result;
+        }
         Vue.component("mySlot", {
-            props:{
-                test:{
-                    type:String,
-                    default:"xxx",
+            props: {
+                test: {
+                    type: String,
+                    default: "xxx",
                 }
             },
             data() {
@@ -29,7 +41,7 @@
             render(h) {
                 return h('div', [
                     // function(){}
-                // this.$scopedSlots.header( this.test)
+                    // this.$scopedSlots.header( this.test)
                     // h('header', [ this.$scopedSlots.header( this.test)]),
                     // h('main', [this.$scopedSlots.main({ content: this.content })]),
                     h('span', [this.$scopedSlots.default({ content: this.content })]),
@@ -41,35 +53,35 @@
             },
         }
         );
-      var va =   new Vue({
+        var vm = new Vue({
+            step: query.step,
             el: "#app",
             render(h) {
-                // return  h('my-slot',[function(){return "xxx"},"xxx"])
-                return  h('my-slot',[()=>"a",h("div",'xxx')])
-                
-            //     h('my-slot', {
-            //         scopedSlots: {
-            //             header: props => {
+                return h('my-slot', [() => "a", h("div", 'xxx')])
 
-            //                 return  h('div',{ 
-            //                     style:{
-            //                         color:"red"
-            //                     },
-            //                     on:{
-            //                         click(){
-                                       
-            //                         }
-            //                     }
-            //                 },props)
-            //             }
-            //         }
-            //     }, [
-                   
-            //             h('div', { slot: 'main' }, 'this is main'),
-            //             'default children node',
-            //             h('div', { slot: 'footer' }, 'this is footer')
-                        
-            //         ])
+                //     h('my-slot', {
+                //         scopedSlots: {
+                //             header: props => {
+
+                //                 return  h('div',{ 
+                //                     style:{
+                //                         color:"red"
+                //                     },
+                //                     on:{
+                //                         click(){
+
+                //                         }
+                //                     }
+                //                 },props)
+                //             }
+                //         }
+                //     }, [
+
+                //             h('div', { slot: 'main' }, 'this is main'),
+                //             'default children node',
+                //             h('div', { slot: 'footer' }, 'this is footer')
+
+                //         ])
             }
         })
     </script>

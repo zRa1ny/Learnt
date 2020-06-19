@@ -2353,8 +2353,11 @@
   // because functional components already normalize their own children.
   function simpleNormalizeChildren (children) {
     console.log('simpleNormalizeChildren')
+    console.log(children);
+    debugger;
     for (var i = 0; i < children.length; i++) {
       if (Array.isArray(children[i])) {
+        console.log('simpleNormalizeChildren.array' )
         return Array.prototype.concat.apply([], children)
       }
     }
@@ -2366,6 +2369,7 @@
   // with hand-written render functions / JSX. In such cases a full normalization
   // is needed to cater to all possible types of children values.
   function normalizeChildren (children) {
+    console.log('normalizeChildren')
     return isPrimitive(children)
       ? [createTextVNode(children)]
       : Array.isArray(children)
@@ -2380,7 +2384,9 @@
   function normalizeArrayChildren (children, nestedIndex) {
     var res = [];
     var i, c, lastIndex, last;
+    console.log('normalizeChildren.normalizeArrayChildren')
     console.log(children)
+    debugger;
     for (i = 0; i < children.length; i++) {
       c = children[i];
       if (isUndef(c) || typeof c === 'boolean') { continue }
@@ -4997,11 +5003,7 @@
       // a flag to avoid this being observed
       vm._isVue = true;
       // merge options
-      if(options.step==1){
-        console.log(vm)
-        console.log(options)
-        debugger;
-      }
+    
       if (options && options._isComponent) {
         // optimize internal component instantiation
         // since dynamic options merging is pretty slow, and none of the
@@ -5014,41 +5016,26 @@
           vm
         );
       }
-      if(options.step==2){
-        console.log(vm)
-        debugger;
-      }
+     
       
       /* istanbul ignore else */
       {
         initProxy(vm);
       }
 
-      if(options.step==3){
-        console.log(vm)
-        debugger;
-      }
+ 
       // expose real self
       vm._self = vm;
       
       initLifecycle(vm);
-      if(options.step==4){
-        console.log(vm)
-        debugger;
-      }
+   
       
       initEvents(vm);
       
-      if(options.step==5  || (!vm.$options.abstract && vm.$parent && vm.$parent.$options.step==5)){
-        console.log(vm)
-        debugger;
-      }
+ 
       initRender(vm);
       
-      if(options.step==6  || ( vm.$root.$options.step==6)){
-        console.log(vm)
-        debugger;
-      }
+    
       callHook(vm, 'beforeCreate');
       initInjections(vm); // resolve injections before data/props
       initState(vm);

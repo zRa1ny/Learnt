@@ -23,15 +23,6 @@
     <script src="./vue.js"></script>
     <script>
         var query = GetRequest();
-        Vue.component("hello-wrod", {
-            template: "<span><slot><span>hello </span></slot></span>",
-            beforeCreate() {
-                // if ( query.step == 5) {
-                //     console.log(this)
-                //     debugger;
-                // }
-            }
-        })
         function GetRequest() {
             var fullURL = window.location.href, url = location.search, result = new Object();
             if (url.indexOf("?") != -1) {
@@ -43,6 +34,16 @@
 
             return result;
         }
+        Vue.component("hello-wrod", {
+            template: "<span><slot><span>hello </span><span><span>word</span><span>word</span> </span></slot></span>",
+            beforeCreate() {
+                // if ( query.step == 5) {
+                //     console.log(this)
+                //     debugger;
+                // }
+            }
+        })
+  
 
 
         const mixins1 = {
@@ -106,8 +107,6 @@
             },
             created: function () { },
             beforeMount: function () { 
-             console.log(this.$createElement('div',[this.$createElement('span')]))    
-             console.log('---')
             },
             mounted: function () { },
             beforeUpdate: function () { },
