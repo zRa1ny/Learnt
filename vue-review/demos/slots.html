@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue</title>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+     -->
+    <script src="./vue_init/vue.js"></script>
+    <script>
+        Vue.component("mySlot", {
+            props:{
+                test:{
+                    type:String,
+                    default:"xxx",
+                }
+            },
+            data() {
+                return { user: 'John', content: 'vue', copytight: 'CopyRight' }
+            },
+            render(h) {
+                return h('div', [
+                    // function(){}
+                // this.$scopedSlots.header( this.test)
+                    // h('header', [ this.$scopedSlots.header( this.test)]),
+                    // h('main', [this.$scopedSlots.main({ content: this.content })]),
+                    h('span', [this.$scopedSlots.default({ content: this.content })]),
+                    // h('footer', [this.$scopedSlots.footer({ copytight: this.copytight })])
+                ])
+            },
+            mounted() {
+                console.log(this)
+            },
+        }
+        );
+      var va =   new Vue({
+            el: "#app",
+            render(h) {
+                // return  h('my-slot',[function(){return "xxx"},"xxx"])
+                return  h('my-slot',[()=>"a",h("div",'xxx')])
+                
+            //     h('my-slot', {
+            //         scopedSlots: {
+            //             header: props => {
+
+            //                 return  h('div',{ 
+            //                     style:{
+            //                         color:"red"
+            //                     },
+            //                     on:{
+            //                         click(){
+                                       
+            //                         }
+            //                     }
+            //                 },props)
+            //             }
+            //         }
+            //     }, [
+                   
+            //             h('div', { slot: 'main' }, 'this is main'),
+            //             'default children node',
+            //             h('div', { slot: 'footer' }, 'this is footer')
+                        
+            //         ])
+            }
+        })
+    </script>
+</body>
+
+</html>

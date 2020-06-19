@@ -2504,8 +2504,10 @@
     context
   ) {
     if (!children || !children.length) {
+      
       return {}
     }
+
     var slots = {};
     for (var i = 0, l = children.length; i < l; i++) {
       var child = children[i];
@@ -3370,6 +3372,7 @@
     children,
     normalizationType
   ) {
+   
     if (isDef(data) && isDef((data).__ob__)) {
       warn(
         "Avoid using observed data object as vnode data: " + (JSON.stringify(data)) + "\n" +
@@ -3397,6 +3400,7 @@
         );
       }
     }
+  
     // support single function children as default scoped slot
     if (Array.isArray(children) &&
       typeof children[0] === 'function'
@@ -3404,12 +3408,15 @@
       data = data || {};
       data.scopedSlots = { default: children[0] };
       children.length = 0;
+      console.log(data)
     }
+  
     if (normalizationType === ALWAYS_NORMALIZE) {
       children = normalizeChildren(children);
     } else if (normalizationType === SIMPLE_NORMALIZE) {
       children = simpleNormalizeChildren(children);
     }
+
     var vnode, ns;
     if (typeof tag === 'string') {
       var Ctor;
@@ -3493,6 +3500,7 @@
     var renderContext = parentVnode && parentVnode.context;
     vm.$slots = resolveSlots(options._renderChildren, renderContext);
     vm.$scopedSlots = emptyObject;
+    
     // bind the createElement fn to this instance
     // so that we get proper render context inside it.
     // args order: tag, data, children, normalizationType, alwaysNormalize
@@ -5019,12 +5027,19 @@
         console.log(vm)
         debugger;
       }
+      
       initEvents(vm);
-      if(options.step==5){
+      
+      if(options.step==5  || (!vm.$options.abstract && vm.$parent && vm.$parent.$options.step==5)){
         console.log(vm)
         debugger;
       }
       initRender(vm);
+      
+      if(options.step==6  || ( vm.$root.$options.step==6)){
+        console.log(vm)
+        debugger;
+      }
       callHook(vm, 'beforeCreate');
       initInjections(vm); // resolve injections before data/props
       initState(vm);

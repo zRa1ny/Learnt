@@ -10,15 +10,27 @@
 
 <body>
     <div id="app">
-        <transition name="fade">
-            <hello-wrod></hello-wrod>  
-        </transition>
+        <!-- <transition name="fade"> -->
+        <hello-wrod @click="hellowordclickFn" @hook:beforeCreate="hookbeforeCreateFn" ref="helloword2">
+        </hello-wrod>
+        <hello-wrod @click="hellowordclickFn" @hook:beforeCreate="hookbeforeCreateFn" ref="helloword1">
+            <hello-wrod @click="hellowordclickFn" @hook:beforeCreate="hookbeforeCreateFn" ref="helloword2">
+            </hello-wrod>
+        </hello-wrod>
+
+        <!-- </transition> -->
     </div>
     <script src="./vue.js"></script>
     <script>
-
-        Vue.component("hello-wrod",{
-            template:"<span>hello word!</span>"
+        var query = GetRequest();
+        Vue.component("hello-wrod", {
+            template: "<span><slot><span>hello </span></slot></span>",
+            beforeCreate() {
+                // if ( query.step == 5) {
+                //     console.log(this)
+                //     debugger;
+                // }
+            }
         })
         function GetRequest() {
             var fullURL = window.location.href, url = location.search, result = new Object();
@@ -52,7 +64,7 @@
 
 
         new Vue({
-            step: GetRequest().step,
+            step: query.step,
             el: "#app",
             //数组模式
             props: ['title', 'likes'],
@@ -83,21 +95,27 @@
                 test: "a"
             },
             methods: {
-                testFN: function () { }
+                testFN: function () { },
+                hellowordclickFn: function () { },
+                hookbeforeCreateFn: function () { },
             },
             watch: {
                 test: function () { }
             },
-            beforeCreate: function () { },
+            beforeCreate: function () {
+            },
             created: function () { },
-            beforeMount: function () { },
+            beforeMount: function () { 
+             console.log(this.$createElement('div',[this.$createElement('span')]))    
+             console.log('---')
+            },
             mounted: function () { },
             beforeUpdate: function () { },
             updated: function () { },
             beforeDestroy: function () { },
             destroyed: function () { },
             // render(h) {
-                
+
             // },
         })
     </script>

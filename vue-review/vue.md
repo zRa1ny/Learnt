@@ -698,6 +698,187 @@ const handlers = options.render && options.render._withStripped
 3. 声明一个变量listeners储存vm.$options._parentListeners，_parentListeners，父组件绑定在当前组件上的事件属性是父组件绑定在当前组件上的事件。
 4. 判断listeners是否存在，存在就执行`updateComponentListeners(vm, listeners)`
 
+initEvents执行完毕，事件（父组件@监听的）相关已经初始化完成。[§](./demos/vue_init/index.html?step=5) 。
+
+继续执行`initRender(vm)`，
+```
+  function initRender (vm) {
+    vm._vnode = null; // the root of the child tree
+    vm._staticTrees = null; // v-once cached trees
+    var options = vm.$options;
+    var parentVnode = vm.$vnode = options._parentVnode; // the placeholder node in parent tree
+    var renderContext = parentVnode && parentVnode.context;
+    vm.$slots = resolveSlots(options._renderChildren, renderContext);
+    vm.$scopedSlots = emptyObject;
+    // bind the createElement fn to this instance
+    // so that we get proper render context inside it.
+    // args order: tag, data, children, normalizationType, alwaysNormalize
+    // internal version is used by render functions compiled from templates
+    vm._c = function (a, b, c, d) { return createElement(vm, a, b, c, d, false); };
+    // normalization is always applied for the public version, used in
+    // user-written render functions.
+    vm.$createElement = function (a, b, c, d) { return createElement(vm, a, b, c, d, true); };
+
+    // $attrs & $listeners are exposed for easier HOC creation.
+    // they need to be reactive so that HOCs using them are always updated
+    var parentData = parentVnode && parentVnode.data;
+
+    /* istanbul ignore else */
+    {
+      defineReactive$$1(vm, '$attrs', parentData && parentData.attrs || emptyObject, function () {
+        !isUpdatingChildComponent && warn("$attrs is readonly.", vm);
+      }, true);
+      defineReactive$$1(vm, '$listeners', options._parentListeners || emptyObject, function () {
+        !isUpdatingChildComponent && warn("$listeners is readonly.", vm);
+      }, true);
+    }
+  }
+```
+首先为了实例增加了技术个属性值，接着往下看
+```
+    vm.$slots = resolveSlots(options._renderChildren, renderContext);
+```
+`renderContext` 是 `vm.$options._parentVnode`,`renderContext` 是 `vm.$options._parentVnode.context`,在我们new Vue() 过程中到这里，并没有在$options中添加和辅助`_parentVnode`，所以这里的两个值都`undefined`（组件实例化的时候_parentVnode存放自身VNode，context存放父级Vm），接下来再看看`resolveSlots`函数：
+```
+  function resolveSlots (
+    children,
+    context
+  ) {
+    if (!children || !children.length) {
+      return {}
+    }
+    var slots = {};
+    for (var i = 0, l = children.length; i < l; i++) {
+      var child = children[i];
+      var data = child.data;
+      // remove slot attribute if the node is resolved as a Vue slot node
+      if (data && data.attrs && data.attrs.slot) {
+        delete data.attrs.slot;
+      }
+      // named slots should only be respected if the vnode was rendered in the
+      // same context.
+      if ((child.context === context || child.fnContext === context) &&
+        data && data.slot != null
+      ) {
+        var name = data.slot;
+        var slot = (slots[name] || (slots[name] = []));
+        if (child.tag === 'template') {
+          slot.push.apply(slot, child.children || []);
+        } else {
+          slot.push(child);
+        }
+      } else {
+        (slots.default || (slots.default = [])).push(child);
+      }
+    }
+    // ignore slots that contains only whitespace
+    for (var name$1 in slots) {
+      if (slots[name$1].every(isWhitespace)) {
+        delete slots[name$1];
+      }
+    }
+    return slots
+  }
+
+```
+
+首先判断传入的`children` 是否符合要求，不符合直接返回`{}`。（根Vue和没有slot的情况）
+如果符合要求，就对传入的`children`进行遍历，寻找所有solt，然后返回slots。
+
+这里new Vue()实例化，直接返回空，所以  `vm.$slots` 和 `vm.$scopedSlots` 初始化都 `{}`。
+
+再看两个关键函数`vm._c` 和 `vm.$createElement `,两个函数是一样的，一个用于内部使用，一个提供给用户的方法。
+```
+ function (a, b, c, d) { return createElement(vm, a, b, c, d, true); }
+
+```
+内部直接调用`createElement`函数,`createElement`函数内部对数据进行校验，
+```
+  function createElement (
+    context,
+    tag,
+    data,
+    children,
+    normalizationType,
+    alwaysNormalize
+  ) {
+    if (Array.isArray(data) || isPrimitive(data)) {
+      normalizationType = children;
+      children = data;
+      data = undefined;
+    }
+    if (isTrue(alwaysNormalize)) {
+      normalizationType = ALWAYS_NORMALIZE;
+    }
+    return _createElement(context, tag, data, children, normalizationType)
+  }
+
+```
+
+判断`data`是不是数组或者是基本类型，如果成立，则判断判断为省略了data参数，就把后面两个参数依次向前赋值，并把data设为undefined。判断`alwaysNormalize`是否`true`,是将`normalizationType`设置为`ALWAYS_NORMALIZE`(常量2 children的两种模式)。然后传入`_createElement`,`createElement`函数包装了一下`_createElement`，处理了一下传参。
+再看看`_createElement`,代码有点长，我们直接拆分开看,
+```
+   if (isDef(data) && isDef((data).__ob__)) {
+      warn(
+        "Avoid using observed data object as vnode data: " + (JSON.stringify(data)) + "\n" +
+        'Always create fresh vnode data objects in each render!',
+        context
+      );
+      return createEmptyVNode()
+    }
+
+```
+`isDef():`
+```
+ function isDef (v) {
+    return v !== undefined && v !== null
+ }
+
+```
+监测传入的`data`参数存在并且`(data).__ob__`存在，`__ob__`这个是Vue数据监测的时候加上的标识，这里判断传入的data不能是响应式的，vnode中的data不能是响应式的。如果是，则Vue抛出警告,返回一个空的`VNode`。
+
+```
+  if (isDef(data) && isDef(data.is)) {
+      tag = data.is;
+  }
+```
+`data`上有`is`属性（`<div is="bs-pop"></div>`），使用`is`的值作为`tag`的值。
+
+```
+  if (!tag) {
+      // in case of component :is set to falsy value
+      return createEmptyVNode()
+    }
+```
+监测`tag`,如果没有值，想当于没有`tag`的初值，也没有`is`属性，即没有html标签也不是组件，直接返回一个空`VNode`。
+```
+   if (isDef(data) && isDef(data.key) && !isPrimitive(data.key)
+    ) {
+      {
+        warn(
+          'Avoid using non-primitive value as key, ' +
+          'use string/number value instead.',
+          context
+        );
+      }
+    }
+```
+继续判断`data.key`（`<li v-for="(value,index) :key="index"></li>`）不能是响应式的数据，
+```
+    if (Array.isArray(children) &&
+      typeof children[0] === 'function'
+    ) {
+      data = data || {};
+      data.scopedSlots = { default: children[0] };
+      children.length = 0;
+    }
+   
+```
+当`createElement`函数 使用作用域插槽的时候，如果只有一个`default`插槽，可以直接使用一个函数。默认插入默认插槽。
+
+
+
+
 
 
 
