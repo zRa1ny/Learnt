@@ -1039,9 +1039,144 @@ if (isUndef(c) || typeof c === 'boolean') { continue }
     return children
   }
 ```
-但是函数式组件返回的是 一个数组而不是一个节点`，使用`Array.prototype.concat.apply([], children)`进行一层级的扁平化，而因为组件内部的子组件已经自己正常化了，所以只需要打平一层成一维数组。
+但是函数式组件返回的是 一个数组而不是一个节点，使用`Array.prototype.concat.apply([], children)`进行一层级的扁平化，而因为组件内部的子组件已经自己正常化了，所以只需要打平一层成一维数组。
 
-完成children 的规范化以及 VNode 的创建。
+`$createElement`和`_c`都是完成`children` 的规范化以及 `VNode` 的创建。[§](./demos/vue_init/index_vnode.html) 
+
+继续回到`initRender`函数。当前`new Vue()`实例化过程中，`parentData`是`undifinded`,
+```
+ {
+      defineReactive$$1(vm, '$attrs', parentData && parentData.attrs || emptyObject, function () {
+        !isUpdatingChildComponent && warn("$attrs is readonly.", vm);
+      }, true);
+      defineReactive$$1(vm, '$listeners', options._parentListeners || emptyObject, function () {
+        !isUpdatingChildComponent && warn("$listeners is readonly.", vm);
+      }, true);
+ }
+
+```
+`defineReactive$$1`这个函数用来创建响应式对象，简单来说就是给需要监听的对象，设置好`setter`里收集依赖，在`getter`里面触发，是对definePropoty的一层封装，这里是对响应式数据的初始化。
+
+但是在这里，因为传了了第五个参数true,所以这里当前设置值的不会被设置监听，及没有`_ob_`属性。所这里相当给实例设置`$attrs`和`$listeners`两个值，并设置初始值，设置不可设置。
+
+至此，`initRender`执行完成，实例上增加`$slots`,`$scopedSlots`,`$createElement`,`$attrs`,`$listeners`。
+
+回到`_init`,
+```
+ callHook(vm, 'beforeCreate');
+```
+```
+  function callHook (vm, hook) {
+    pushTarget();
+    var handlers = vm.$options[hook];
+    var info = hook + " hook";
+    if (handlers) {
+      for (var i = 0, j = handlers.length; i < j; i++) {
+        invokeWithErrorHandling(handlers[i], vm, null, vm, info);
+      }
+    }
+    if (vm._hasHookEvent) {
+      vm.$emit('hook:' + hook);
+    }
+    popTarget();
+  }
+ ```
+ `callHook`:触发生命周期钩子（即$options里面对呀的钩子方法）并将当前实例设置钩子函数的`this`，然后发送对面的hook事件。[§](./demos/vue_init/index.html?step=6)
+
+ 这里触发了`beforeCreate`，也就进入第一个生命周期钩子，官方将`new Vue()`到`callHook(vm, 'beforeCreate')`中间这个阶段称为`init Events & lifeCycle`。这一阶段，我们收集了父子组件之间的关系，收集父组件监听的子组件的事件，初始化了一系列参数和方法。 [§](./demos/vue_init/index.html?step=beforeCreate)。
+
+ 继续回到`_init`执行`initInjections(vm)`：
+
+ `initInjections`,s取出当前组件需要注入的值并且返回。
+ 因为当时`new Vue()`,根组件不存在注入，先看数据是什么样提供，`initProvide(vm);`。
+
+```
+  function initProvide (vm) {
+    var provide = vm.$options.provide;
+    if (provide) {
+      vm._provided = typeof provide === 'function'
+        ? provide.call(vm)
+        : provide;
+    }
+  }
+
+```
+
+因为要求`provide`是一个函数或者对象，所以这里判断并将返回值赋给实例的`_provided`属性。[§](./demos/vue_init/index.html?step=9)
+
+再看组件注入数据。
+```
+  function initInjections (vm) {
+    var result = resolveInject(vm.$options.inject, vm);
+    if (result) {
+      toggleObserving(false);
+      Object.keys(result).forEach(function (key) {
+        /* istanbul ignore else */
+        {
+          defineReactive$$1(vm, key, result[key], function () {
+            warn(
+              "Avoid mutating an injected value directly since the changes will be " +
+              "overwritten whenever the provided component re-renders. " +
+              "injection being mutated: \"" + key + "\"",
+              vm
+            );
+          });
+        }
+      });
+      toggleObserving(true);
+    }
+  }
+```
+
+`resolveInject`方法，根据当前组件的`$options.inject`属性，将其每一个值绑定到当前组件实例上，并设置数据检测，对应的值从`$options`的原型上获取。从而实现了上下游关系跨组件传值。[§](./demos/vue_init/index.html?step=7)
+
+` initState(vm)`:初始化状态。
+```
+  function initState (vm) {
+    vm._watchers = [];
+    var opts = vm.$options;
+    if (opts.props) { initProps(vm, opts.props); }
+    if (opts.methods) { initMethods(vm, opts.methods); }
+    if (opts.data) {
+      initData(vm);
+    } else {
+      observe(vm._data = {}, true /* asRootData */);
+    }
+    if (opts.computed) { initComputed(vm, opts.computed); }
+    if (opts.watch && opts.watch !== nativeWatch) {
+      initWatch(vm, opts.watch);
+    }
+  }
+
+```
+首先初始一个`_watchers`，开始根据`$options`上的参数进行初始化：
+```
+if (opts.props) { initProps(vm, opts.props); }
+```
+判断是否有传入了`props`值，如果有就初始化：
+```
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

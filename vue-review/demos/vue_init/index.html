@@ -35,12 +35,12 @@
             return result;
         }
         Vue.component("hello-wrod", {
-            template: "<span><slot><span>hello </span><span><span>word</span><span>word</span> </span></slot></span>",
+            template: "<span><slot><span>hello </span><span><span>word</span> <span>{{abc}}</span> </span></slot></span>",
+            inject:['abc'],
+            props:{
+                'aa':'aa'
+            },
             beforeCreate() {
-                // if ( query.step == 5) {
-                //     console.log(this)
-                //     debugger;
-                // }
             }
         })
   
@@ -71,6 +71,12 @@
             props: ['title', 'likes'],
             mixins: [mixins1, mixins2],
             extends: extend,
+            provide(){
+                return {
+                    abc:"cba"
+                }
+            },
+           
             //对象模式
             // props:{
             //     title: {
@@ -113,9 +119,7 @@
             updated: function () { },
             beforeDestroy: function () { },
             destroyed: function () { },
-            // render(h) {
-
-            // },
+           
         })
     </script>
 </body>

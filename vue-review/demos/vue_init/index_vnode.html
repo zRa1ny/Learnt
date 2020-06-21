@@ -10,28 +10,32 @@
 
 <body>
     <div id="app">
-        <div>sss</div>
-        <hello-wrod1 @click="hellowordclickFn" @hook:beforeCreate="hookbeforeCreateFn" ref="helloword2">
+        <div>{{test}} sas</div>
+       
+        <!-- <hello-wrod1 @click="hellowordclickFn" @hook:beforeCreate="hookbeforeCreateFn" ref="helloword2">
         </hello-wrod1>
         <hello-wrod2 @click="hellowordclickFn" @hook:beforeCreate="hookbeforeCreateFn" ref="helloword1">
             <hello-wrod3 @click="hellowordclickFn" @hook:beforeCreate="hookbeforeCreateFn" ref="helloword3">
             
             </hello-wrod3>
-        </hello-wrod2>
-        <smart-component :data="data">  </smart-component>
-        <button @click="change('img')">图片组件</button>
-        <button @click="change('video')">视频组件</button>
-        <button @click="change('text')">文本组件</button>
-        <smart-list :items=items></smart-list>
+        </hello-wrod2> -->
+ 
+        <!-- <func-comp>
+            <div slot-scope="scope">demo functional component {{scope.a}}</div>
+        </func-comp> -->
     </div>
     <script src="./vue_vnode.js"></script>
 
     <script>
         var query = GetRequest();
+
         function GetRequest() {
-            var fullURL = window.location.href, url = location.search, result = new Object();
+            var fullURL = window.location.href,
+                url = location.search,
+                result = new Object();
             if (url.indexOf("?") != -1) {
-                var str = url.substr(1), strs = str.split("&");
+                var str = url.substr(1),
+                    strs = str.split("&");
                 for (var i = 0; i < strs.length; i++) {
                     result[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
                 }
@@ -51,120 +55,22 @@
             template: "<span>{{2}}</span>",
 
         })
-        //图片组件设置
-        var imgOptions = {
-            props: ['data'],
-            render: function (createElement) {
-                return createElement('div', [
-                    createElement('p', '图片组件'),
-                    createElement('img', {
-                        attrs: {
-                            src: this.data.url,
-                            height: 300,
-                            weight: 400
-
-                        }
-                    })
-                ]);
-            }
-        };
-
-        //视频组件设置
-        var videoOptions = {
-            props: ['data'],
-            render: function (createElement) {
-                return createElement('div', [
-                    createElement('p', '视频组件'),
-                    createElement('video', {
-                        attrs: {
-                            src: this.data.url,
-                            controls: 'controls',
-                            autoplay: 'autoplay'
-                        }
-                    })
-                ]);
-            }
-        };
-
-        //文本组件设置
-        var textOptions = {
-            props: ['data'],
-            render: function (createElement) {
-                return createElement('div', [
-                    createElement('p', '文本组件'),
-                    createElement('p', this.data.content)
-                ]);
-            }
-        };
-
-        Vue.component('smart-component', {
-            //设置为函数化组件
-            functional: true,
-            render: function (createElement, context) {
-                function get() {
-                    var data = context.props.data;
-
-                    // console.log("smart-component/type:" + data.type);
-                    //判断是哪一种类型的组件
-                    switch (data.type) {
-                        case 'img':
-                            return imgOptions;
-                        case 'video':
-                            return videoOptions;
-                        case 'text':
-                            return textOptions;
-                        default:
-                         return {
-                            // props: ['data'],
-                            render: function (createElement) {
-                                return [createElement('hello-wrod2')];
-                            }
-                        }   
-                        ;
-                    }
-                }
-
-                return createElement(
-                    get(),
-                    {
-                        props: {
-                            data: context.props.data
-                        }
-                    },
-                    context.children
-                )
-            },
-            props: {
-                data: {
-                    type: Object,
-                    required: true
-                }
-            }
-        })
 
         Vue.component("hello-wrod3", {
             template: "<span>{{3}}</span>",
         })
 
-        Vue.component('smart-list', {
-            functional: true, 　　　　　　　　　　　　　　　　　　　　　　//指定这是一个函数式组件
-            render: function (createElement, context) {
-                function appropriateListComponent (){
-                    if (context.props.items.length==0){             //当父组件传来的items元素为空时渲染这个
-                        return {template:"<div>Enpty item</div>"}
-                    }
-                    return 'ul'
-                }
-                return createElement(appropriateListComponent(),Array.apply(null,{length:context.props.items.length}).map(function(val,index){
-                    return createElement('li',context.props.items[index].name)
-                }))
-            },
+        Vue.component('func-comp', {
+            functional: true,
             props: {
-                items: {type: Array,required: true},
-                isOrdered: Boolean
+                name: String
+            },
+            render(createElement, context) {
+                return createElement('div', context.data, [context.scopedSlots.default({
+                    a: 1
+                }), createElement('h1', '一则头条'), createElement('h1', '一则头条')])
             }
-        });
-
+        })
 
 
 
@@ -173,55 +79,38 @@
             data: {
                 test: "a",
                 data: {},
-                items:[{name:'a',id:0},{name:'b',id:1},{name:'c',id:2}]
+                items: [{
+                    name: 'a',
+                    id: 0
+                }, {
+                    name: 'b',
+                    id: 1
+                }, {
+                    name: 'c',
+                    id: 2
+                }]
             },
             methods: {
-                testFN: function () { },
-                hellowordclickFn: function () { },
-                hookbeforeCreateFn: function () { },
-                change: function (type) {
-                    console.log("输入类型：" + type);
-                    switch (type) {
-                        case 'img':
-                            this.data = {
-                                type: 'img',
-                                url: 'http://pic-bucket.ws.126.net/photo/0001/2019-02-07/E7D8PON900AO0001NOS.jpg'
-                            }
-                            break;
-                        case 'video':
-                            this.data = {
-                                type: 'video',
-                                url: 'http://wxapp.cp31.ott.cibntv.net/6773887A7F94A71DF718E212C/03002002005B836E73A0C5708529E09C1952A1-1FCF-4289-875D-AEE23D77530D.mp4?ccode=0517&duration=393&expire=18000&psid=bbd36054f9dd2b21efc4121e320f05a0&ups_client_netip=65600b48&ups_ts=1549519607&ups_userid=21780671&utid=eWrCEmi2cFsCAWoLI41wnWhW&vid=XMzc5OTM0OTAyMA&vkey=A1b479ba34ca90bcc61e3d6c3b2da5a8e&iv=1&sp='
-                            }
-                            break;
-                        case 'text':
-                            this.data = {
-                                type: 'text',
-                                content: '《流浪地球》中的科学：太阳何时吞并地球？科学家已经给出时间表'
-                            }
-                            break;
-                        default:
-                            console.log("data 类型不合法：" + type);
-                    }
-
-                },
+                testFN: function () {},
+                hellowordclickFn: function () {},
+                hookbeforeCreateFn: function () {},
             },
-       
+
             watch: {
-            test: function () { }
-        },
-            beforeCreate: function () {
+                test: function () {}
             },
-            created: function () { },
-            beforeMount: function () {
-            },
-            mounted: function () { },
-            beforeUpdate: function () { },
-            updated: function () { },
-            beforeDestroy: function () { },
-            destroyed: function () { },
+            beforeCreate: function () {},
+            created: function () {},
+            beforeMount: function () {},
+            mounted: function () {},
+            beforeUpdate: function () {},
+            updated: function () {},
+            beforeDestroy: function () {},
+            destroyed: function () {},
             // render(h) {
-
+            //     return h("smart-list",{props:{
+            //         items:this.items
+            //     }})
             // },
         })
     </script>

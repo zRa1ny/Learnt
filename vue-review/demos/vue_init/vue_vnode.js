@@ -2352,8 +2352,7 @@
   // thing with Array.prototype.concat. It is guaranteed to be only 1-level deep
   // because functional components already normalize their own children.
   function simpleNormalizeChildren (children) {
-    console.log('simpleNormalizeChildren')
-    console.log(children);
+    console.log('simpleNormalizeChildren',children)
     debugger;
     for (var i = 0; i < children.length; i++) {
       if (Array.isArray(children[i])) {
@@ -2369,7 +2368,7 @@
   // with hand-written render functions / JSX. In such cases a full normalization
   // is needed to cater to all possible types of children values.
   function normalizeChildren (children) {
-    console.log('normalizeChildren')
+    console.log('normalizeChildren',children)
     return isPrimitive(children)
       ? [createTextVNode(children)]
       : Array.isArray(children)
@@ -2384,8 +2383,7 @@
   function normalizeArrayChildren (children, nestedIndex) {
     var res = [];
     var i, c, lastIndex, last;
-    console.log('normalizeChildren.normalizeArrayChildren')
-    console.log(children)
+    console.log('normalizeChildren.normalizeArrayChildren',children)
     debugger;
     for (i = 0; i < children.length; i++) {
       c = children[i];
@@ -2395,7 +2393,6 @@
       //  nested
       
       if (Array.isArray(c)) {
-        console.log('arry')
         if (c.length > 0) {
           c = normalizeArrayChildren(c, ((nestedIndex || '') + "_" + i));
           // merge adjacent text nodes
@@ -2983,7 +2980,6 @@
     Ctor
   ) {
     var this$1 = this;
-
     var options = Ctor.options;
     // ensure the createElement function in functional components
     // gets a unique context - this is necessary for correct named slot check
@@ -3383,7 +3379,7 @@
     children,
     normalizationType
   ) {
-   
+    
     if (isDef(data) && isDef((data).__ob__)) {
       warn(
         "Avoid using observed data object as vnode data: " + (JSON.stringify(data)) + "\n" +

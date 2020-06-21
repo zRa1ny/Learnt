@@ -1031,7 +1031,6 @@
     if ((!getter || setter) && arguments.length === 2) {
       val = obj[key];
     }
-
     var childOb = !shallow && observe(val);
     Object.defineProperty(obj, key, {
       enumerable: true,
@@ -2352,7 +2351,7 @@
   // thing with Array.prototype.concat. It is guaranteed to be only 1-level deep
   // because functional components already normalize their own children.
   function simpleNormalizeChildren (children) {
-    console.log('simpleNormalizeChildren')
+   
     for (var i = 0; i < children.length; i++) {
       if (Array.isArray(children[i])) {
         return Array.prototype.concat.apply([], children)
@@ -2380,7 +2379,7 @@
   function normalizeArrayChildren (children, nestedIndex) {
     var res = [];
     var i, c, lastIndex, last;
-    console.log(children)
+    // console.log(children)
     for (i = 0; i < children.length; i++) {
       c = children[i];
       if (isUndef(c) || typeof c === 'boolean') { continue }
@@ -2389,7 +2388,7 @@
       //  nested
       
       if (Array.isArray(c)) {
-        console.log('arry')
+        // console.log('arry')
         if (c.length > 0) {
           c = normalizeArrayChildren(c, ((nestedIndex || '') + "_" + i));
           // merge adjacent text nodes
@@ -2468,7 +2467,7 @@
       var keys = hasSymbol
         ? Reflect.ownKeys(inject)
         : Object.keys(inject);
-
+     
       for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
         // #6574 in case the inject object is observed...
@@ -3411,7 +3410,7 @@
       typeof children[0] === 'function'
     ) {
       if(context.$root.$options.step=='slots'){
-        console.log(children)
+        // console.log(children)
       }
       data = data || {};
       data.scopedSlots = { default: children[0] };
@@ -5044,15 +5043,31 @@
         debugger;
       }
       initRender(vm);
-      
-      if(options.step==6  || ( vm.$root.$options.step==6)){
+      // 
+      if(options.step==6 || ( vm.$root.$options.step==6) ){
         console.log(vm)
         debugger;
       }
       callHook(vm, 'beforeCreate');
+      if(options.step=="beforeCreate"){
+        console.log(vm)
+        debugger;
+      }
       initInjections(vm); // resolve injections before data/props
+      if(options.step==7 || ( vm.$root.$options.step==7) ){
+        console.log(vm)
+        debugger;
+      }
       initState(vm);
+      if(options.step==8 || ( vm.$root.$options.step==8) ){
+        console.log(vm)
+        debugger;
+      }
       initProvide(vm); // resolve provide after data/props
+      if(options.step==9 || ( vm.$root.$options.step==9) ){
+        console.log(vm)
+        debugger;
+      }
       callHook(vm, 'created');
 
       /* istanbul ignore if */
