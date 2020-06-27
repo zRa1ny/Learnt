@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue</title>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        var query = GetRequest();
+
+        function GetRequest() {
+            var fullURL = window.location.href,
+                url = location.search,
+                result = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1),
+                    strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    result[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+            }
+
+            return result;
+        }
+        new Vue({
+            el: "#app",
+            template: "<div><h3>{{title}}</h3><div>静态内容</div></div>",
+            data: {
+                title: "我是data数据title"
+            },
+            watch: {
+                title: function () {}
+            },
+            computed: {
+                mtitle: function () {
+                    return m + this.title
+                }
+            },
+            methods: {
+                show() {}
+            },
+            beforeCreate: function () {
+                if (query.type === "1" || query.type === undefined) {
+                    console.log(vm);
+                    debugger;
+                    console.log('---- ---- Before Create');
+                }
+
+            },
+            created: function () {
+                if (query.type === "2" || query.type === undefined) {
+                    console.log(vm);
+                    debugger;
+                    console.log('---- ---- Created');
+                }
+
+
+            },
+            beforeMount: function () {
+                if (query.type === "3" || query.type === undefined) {
+                    console.log(vm);
+                    debugger;
+                    console.log('---- ---- beforeMount');
+                }
+
+            }
+        })
+    </script>
+</body>
+
+</html>

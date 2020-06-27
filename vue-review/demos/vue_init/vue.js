@@ -2461,6 +2461,7 @@
   }
 
   function resolveInject (inject, vm) {
+    
     if (inject) {
       // inject is :any because flow is not smart enough to figure out cached
       var result = Object.create(null);
@@ -11966,7 +11967,9 @@
     if (!options.render) {
       var template = options.template;
       if (template) {
+
         if (typeof template === 'string') {
+
           if (template.charAt(0) === '#') {
             template = idToTemplate(template);
             /* istanbul ignore if */
@@ -11977,6 +11980,7 @@
               );
             }
           }
+
         } else if (template.nodeType) {
           template = template.innerHTML;
         } else {
@@ -11988,6 +11992,7 @@
       } else if (el) {
         template = getOuterHTML(el);
       }
+
       if (template) {
         /* istanbul ignore if */
         if (config.performance && mark) {
@@ -12001,6 +12006,8 @@
           delimiters: options.delimiters,
           comments: options.comments
         }, this);
+
+  
         var render = ref.render;
         var staticRenderFns = ref.staticRenderFns;
         options.render = render;

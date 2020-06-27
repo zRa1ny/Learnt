@@ -1083,11 +1083,11 @@ if (isUndef(c) || typeof c === 'boolean') { continue }
  ```
  `callHook`:触发生命周期钩子（即$options里面对呀的钩子方法）并将当前实例设置钩子函数的`this`，然后发送对面的hook事件。[§](./demos/vue_init/index.html?step=6)
 
- 这里触发了`beforeCreate`，也就进入第一个生命周期钩子，官方将`new Vue()`到`callHook(vm, 'beforeCreate')`中间这个阶段称为`init Events & lifeCycle`。这一阶段，我们收集了父子组件之间的关系，收集父组件监听的子组件的事件，初始化了一系列参数和方法。 [§](./demos/vue_init/index.html?step=beforeCreate)。
+ 这里触发了`beforeCreate`，也就进入第一个生命周期钩子，官方将`new Vue()`到`callHook(vm, 'beforeCreate')`中间这个阶段称为`init Events & lifeCycle`。这一阶段，我们收集了父子组件之间的关系，收集父组件监听的子组件的事件，初始化了一系列参数和方法。 [§](./demos/vue_init/[§](./demos/vue_init/lifecyle.html?type=1)。
 
  继续回到`_init`执行`initInjections(vm)`：
 
- `initInjections`,s取出当前组件需要注入的值并且返回。
+ `initInjections`,取出当前组件需要注入的值并且返回。
  因为当时`new Vue()`,根组件不存在注入，先看数据是什么样提供，`initProvide(vm);`。
 
 ```
@@ -1128,7 +1128,7 @@ if (isUndef(c) || typeof c === 'boolean') { continue }
   }
 ```
 
-`resolveInject`方法，根据当前组件的`$options.inject`属性，将其每一个值绑定到当前组件实例上，并设置数据检测，对应的值从`$options`的原型上获取。从而实现了上下游关系跨组件传值。[§](./demos/vue_init/index.html?step=7)
+`resolveInject`方法，根据当前组件的`$options.inject`属性，返回一个属性值对象（对应的值从`vm._provided`的上获取,如果没有，通过$parent向上寻找）,然后将返回值每一个值绑定到当前组件实例上，从而实现了上下游关系跨组件传值。[§](./demos/vue_init/index.html?step=7)
 
 ` initState(vm)`:初始化状态。
 ```
@@ -1154,8 +1154,330 @@ if (isUndef(c) || typeof c === 'boolean') { continue }
 if (opts.props) { initProps(vm, opts.props); }
 ```
 判断是否有传入了`props`值，如果有就初始化：
+拆解`initProps`，首先给实例增加一个`_prop`属性和实例的`$options.propsData`，
 ```
+  for (var key in propsOptions) loop( key );
 ```
+对`$options.props`属性进行遍历，执行`loop(ley)`
+
+```
+    var loop = function ( key ) {
+      keys.push(key);
+      var value = validateProp(key, propsOptions, propsData, vm);
+      {
+        var hyphenatedKey = hyphenate(key);
+        if (isReservedAttribute(hyphenatedKey) ||
+            config.isReservedAttr(hyphenatedKey)) {
+          warn(
+            ("\"" + hyphenatedKey + "\" is a reserved attribute and cannot be used as component prop."),
+            vm
+          );
+        }
+        defineReactive$$1(props, key, value, function () {
+          if (!isRoot && !isUpdatingChildComponent) {
+            warn(
+              "Avoid mutating a prop directly since the value will be " +
+              "overwritten whenever the parent component re-renders. " +
+              "Instead, use a data or computed property based on the prop's " +
+              "value. Prop being mutated: \"" + key + "\"",
+              vm
+            );
+          }
+        });
+      }
+      if (!(key in vm)) {
+        proxy(vm, "_props", key);
+      }
+    };
+```
+`keys = vm.$options._propKeys = []`,储存传入的`prop`属性的键值。
+`validateProp`，对数据进行类型检测和设置监听初始值，最后返回这个值。
+`hyphenate`，将驼峰语法转化`-`链接并返回。
+`isReservedAttribute(hyphenatedKey) ||config.isReservedAttr(hyphenatedKey)`,判断是不是保留的名称或者设置保留的。
+设置对值监听的数据收集和数据更新，并将获取和设置实例的`props`上的属性代理到`_props`上。
+
+完成`props`属性的初始化之后，继续初始化`methods`属性。
+`initMethods`，检测`methods`中的方法是不是函数，并且有没有和现有的方法方法重名和`props`属性重名。并且设置访问实例对应名称的时候
+```
+ vm[key] = typeof methods[key] !== 'function' ? noop : bind(methods[key], vm);
+```
+访问对应的方法，并绑定实例为`this`.
+
+继续初始化`data`属性：
+```
+  if (opts.data) {
+    initData(vm);
+  } else {
+    observe(vm._data = {}, true /* asRootData */);
+  }
+```
+判断是否传入了`data`参数，如果没有传入，就给`_data`赋值空对象，并设置监听。
+如果传入了，`initData(vm)`。
+```
+    var data = vm.$options.data;
+    data = vm._data = typeof data === 'function'
+      ? getData(data, vm)
+      : data || {};
+
+```
+
+  首先获取`data`参数，将对象和函数传值通过话处理成对象。
+
+```
+    if (!isPlainObject(data)) {
+      data = {};
+      warn(
+        'data functions should return an object:\n' +
+        'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
+        vm
+      );
+    }
+```
+  `isPlainObject`判断`data`参数类型必须为对象。
+
+```
+    // proxy data on instance
+    var keys = Object.keys(data);
+    var props = vm.$options.props;
+    var methods = vm.$options.methods;
+    var i = keys.length;
+    while (i--) {
+      var key = keys[i];
+      {
+        if (methods && hasOwn(methods, key)) {
+          warn(
+            ("Method \"" + key + "\" has already been defined as a data property."),
+            vm
+          );
+        }
+      }
+      if (props && hasOwn(props, key)) {
+        warn(
+          "The data property \"" + key + "\" is already declared as a prop. " +
+          "Use prop default value instead.",
+          vm
+        );
+      } else if (!isReserved(key)) {
+        proxy(vm, "_data", key);
+      }
+    }
+```
+
+判断`data`中的键有没有和`props`和`methods`中和重合，并且不是`_`和`$`开头。
+则将对实例访问`data`中的键时候，将其代理到`_data`上。
+
+最后 监听整个`data`。
+
+继续初始化计算属性，执行`initComputed(vm, opts.computed)`。
+```
+  var watchers = vm._computedWatchers = Object.create(null);
+  var isSSR = isServerRendering();
+```
+首先给实例增加`_computedWatchers`属性，并设置两个局部变量，`watchers`等于`vm._computedWatchers`,`isSSR`是否是服务器渲染的标识。
+```
+  for (var key in computed) {
+      var userDef = computed[key];
+      var getter = typeof userDef === 'function' ? userDef : userDef.get;
+      if (getter == null) {
+        warn(
+          ("Getter is missing for computed property \"" + key + "\"."),
+          vm
+        );
+      }
+
+      if (!isSSR) {
+        // create internal watcher for the computed property.
+        watchers[key] = new Watcher(
+          vm,
+          getter || noop,
+          noop,
+          computedWatcherOptions
+        );
+      }
+      if (!(key in vm)) {
+        defineComputed(vm, key, userDef);
+      } else {
+        if (key in vm.$data) {
+          warn(("The computed property \"" + key + "\" is already defined in data."), vm);
+        } else if (vm.$options.props && key in vm.$options.props) {
+          warn(("The computed property \"" + key + "\" is already defined as a prop."), vm);
+        }
+      }
+    }
+```
+遍历`computed`的值，如果对应的值是函数，则当作是这个属性的`getter`.此外属性的值还可以是一个对象，他只有三个有效字段set、get和cache，分别表示属性的setter、getter和是否启用缓存，其中get是必须的，cache默认为true。
+
+如果不是服务端渲染，创建一个计算属性 watcher。
+如果实例上没有与计算属性重名的值，执行`  defineComputed(vm, key, userDef)`,调用defineComputed函数，监听数据，为组件中的属性绑定getter及setter。
+
+`initWatch(vm, opts.watch)`:
+```
+  function initWatch (vm, watch) {
+    for (var key in watch) {
+      var handler = watch[key];
+      if (Array.isArray(handler)) {
+        for (var i = 0; i < handler.length; i++) {
+          createWatcher(vm, key, handler[i]);
+        }
+      } else {
+        createWatcher(vm, key, handler);
+      }
+    }
+  }
+```
+给`watch`参数中的每一项都创建`watcher`，如果是数组，则遍历每一个元素。
+```
+  function createWatcher (
+    vm,
+    expOrFn,
+    handler,
+    options
+  ) {
+    if (isPlainObject(handler)) {
+      options = handler;
+      handler = handler.handler;
+    }
+    if (typeof handler === 'string') {
+      handler = vm[handler];
+    }
+    return vm.$watch(expOrFn, handler, options)
+  }
+
+```
+处理对象和函数两种传参，然后通过`$watch`,监听数据变化，并执行回调。
+
+至此，完成了生命周期的数据初始化，包括`props`,`methods`,`data`,`watch`,`computed`,`inject`,`provide`，这些数据已经绑定到实例上了，并且对应的属性已经被监听。此`$el`属性尚未初始化，也没有初始化页面和绑定，此时没有`dom`结构。
+
+```
+   callHook(vm, 'created');
+```
+执行回调。[§](./demos/vue_init/lifecyle.html?type=2)。
+
+继续往下看`_init(options)`:
+```
+      if (vm.$options.el) {
+        vm.$mount(vm.$options.el);
+      }
+```
+如果没有`el`参数，那么初始化至此结束了，不会挂载到页面上，直到调用实例的`$mount`方法。
+如果有`el`参数，直接在`_init()`最后调用并传入`el`参数。
+
+拆解`$mount`:
+```
+  el = el && query(el);
+
+  if (el === document.body || el === document.documentElement) {
+    warn(
+      "Do not mount Vue to <html> or <body> - mount to normal elements instead."
+    );
+    return this
+  }
+```
+通过`el`参数获取对应的DOM,判断是否是`body`和`html`，如果是 抛出警告返回this结束。
+
+- 如果没有传入`render`函数:
+  1. 如果没传入`template`
+  ```
+    template = getOuterHTML(el);
+  ```
+  通过`el`获取`el`及其内部的元素作为`template`.
+  
+  2. 如果传入`template`
+    - 判断`tempalte`参数传入的是不是字符串，如果是字符串，判断是否以"#"开头的。
+      ```
+        if (template.charAt(0) === '#') {
+                template = idToTemplate(template);
+                /* istanbul ignore if */
+                if (!template) {
+                  warn(
+                    ("Template element not found or is empty: " + (options.template)),
+                    this
+                  );
+                }
+              }
+      ```
+      ```
+      var idToTemplate = cached(function (id) {
+        var el = query(id);
+        return el && el.innerHTML
+      });
+      ```
+      如果是，就当作元素的id去获取对应的DOM，并将其赋给template。接着判断是否获取到了DOM，没有抛出警告。
+
+      如果不是"#"开头的字符串，就不做处理直接当作template。
+      
+    - 如果不是字符串
+      当作DOM处理，判断`template.nodeType`,使用`innerHTML`作为`template`。
+    - 其余情况直接抛出警告，返回实例结束。
+
+  3. 将传入的`template`统一处理后，如果`tempalte`有值，
+      ```
+       var ref = compileToFunctions(template, {
+          outputSourceRange: "development" !== 'production',
+          shouldDecodeNewlines: shouldDecodeNewlines,
+          shouldDecodeNewlinesForHref: shouldDecodeNewlinesForHref,
+          delimiters: options.delimiters,
+          comments: options.comments
+        }, this);
+        var render = ref.render;
+        var staticRenderFns = ref.staticRenderFns;
+        options.render = render;
+        options.staticRenderFns = staticRenderFns;
+
+      ```
+
+      使用`compileToFunctions`,编译字符串模板，如果 shouldDecodeNewlines 为 true，意味着 Vue 在编译模板的时候，要对属性值中的换行符或制表符做兼容处理。而shouldDecodeNewlinesForHref为true 意味着Vue在编译模板的时候，要对a标签的 href 属性值中的换行符或制表符做兼容处理。delimiters改变纯文本插入分隔符，comments为true的时候保留html注释。
+      编译完成后会返回一个对象，有两个属性`render`和`staticRenderFns`，一个获得绑定动态数据的VNode，一个是获得静态数据Vnode。
+
+      然后把这两个属性绑定`options`参数上面。
+      此时，`options` 也有`render`方法。
+      最后 调用`return mount.call(this, el, hydrating)`。
+
+- 如果传入`render`函数:
+      直接调用`return mount.call(this, el, hydrating)`
+
+再看看`mount`函数：
+```
+  mount = function (
+    el,
+    hydrating
+  ) {
+    el = el && inBrowser ? query(el) : undefined;
+    return mountComponent(this, el, hydrating)
+  };
+```
+判断`el`参数是否存在和是否在浏览器中，给el重新赋值为DOM或者undefined。
+调用`mountComponent(this, el, hydrating)`,`this`是当前实例。
+```
+   vm.$el = el;
+    if (!vm.$options.render) {
+      vm.$options.render = createEmptyVNode;
+      {
+        /* istanbul ignore if */
+        if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||
+          vm.$options.el || el) {
+          warn(
+            'You are using the runtime-only build of Vue where the template ' +
+            'compiler is not available. Either pre-compile the templates into ' +
+            'render functions, or use the compiler-included build.',
+            vm
+          );
+        } else {
+          warn(
+            'Failed to mount component: template or render function not defined.',
+            vm
+          );
+        }
+      }
+    }
+```
+首先将`el`赋给实例的`#el`属性，如果在浏览器中，就是当前实例绑定的DOM。
+如果没有`$options.render`,给`render`赋一个生产空VNode的函数,抛出错误。
+```
+ callHook(vm, 'beforeMount');
+```
+
+执行`beforeMount`回调，此时相对于之前，首先根据`el`参数，将`#el`赋值；其次，如果没有`render`参数，就根据`tempalte`生成一个并赋值给`options.render`。当然 此时还没有挂在页面上面，所以只有一个挂载节点的DOM存在。[§](./demos/vue_init/lifecyle.html?type=3)
 
 
 
