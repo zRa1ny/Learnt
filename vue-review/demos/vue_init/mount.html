@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue</title>
+</head>
+
+<body>
+    <div id="app">
+        <hello></hello>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            components:{
+                hello:{
+                    template:"<div>hello</div>"
+                }
+            },
+            data: {
+                title: "我是data数据title"
+            },
+            watch: {
+                title: function () { }
+            },
+            computed: {
+                mtitle: function () {
+                    return m + this.title
+                }
+            },
+            methods: {
+                show() { }
+            },
+        })
+    </script>
+</body>
+
+</html>

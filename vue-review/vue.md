@@ -1477,7 +1477,20 @@ if (opts.props) { initProps(vm, opts.props); }
  callHook(vm, 'beforeMount');
 ```
 
-执行`beforeMount`回调，此时相对于之前，首先根据`el`参数，将`#el`赋值；其次，如果没有`render`参数，就根据`tempalte`生成一个并赋值给`options.render`。当然 此时还没有挂在页面上面，所以只有一个挂载节点的DOM存在。[§](./demos/vue_init/lifecyle.html?type=3)
+执行`beforeMount`回调，此时相对于之前，首先根据`el`参数，将`#el`赋值；其次，如果没有`render`参数，就根据`tempalte`生成一个并赋值给`options.render`。 此时还没有挂到页面上面，所以只有一个挂载节点的DOM存在。[§](./demos/vue_init/lifecyle.html?type=3)
+
+申明一个函数，函数内部调用实例的`_update`方法，传入实例的`_render`方法。
+```
+ updateComponent = function () {
+        vm._update(vm._render(), hydrating);
+ };
+```
+
+先看下`_render`方法。
+
+
+[§](./demos/vue_init/mount.html)
+
 
 
 
