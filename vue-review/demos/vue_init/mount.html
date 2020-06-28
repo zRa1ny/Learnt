@@ -18,7 +18,15 @@
             el: "#app",
             components:{
                 hello:{
-                    template:"<div>hello</div>"
+                    template:"<div>hello</div>",
+                    // render(h){
+                    //     return h("div",[h("p",['haha'])])
+                    // },
+                    data(){
+                        return {
+                            a:'1'
+                        }
+                    }
                 }
             },
             data: {

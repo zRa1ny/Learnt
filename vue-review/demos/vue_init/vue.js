@@ -3549,7 +3549,7 @@
       var ref = vm.$options;
       var render = ref.render;
       var _parentVnode = ref._parentVnode;
-      debugger;
+     
       if (_parentVnode) {
         vm.$scopedSlots = normalizeScopedSlots(
           _parentVnode.data.scopedSlots,
