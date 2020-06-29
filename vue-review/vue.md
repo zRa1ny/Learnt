@@ -1516,9 +1516,40 @@ if (opts.props) { initProps(vm, opts.props); }
 ```
 通过call的方式调用`render`，传入当前实例作为`this`（`_renderProxy`是当前实例的代理）,第二参数`$createElement`根据参数创建`Vnode`。这里的`render`跟参数传入的`render`是一样的，这里是由模板编译得到的`render`。执行完成的返回结果`Vnode`。这里`_parentVnode`储存的是未经过`render`函数处理的`Vnode`,中间会含有vue的组件标签，经过`render`函数之后返回的vnode，是纯html标签的Vnode。
 
-再回到`vm._update(vm._render(), hydrating);`,
+再回到`vm._update(vm._render(), hydrating)`，
 
 _update主要是调用了patch函数，patch函数的主要功能将vnode转换为dom节点然后渲染在视图中。因此，为了生成dom节点，还需要判断vnode是否有子节点，一直递归到没有子节点时。开始创建子节点并插入在父节点中。最后再将原来定义的根节点移除，因为已经重新建立了新的节点替换原来的根节点。
+也就是说创建dom节点的这个过程，是先从最底层的子节点开始的。[§](./demos/vue_init/alllifecyle.html)。
+
+`beforeCreate ---> beforeMount`:父组件会先于子组件触发生命周期。
+`mounted`:子组件会先于父组件触发生命周期。
+ 非父子关系无法确定先后顺序。
+
+把这个函数储存再`updateComponent`中，并创建一个渲染 Watcher。
+```
+ new Watcher(vm, updateComponent, noop, {
+      before: function before () {
+        if (vm._isMounted && !vm._isDestroyed) {
+          callHook(vm, 'beforeUpdate');
+        }
+      }
+    }, true /* isRenderWatcher */);
+```
+实例化了渲染 Watcher 并调用了 updateComponent 进行第一次渲染。
+
+```
+ if (vm.$vnode == null) {
+      vm._isMounted = true;
+      callHook(vm, 'mounted');
+    }
+    return vm
+```
+
+
+
+
+
+
 
 
 

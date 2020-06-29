@@ -4069,6 +4069,7 @@
     var updateComponent;
     /* istanbul ignore if */
     if (config.performance && mark) {
+        debugger;
       updateComponent = function () {
         var name = vm._name;
         var id = vm._uid;
@@ -4090,7 +4091,7 @@
         vm._update(vm._render(), hydrating);
       };
     }
-
+  
     // we set this to vm._watcher inside the watcher's constructor
     // since the watcher's initial patch may call $forceUpdate (e.g. inside child
     // component's mounted hook), which relies on vm._watcher being already defined
@@ -4102,9 +4103,10 @@
       }
     }, true /* isRenderWatcher */);
     hydrating = false;
-
+   
     // manually mounted instance, call mounted on self
     // mounted is called for render-created child components in its inserted hook
+    
     if (vm.$vnode == null) {
       vm._isMounted = true;
       callHook(vm, 'mounted');
