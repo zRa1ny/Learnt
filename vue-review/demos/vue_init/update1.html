@@ -10,6 +10,7 @@
 
 <body>
     <div id="app">
+        <h3  ref="title">{{title}}</h3>
         <hello></hello>
     </div>
     <script src="./vue.js"></script>
@@ -19,6 +20,9 @@
             components:{
                 hello:{
                     template:"<div>hello</div>",
+                    // render(h){
+                    //     return h("div",[h("p",['haha'])])
+                    // },
                     data(){
                         return {
                             a:'1'
@@ -40,14 +44,25 @@
             methods: {
                 show() { }
             },
-
+            beforeMount:function(){
+              
+            },
             mounted:function(){
                 console.log( " -----mounted ---- ");
                 console.log(this);
-              
-                
+                this.title =  "mounted 改变 title"
             },
-          
+            beforeUpdate:function(){
+                console.log("---- beforeUpdate --- ")
+                this.title =  "beforeUpdate 改变 title";
+                console.log("this.title",this.title)
+                console.log("this.$refs.title.innerHTML",this.$refs.title.innerHTML)
+            },
+            updated:function(){
+                console.log("---- updated --- ");
+                console.log("this.title",this.title)
+                console.log("this.$refs.title.innerHTML",this.$refs.title.innerHTML)
+            }
         })
     </script>
 </body>

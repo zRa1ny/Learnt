@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue</title>
+</head>
+
+<body>
+    <div id="app">
+        <h3 ref="title">{{title}}</h3>
+        <h3 >{{test.a}}</h3>
+        <child1 :title="title"></child1>
+        <child2 :title="title"></child2>
+        <button @click="title = '修改'">title = '修改'</button>
+        <button @click="test.a = '修改'">test.a = '修改'</button>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            components: {
+                child1: {
+                    components: {
+                        grandson: {
+                            props: {
+                                title: {
+                                    type:String,
+                                    default:"title"
+                                },
+                                name: {
+                                    type:String,
+                                    default:"name"
+                                },
+                            },
+                            template: "<div>{{title}} = > {{name}}</div>",
+                            beforeUpdate: function () {
+                                console.log("----grandson beforeUpdate --- ")
+
+                            },
+                            updated: function () {
+                                console.log("----grandson updated --- ");
+                            }
+                        },
+                    },
+                    props: {
+                        title: {
+                            type:String,
+                            default:"title"
+                        }
+                    },
+                    template: "<div>{{title}}<grandson :title='title' :name='name'></grandson> <button @click='name = \"修改name\"'>name = \"修改name\"</button></div>",
+                    data(){
+                        return {
+                            name:"name"
+                        }
+                    },
+                    beforeUpdate: function () {
+                        console.log("----child1 beforeUpdate --- ")
+
+                    },
+                    updated: function () {
+                        console.log("----child1 updated --- ");
+                    }
+                },
+
+                child2: {
+                    props: {
+                        title: {
+                            type:String,
+                            default:"title"
+                        }
+                    },
+                    template: "<div>{{title}}{{test.a}}</div>",
+                    data(){
+                        return{
+                            test:{}
+                        }
+                    },
+                    mounted:function(){
+                        this.test.a="a"
+                    },
+                    beforeUpdate: function () {
+                        console.log("----child2 beforeUpdate --- ")
+                    },
+                    updated: function () {
+                        console.log("----child2 updated --- ");
+                    }
+                }
+            },
+            data: {
+                title: "title",
+                test:{
+                    
+                }
+            },
+            watch: {
+                title: function () {}
+            },
+            computed: {
+                mtitle: function () {
+                    return "m" + this.title
+                }
+            },
+            methods: {
+                show() {}
+            },
+
+            beforeUpdate: function () {
+                console.log("----root beforeUpdate --- ")
+
+            },
+            updated: function () {
+                console.log("----root updated --- ");
+            }
+        })
+    </script>
+</body>
+
+</html>
