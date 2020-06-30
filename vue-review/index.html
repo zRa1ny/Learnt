@@ -6,84 +6,1468 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" href="./css/markdown.css">
+    <link rel="stylesheet" href="./css/highlight.css">
 </head>
 
 <body>
     <div id="app">
-        {{title}}
-        {{num}}
-        <button @click="setData('num',2)">num</button>
-        <test-event @test="catchEvent" ref="test"></test-event>
+        <h3 id="vue构造函数">Vue构造函数</h3>
+        <p>Vue 的核心代码入口，包括内置组件，全局API封装，Vue 实例化，观察者，虚拟DOM, 工具函数等等（不包含模板编译部分,源码/core部分）。</p>
+        <pre><code> <span class="hljs-comment">// 入口</span>
+         <span class="hljs-comment">// /vue/src/core/index.js</span>
+        
+        
+        <span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">'./instance/index'</span>
+        <span class="hljs-keyword">import</span> { initGlobalAPI } <span class="hljs-keyword">from</span> <span class="hljs-string">'./global-api/index'</span>
+        ...
+        
+        initGlobalAPI(Vue)
+        
+        ...
+        
+        Vue.version = <span class="hljs-string">'__VERSION__'</span>
+        
+        <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Vue
+        </code></pre>
+        <p>Vue 是从/instance/index.js中导出的默认值。</p>
+        <p><code>initGlobalAPI(Vue)</code></p>
+        <pre><code><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initGlobalAPI</span> (<span class="hljs-params">Vue: GlobalAPI</span>) </span>{
+          <span class="hljs-keyword">const</span> configDef = {}
+          configDef.get = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> config
+            ...
+          <span class="hljs-built_in">Object</span>.defineProperty(Vue, <span class="hljs-string">'config'</span>, configDef)
+          <span class="hljs-comment">// 设置 Vue.config 是一个对象，包含 Vue 的全局配置</span>
+        
+          Vue.util = {
+            warn,
+            extend,
+            mergeOptions,
+            defineReactive
+          }
+          <span class="hljs-comment">// Vue的静态方法，非提供给用户的api，尽量别碰</span>
+        
+          Vue.set = <span class="hljs-keyword">set</span>
+          Vue.delete = del
+          Vue.nextTick = nextTick
+          <span class="hljs-comment">// 绑定全局API——Vue.set，Vue.delete，Vue.nextTick</span>
+        
+          ...
+        
+          Vue.options = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>)
+          ASSET_TYPES.forEach(<span class="hljs-function"><span class="hljs-params">type</span> =&gt;</span> {
+            Vue.options[<span class="hljs-keyword">type</span> + <span class="hljs-string">'s'</span>] = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>)
+          })
+          <span class="hljs-comment">// ASSET_TYPES = [ 'component','directive','filter' ] </span>
+        
+          Vue.options._base = Vue
+          <span class="hljs-comment">// 初始化options</span>
+        
+          extend(Vue.options.components, builtInComponents)
+          <span class="hljs-comment">// builtInComponents = KeepAlive</span>
+          <span class="hljs-comment">// 将keeplive组件 加入Vue.options.components</span>
+        
+        
+          initUse(Vue)
+          initMixin(Vue)
+          initExtend(Vue)
+          initAssetRegisters(Vue)
+          <span class="hljs-comment">// 初始化Vue.extend，Vue.mixin，Vue.extend</span>
+          <span class="hljs-comment">// AssetRegisters就是component，directive，filter三者</span>
+        }
+        </code></pre>
+        <p>这部分主要是给Vue构造函数上增加全局静态方法和属性。通过<code>Object.getOwnPropertyNames(Vue)</code> 可以查看。</p>
+        <blockquote>
+            <p> <code>Vue.set( target, key, value )</code> 修改对象或者数组的指并触发数据监测。(跟this.$set一样) </p>
+        </blockquote>
+        <blockquote>
+            <p><code>Vue.delete(target,key/index)</code> 删除对象的 property。如果对象是响应式的，确保删除能触发更新视图。这个方法主要用于避开 Vue 不能检测到
+                property 被删除的限制，但是你应该很少会使用它。(跟this.$delete一样). </p>
+        </blockquote>
+        <blockquote>
+            <p><code>Vue.nextTick</code> 在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。 <a
+                    href="./demos/Vue.delete&amp;&amp;set&amp;&amp;nextTick.html"
+                    title="Vue.delete &amp;&amp; set &amp;&amp; nextTick.html" target="_blank">§</a></p>
+        </blockquote>
+        <blockquote>
+            <p><code>Vue.use</code> 用于安装 Vue.js 插件。如果插件是一个对象，必须提供 install 方法。如果插件是一个函数，它会被作为 install 方法。install 方法调用时，会将
+                Vue 作为参数传入。当 install 方法被同一个插件多次调用，插件将只会被安装一次,并且通过全局方法 Vue.use() 使用插件。它需要在你调用 new Vue() 启动应用之前完成。 </p>
+        </blockquote>
+        <pre><code><span class="hljs-comment">// plugin install</span>
+        <span class="hljs-comment">// 这个插件必须具有install方法 </span>
+        <span class="hljs-keyword">const</span> plugin = {
+         install (Vue, options) { 
+            <span class="hljs-comment">// 添加全局方法或者属性 </span>
+            Vue.myGlobMethod = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}; 
+            <span class="hljs-comment">// 添加全局指令 </span>
+            Vue.directive(); 
+            <span class="hljs-comment">// 添加混入 </span>
+            Vue.mixin(); 
+            <span class="hljs-comment">// 添加实例方法 </span>
+            Vue.prototype.$xxx = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}; 
+            <span class="hljs-comment">// 注册全局组件 </span>
+            Vue.component() 
+         } 
+        } 
+        
+        <span class="hljs-comment">// plugin 函数</span>
+        <span class="hljs-keyword">const</span> plugin =  <span class="hljs-function">(<span class="hljs-params">Vue</span>)=&gt;</span>{
+          Vue.component(Add.name,Add)
+        }
+        
+        
+        <span class="hljs-comment">// 安装</span>
+        <span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">'vue'</span>; 
+        <span class="hljs-comment">// Vue.use内部会调用plugin的install方法</span>
+        <span class="hljs-comment">// Vue.use内部会蒋plugin函数当做install方法调用</span>
+        Vue.use(plugin);
+        </code></pre>
+        <blockquote>
+            <p>Vue.mixin( mixin ) : 全局注册一个混入，影响注册之后所有创建的每个 Vue 实例。插件作者可以使用混入，向组件注入自定义的行为。不推荐在应用代码中使用。</p>
+        </blockquote>
+        <blockquote>
+            <p>Vue.extend( options ) 使用基础 Vue 构造器，创建一个“子类”。参数是一个包含组件选项的对象。</p>
+        </blockquote>
+        <blockquote>
+            <p>Vue.component( id, [definition] ) 注册或获取全局组件。注册还会自动使用给定的 id 设置组件的名称</p>
+        </blockquote>
+        <blockquote>
+            <p>Vue.directive( id, [definition] ) 注册或获取全局指令。</p>
+        </blockquote>
+        <blockquote>
+            <p>Vue.filter( id, [definition] ) 注册或获取全局过滤器。</p>
+        </blockquote>
+        <hr>
+        <pre><code><span class="hljs-comment">// /vue/src/core/insance/index.js</span>
+        
+        <span class="hljs-keyword">import</span> { initMixin } <span class="hljs-keyword">from</span> <span class="hljs-string">'./init'</span>
+        <span class="hljs-keyword">import</span> { stateMixin } <span class="hljs-keyword">from</span> <span class="hljs-string">'./state'</span>
+        <span class="hljs-keyword">import</span> { renderMixin } <span class="hljs-keyword">from</span> <span class="hljs-string">'./render'</span>
+        <span class="hljs-keyword">import</span> { eventsMixin } <span class="hljs-keyword">from</span> <span class="hljs-string">'./events'</span>
+        <span class="hljs-keyword">import</span> { lifecycleMixin } <span class="hljs-keyword">from</span> <span class="hljs-string">'./lifecycle'</span>
+        <span class="hljs-keyword">import</span> { warn } <span class="hljs-keyword">from</span> <span class="hljs-string">'../util/index'</span>
+        
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Vue</span> (<span class="hljs-params">options</span>) </span>{
+            <span class="hljs-keyword">if</span> (process.env.NODE_ENV !== <span class="hljs-string">'production'</span> &amp;&amp;
+                !(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> Vue)
+            ) {
+                warn(<span class="hljs-string">'Vue is a constructor and should be called with the `new` keyword'</span>)
+            }
+            <span class="hljs-keyword">this</span>._init(options)
+        }
+        
+        initMixin(Vue)
+        stateMixin(Vue)
+        eventsMixin(Vue)
+        lifecycleMixin(Vue)
+        renderMixin(Vue)
+        
+        <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Vue
+        </code></pre>
+        <p>这部分主要给Vue.prototype增加了各种方法。</p>
+        <pre><code><span class="hljs-comment">// initMixin(Vue)</span>
+        <span class="hljs-comment">// 为Vue的原型对象增加一个_init方法，该方法用于Vue实例时初始Vue实例对象。</span>
+        <span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initMixin</span> (<span class="hljs-params">Vue: Class&lt;Component&gt;</span>) </span>{
+          Vue.prototype._init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options?: <span class="hljs-built_in">Object</span></span>) </span>{
+             ...
+          }
+        }
+        
+        <span class="hljs-comment">// stateMixin(Vue)</span>
+        <span class="hljs-comment">// 初始化 $data $props 属性，定义$set，$delete，$watch 方法</span>
+        <span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stateMixin</span> (<span class="hljs-params">Vue: Class&lt;Component&gt;</span>) </span>{
+          ...
+          <span class="hljs-built_in">Object</span>.defineProperty(Vue.prototype, <span class="hljs-string">'$data'</span>, dataDef)
+          <span class="hljs-built_in">Object</span>.defineProperty(Vue.prototype, <span class="hljs-string">'$props'</span>, propsDef)
+        
+          Vue.prototype.$<span class="hljs-keyword">set</span> = <span class="hljs-keyword">set</span>
+          Vue.prototype.$<span class="hljs-keyword">delete</span> = del
+        
+          Vue.prototype.$watch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">
+            expOrFn: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">Function</span>,
+            cb: <span class="hljs-built_in">any</span>,
+            options?: <span class="hljs-built_in">Object</span>
+          </span>): <span class="hljs-title">Function</span> </span>{
+             ...
+          }
+        }
+        
+        <span class="hljs-comment">// eventsMixin(Vue)</span>
+        <span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">eventsMixin</span> (<span class="hljs-params">Vue: Class&lt;Component&gt;</span>) </span>{
+          <span class="hljs-keyword">const</span> hookRE = <span class="hljs-regexp">/^hook:/</span>
+          Vue.prototype.$on = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">Array</span>&lt;<span class="hljs-built_in">string</span>&gt;, fn: <span class="hljs-built_in">Function</span></span>): <span class="hljs-title">Component</span> </span>{
+            ...
+          }
+          <span class="hljs-comment">// $on(eventName) 监听事件</span>
+        
+          Vue.prototype.$once = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event: <span class="hljs-built_in">string</span>, fn: <span class="hljs-built_in">Function</span></span>): <span class="hljs-title">Component</span> </span>{
+            ...
+          }
+          <span class="hljs-comment">// $once(eventName) 监听事件触发一次</span>
+        
+          Vue.prototype.$off = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event?: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">Array</span>&lt;<span class="hljs-built_in">string</span>&gt;, fn?: <span class="hljs-built_in">Function</span></span>): <span class="hljs-title">Component</span> </span>{
+            ...
+          }
+          <span class="hljs-comment">// $off(eventName) 解除监听事件</span>
+        
+          Vue.prototype.$emit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event: <span class="hljs-built_in">string</span></span>): <span class="hljs-title">Component</span> </span>{
+            ...
+          }
+          <span class="hljs-comment">// $emit(eventName) 触发事件</span>
+        }
+        
+        <span class="hljs-comment">// lifecycleMixin(Vue)</span>
+        <span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">lifecycleMixin</span> (<span class="hljs-params">Vue: Class&lt;Component&gt;</span>) </span>{
+          Vue.prototype._update = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">vnode: VNode, hydrating?: <span class="hljs-built_in">boolean</span></span>) </span>{
+            ...
+          }
+          <span class="hljs-comment">//_update 是实例的一个私有方法，它被调用的时机有 2 个，一个是首次渲染，一个是数据更新的时候渲染。第二种会触发beforeUpdate和updated生命周期钩子。</span>
+        
+          Vue.prototype.$forceUpdate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            ...
+          }
+          <span class="hljs-comment">// $forceUpdate强制更新，包括没有没有被页面监听到的变化，都会刷新到页面上，但是不会使这个值被监听到。</span>
+        
+          Vue.prototype.$destroy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            callHook(vm, <span class="hljs-string">'beforeDestroy'</span>)
+            ...
+            vm.__patch__(vm._vnode, <span class="hljs-literal">null</span>)
+            callHook(vm, <span class="hljs-string">'destroyed'</span>)
+            vm.$off()
+          }
+          <span class="hljs-comment">// $destroy只是完全销毁一个实例。清理它与其它实例的连接，解绑它的全部指令及事件监听器。不会清除dom。会触发 beforeDestroy 和 destroyed；</span>
+        }
+        
+        <span class="hljs-comment">//renderMixin(Vue)</span>
+        <span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderMixin</span> (<span class="hljs-params">Vue: Class&lt;Component&gt;</span>) </span>{
+          installRenderHelpers(Vue.prototype)
+          <span class="hljs-comment">// 这就是 Vue 的各类渲染方法了</span>
+        
+          Vue.prototype.$nextTick = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fn: <span class="hljs-built_in">Function</span></span>) </span>{
+            <span class="hljs-keyword">return</span> nextTick(fn, <span class="hljs-keyword">this</span>)
+          }
+          <span class="hljs-comment">// 定义了 Vue 的 $nextTick </span>
+        
+          Vue.prototype._render = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>): <span class="hljs-title">VNode</span> </span>{
+        
+          }
+          <span class="hljs-comment">// 定义了 Vue 的 $nextTick </span>
+        
+        }
+        
+        <span class="hljs-comment">// 最后导出Vue</span>
+        </code></pre>
+        <h1 id="vue的生命周期">vue的生命周期</h1>
+        <p><img src="./lifecycle.png" alt="图片alt" title="vue生命周期图"> </p>
+        <blockquote>
+            <p>每个 Vue 实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM
+                等。同时在这个过程中也会运行一些叫做生命周期钩子的函数，这给了用户在不同阶段添加自己的代码的机会。</p>
+        </blockquote>
+        <p>初始化过程：设置数据监听，模板编译，挂载DOM与视图绑定，挂载方法。
+            生命周期钩子：初始化不同阶段调用的是函数，方便用于插入代码，另一些在特定动作的时候也会触发（更新和销毁）。</p>
+        <p>各个生命周期钩子的触发时机：</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>触发时机</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>beforeCreate</td>
+                    <td>在实例初始化之后调用。</td>
+                </tr>
+                <tr>
+                    <td>created</td>
+                    <td>在实例创建完成后被立即调用。</td>
+                </tr>
+                <tr>
+                    <td>beforeMount</td>
+                    <td>在挂载开始之前被调用。</td>
+                </tr>
+                <tr>
+                    <td>mounted</td>
+                    <td>实例被挂载后调用。</td>
+                </tr>
+                <tr>
+                    <td>beforeUpdate</td>
+                    <td>数据更新时之后，虚拟DOM更新和页面重新渲染之前调用。</td>
+                </tr>
+                <tr>
+                    <td>updated</td>
+                    <td>数据更改导致的虚拟DOM更新和页面重新渲染之后调用。</td>
+                </tr>
+                <tr>
+                    <td>beforeDestroy</td>
+                    <td>实例销毁之前调用。</td>
+                </tr>
+                <tr>
+                    <td>destroy</td>
+                    <td>实例销毁后调用。</td>
+                </tr>
+                <tr>
+                    <td>activated</td>
+                    <td>被 keep-alive 缓存的组件激活时调用。</td>
+                </tr>
+                <tr>
+                    <td>deactivated</td>
+                    <td>被 keep-alive 缓存的组件停用时调用。</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 id="vue的实例化过程">Vue的实例化过程</h3>
+        <p>从 <code>new Vue()</code> 开始：</p>
+        <pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Vue</span> (<span class="hljs-params">options</span>) </span>{
+            <span class="hljs-keyword">if</span> (process.env.NODE_ENV !== <span class="hljs-string">'production'</span> &amp;&amp;
+                !(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> Vue)
+            ) {
+                warn(<span class="hljs-string">'Vue is a constructor and should be called with the `new` keyword'</span>)
+            }
+            <span class="hljs-comment">// 不是生产环境下，判断是否是通过new调用的函数，必须使用new调用 否则提示。</span>
+            <span class="hljs-keyword">this</span>._init(options)
+            <span class="hljs-comment">// 开始_init</span>
+        }
+        </code></pre>
+        <p><code>_init</code>:创建和初始化实例，完成以下的配置：数据观测 (data observer)，property 和方法的运算，watch/event 事件回调。</p>
+        <pre><code>Vue.prototype._init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options?: Object</span>) </span>{
+            <span class="hljs-keyword">const</span> vm: Component = <span class="hljs-keyword">this</span>
+            ...
+            vm._uid = uid++
+            vm._isVue = <span class="hljs-literal">true</span>
+            <span class="hljs-comment">// 初始化两个私有属性</span>
+            ...
+            if (options &amp;&amp; options._isComponent) {
+              initInternalComponent(vm, options)
+            } <span class="hljs-keyword">else</span> {
+              vm.$options = mergeOptions(
+                resolveConstructorOptions(vm.constructor),
+                options || {},
+                vm
+              )
+            }
+            <span class="hljs-comment">// 优化内部组件实例化</span>
+            <span class="hljs-comment">// 因为动态选项合并是相当慢的</span>
+            <span class="hljs-comment">// 没有内部组件选项需要特殊处理。</span>
+            <span class="hljs-comment">// mergeOptions 函数将会把 Vue.options 作为 父选项，把我们传递的实例选项作为子选项进行合并，合并的结果我们可以通过打印 $options 属性得知。</span>
+        
+            <span class="hljs-keyword">if</span> (process.env.NODE_ENV !== <span class="hljs-string">'production'</span>) {
+              initProxy(vm)
+            } <span class="hljs-keyword">else</span> {
+              vm._renderProxy = vm
+            }
+            <span class="hljs-comment">//当前环境是开发环境，则调用initProxy方法</span>
+            <span class="hljs-comment">//如果不是开发环境，则vue实例的_renderProxy属性指向vue实例本身。</span>
+        
+            vm._self = vm
+            initLifecycle(vm)
+            initEvents(vm)
+            initRender(vm)
+            callHook(vm, <span class="hljs-string">'beforeCreate'</span>)
+            initInjections(vm) <span class="hljs-comment">// resolve injections before data/props</span>
+            initState(vm)
+            initProvide(vm) <span class="hljs-comment">// resolve provide after data/props</span>
+            callHook(vm, <span class="hljs-string">'created'</span>)
+        
+            <span class="hljs-comment">/* istanbul ignore if */</span>
+            <span class="hljs-keyword">if</span> (process.env.NODE_ENV !== <span class="hljs-string">'production'</span> &amp;&amp; config.performance &amp;&amp; mark) {
+              vm._name = formatComponentName(vm, <span class="hljs-literal">false</span>)
+              mark(endTag)
+              measure(<span class="hljs-string">`vue <span class="hljs-subst">${vm._name}</span> init`</span>, startTag, endTag)
+            }
+        
+            <span class="hljs-keyword">if</span> (vm.$options.el) {
+              vm.$mount(vm.$options.el)
+            }
+          }
+        </code></pre>
+        <pre><code><span class="hljs-string">vm._uid</span> <span class="hljs-string">=</span> <span class="hljs-string">uid++</span>
+        <span class="hljs-string">vm._isVue</span> <span class="hljs-string">=</span> <span class="hljs-literal">true</span></code></pre>
+        <p>首先，用vm缓存了当前的实例，
+            再添加了两个私有属性<code>_uid</code>和<code>_isVue</code>,一个是vue实例的编号，从0开始，一个是Vue的标识(为了vm对象避免被observed)。</p>
+        <pre><code> <span class="hljs-keyword">if</span> (options &amp;&amp; options._isComponent) {
+              initInternalComponent(vm, options)
+            } <span class="hljs-keyword">else</span> {
+              vm.$options = mergeOptions(
+                resolveConstructorOptions(vm.constructor),
+                options <span class="hljs-params">||</span> {},
+                vm
+              )
+            }
+        </code></pre>
+        <p>接着进行判断<code>options &amp;&amp; options._isComponent</code>,
+            new
+            Vue调用时传入的options，没有_isCommponet属性，进行else分支，执行<code>mergeOptions</code>方法，第一个是resolveConstructorOptions方法返回值(vm.constructor的options，即Vue.options)，第二是new
+            Vue时传入的值(自定义的options)，第三个是vue对象本身。mergeOptions就是通过一系列的合并策略，将Vue的构造函数以及自定义的options进行合并。 <a
+                href="./demos/vue_init/index.html?step=1" target="_blank">§</a> 。</p>
+        <pre><code><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mergeOptions</span> (<span class="hljs-params">
+          parent: Object,
+          child: Object,
+          vm?: Component
+        </span>): <span class="hljs-title">Object</span> </span>{
+          <span class="hljs-keyword">if</span> (process.env.NODE_ENV !== <span class="hljs-string">'production'</span>) {
+            checkComponents(child)
+          }
+        
+          <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> child === <span class="hljs-string">'function'</span>) {
+            child = child.options
+          }
+        
+          normalizeProps(child, vm)
+          normalizeInject(child, vm)
+          normalizeDirectives(child)
+        
+          <span class="hljs-keyword">if</span> (!child._base) {
+            <span class="hljs-keyword">if</span> (child.extends) {
+              parent = mergeOptions(parent, child.extends, vm)
+            }
+            <span class="hljs-keyword">if</span> (child.mixins) {
+              <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, l = child.mixins.length; i &lt; l; i++) {
+                parent = mergeOptions(parent, child.mixins[i], vm)
+              }
+            }
+          }
+        
+          <span class="hljs-keyword">const</span> options = {}
+          <span class="hljs-keyword">let</span> key
+          <span class="hljs-keyword">for</span> (key <span class="hljs-keyword">in</span> parent) {
+            mergeField(key)
+          }
+          <span class="hljs-keyword">for</span> (key <span class="hljs-keyword">in</span> child) {
+            <span class="hljs-keyword">if</span> (!hasOwn(parent, key)) {
+              mergeField(key)
+            }
+          }
+          <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mergeField</span> (<span class="hljs-params">key</span>) </span>{
+            <span class="hljs-keyword">const</span> strat = strats[key] || defaultStrat
+            options[key] = strat(parent[key], child[key], vm, key)
+          }
+          <span class="hljs-keyword">return</span> options
+        }</code></pre>
+        <p><code>mergeOptions</code>方法中parent对应Vue.options,child对应实例化传入的options，vm实例本身。</p>
+        <pre><code>  <span class="hljs-keyword">if</span> (process.env.NODE_ENV !== <span class="hljs-string">'production'</span>) {
+            checkComponents(child)
+          }</code></pre>
+        <p><code>checkComponents</code>会对传入的组件名称(options.components)的合法性校验， 包括不能与html标签冲突，名称包含字符，数字，连接符，并要以字母开头等。</p>
+        <pre><code> normalizeProps(child, vm)
+         normalizeInject(child, vm)
+         normalizeDirectives(child)
+        </code></pre>
+        <p>接着对输入的<code>Props</code> 、<code>Inject</code> 、<code>Directives</code>
+            ,进行格式统一（因为Vue同一个选项可以接受不同形式的传值，例如数组，对象和函数等，这里统一进行转化。）</p>
+        <pre><code> if (!child._base) {
+            if (child.extends) {
+              parent = mergeOptions(parent, child.extends, vm)
+            }
+            if (child.mixins) {
+              for (let i = 0, l = child.mixins.length; i <span class="hljs-tag">&lt; <span class="hljs-attr">l</span>; <span class="hljs-attr">i</span>++) {
+                <span class="hljs-attr">parent</span> = <span class="hljs-string">mergeOptions(parent,</span> <span class="hljs-attr">child.mixins</span>[<span class="hljs-attr">i</span>], <span class="hljs-attr">vm</span>)
+              }
+            }
+          }
+        </span></code></pre>
+        <p>child是new传入的options，所以_base属性是没有的（vue里面option上的_开头的都是私有属性），所以进进行下面代码。
+            判断是否传入了<code>mixins</code>和<code>extends</code>,对extends和mixins属性的处理。递归调用mergeOptions方法，将入参中的extends与mixins合并到parent上。
+            到这里，数据以及准备完毕。</p>
+        <pre><code>  <span class="hljs-keyword">const</span> options = {}
+          <span class="hljs-keyword">let</span> key
+          <span class="hljs-keyword">for</span> (key <span class="hljs-keyword">in</span> parent) {
+            mergeField(key)
+          }
+          <span class="hljs-keyword">for</span> (key <span class="hljs-keyword">in</span> child) {
+            <span class="hljs-keyword">if</span> (!hasOwn(parent, key)) {
+              mergeField(key)
+            }
+          }
+          <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mergeField</span> (<span class="hljs-params">key</span>) </span>{
+            <span class="hljs-keyword">const</span> strat = strats[key] || defaultStrat
+            options[key] = strat(parent[key], child[key], vm, key)
+          }
+          <span class="hljs-keyword">return</span> options</code></pre>
+        <p>对于不同属性的key，Vue有不同的合并策略。
+            对其他属性的合并策略我们就不一一分析代码，总体原则：parent与child两者中只有一个有值，则就直接使用该值，如果两者都有，则视情况： <a
+                href="./demos/vue_init/index.html?step=2" target="_blank">§</a> </p>
+        <ol>
+            <li>beforeCreate/created/...：child的属性通过contact连接到parent后面。</li>
+            <li>watch:child的属性通过contact连接到parent后面。</li>
+            <li>props/methods/computed:child中属性值的覆盖parent的属性值。</li>
+            <li>data/provide:child中的属性值覆盖parent的属性值。</li>
+            <li>component/directive/filter：child中的属性值覆盖parent的属性值。</li>
+        </ol>
+        <p>当component组件调用的时候,会设置<code>_isComponent=true</code>,执行第一种情况。</p>
+        <pre><code><span class="hljs-keyword">if</span> (process.env.NODE_ENV !== <span class="hljs-string">'production'</span>) {
+              initProxy(vm)
+            } <span class="hljs-keyword">else</span> {
+              vm._renderProxy = vm
+            }</code></pre>
+        <p>根据环境判断，通过不同方式设置实例的<code>_renderProxy</code>, 在非生产环境下，使用initProxy，生产环境下，直接设置<code>vm._renderProxy = vm</code>。
+        </p>
+        <pre><code>  initProxy = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initProxy</span> (<span class="hljs-params">vm</span>) </span>{
+            <span class="hljs-keyword">if</span> (hasProxy) {
+              <span class="hljs-comment">// determine which proxy handler to use</span>
+              <span class="hljs-keyword">const</span> options = vm.$options
+              <span class="hljs-keyword">const</span> handlers = options.render &amp;&amp; options.render._withStripped
+                ? getHandler
+                : hasHandler
+              vm._renderProxy = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Proxy</span>(vm, handlers)
+            } <span class="hljs-keyword">else</span> {
+              vm._renderProxy = vm
+            }
+          }</code></pre>
+        <p> hasProxy：</p>
+        <pre><code> <span class="hljs-keyword">const</span> hasProxy = <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">Proxy</span> !== <span class="hljs-string">'undefined'</span> &amp;&amp; isNative(<span class="hljs-built_in">Proxy</span>);
+        
+          <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isNative</span> (<span class="hljs-params">Ctor</span>) </span>{
+           <span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> Ctor === <span class="hljs-string">'function'</span> &amp;&amp; <span class="hljs-regexp">/native code/</span>.test(Ctor.toString())
+         }</code></pre>
+        <p><code>isNative</code>判断传入的是否是函数，并且是否是内置的函数。
+            <code>hasProxy</code> 判断是否存在Proxy这个内置函数。（Proxy es6）
+            上面initProxy代码中，先判断是否存在Proxy，如果存在：</p>
+        <pre><code><span class="hljs-keyword">const</span> options = vm.$options
+        <span class="hljs-keyword">const</span> handlers = options.render &amp;&amp; options.render._withStripped
+        ? getHandler
+        : hasHandler
+         vm._renderProxy = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Proxy</span>(vm, handlers)</code></pre>
+        <p>如果当前实例的$options上存在render属性，且render属性上存在_withStripped（traps其实也就是自定义方法）属性采用getHandler方法,否则采用hasHandler方法菜作为代理的handler函数。
+        </p>
+        <p>这里$options已经初始化完成，new
+            Vue(opts)情况下，_withStripped属性不存在（实际上这个属性在源码中也没有找到设置的地方，猜测是打包的过程注入？），所以使用<code>hasHandler</code>.</p>
+        <pre><code>    <span class="hljs-keyword">var</span> hasHandler = {
+              <span class="hljs-attr">has</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">has</span> (<span class="hljs-params">target, key</span>) </span>{
+                <span class="hljs-keyword">var</span> has = key <span class="hljs-keyword">in</span> target;
+                <span class="hljs-keyword">var</span> isAllowed = allowedGlobals(key) ||
+                  (<span class="hljs-keyword">typeof</span> key === <span class="hljs-string">'string'</span> &amp;&amp; key.charAt(<span class="hljs-number">0</span>) === <span class="hljs-string">'_'</span> &amp;&amp; !(key <span class="hljs-keyword">in</span> target.$data));
+                <span class="hljs-keyword">if</span> (!has &amp;&amp; !isAllowed) {
+                  <span class="hljs-keyword">if</span> (key <span class="hljs-keyword">in</span> target.$data) { warnReservedPrefix(target, key); }
+                  <span class="hljs-keyword">else</span> { warnNonPresent(target, key); }
+                }
+                <span class="hljs-keyword">return</span> has || !isAllowed
+              }
+            };
+        </code></pre>
+        <p>使用Proxy代理的handler，设置has可以拦截hasProperty操作，即判断对象是否具有某个属性时，这个方法会生效。典型的操作就是in运算符。</p>
+        <pre><code>    <span class="hljs-keyword">var</span> allowedGlobals = makeMap(
+              <span class="hljs-string">'Infinity,undefined,NaN,isFinite,isNaN,'</span> +
+              <span class="hljs-string">'parseFloat,parseInt,decodeURI,decodeURIComponent,encodeURI,encodeURIComponent,'</span> +
+              <span class="hljs-string">'Math,Number,Date,Array,Object,Boolean,String,RegExp,Map,Set,JSON,Intl,'</span> +
+              <span class="hljs-string">'require'</span> <span class="hljs-comment">// for Webpack/Browserify</span>
+            );
+        </code></pre>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">makeMap</span> (<span class="hljs-params">
+            str,
+            expectsLowerCase
+          </span>) </span>{
+            <span class="hljs-keyword">var</span> map = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>);
+            <span class="hljs-keyword">var</span> list = str.split(<span class="hljs-string">','</span>);
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; list.length; i++) {
+              map[list[i]] = <span class="hljs-literal">true</span>;
+            }
+            <span class="hljs-keyword">return</span> expectsLowerCase
+              ? <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{ <span class="hljs-keyword">return</span> map[val.toLowerCase()]; }
+              : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{ <span class="hljs-keyword">return</span> map[val]; }
+          }
+        </code></pre>
+        <p><code>allowedGlobals</code>判断了当前满足has拦截操作的key是否在定义集合中，在就返回true，不在就返回undefined。<code>!has &amp;&amp; !isAllowed</code>代表目标不在这个值和这个值不允许has操作的时候，报错，否则就正常返回值。
+        </p>
+        <p><code>initProxy</code>如果Proxy属性存在，则把包装后的vm属性赋值给_renderProxy属性值。否则把vm是实例本身赋值给_renderProxy属性.<a
+                href="./demos/vue_init/index.html?step=3" target="_blank">§</a> </p>
+        <pre><code> vm._self = vm;
+        </code></pre>
+        <p>将实例的_self属性设置为当前实例。然后执行<code>initLifecycle(vm)</code>，先看下initLifecycle的代码。</p>
+        <pre><code>  function initLifecycle (vm) {
+            var options = vm.$options;
+            var parent = options.parent;
+            <span class="hljs-keyword">if</span> (parent &amp;&amp; !options.abstract) {
+              <span class="hljs-keyword">while</span> (parent.$options.abstract &amp;&amp; parent.$parent) {
+                parent = parent.$parent;
+              }
+              parent.$children.push(vm);
+            }
+        
+            vm.$parent = parent;
+            vm.$root = parent ? parent.$root : vm;
+        
+            vm.$children = [];
+            vm.$refs = {};
+        
+            vm._watcher = null;
+            vm._inactive = null;
+            vm._directInactive = <span class="hljs-literal">false</span>;
+            vm._isMounted = <span class="hljs-literal">false</span>;
+            vm._isDestroyed = <span class="hljs-literal">false</span>;
+            vm._isBeingDestroyed = <span class="hljs-literal">false</span>;
+          }</code></pre>
+        <p>首先获取实例的$options属性赋给options,然后获取options.parent赋给parent，当new
+            Vue(opts)过程中，上一步得到$options中没有parent属性，所以parent是undefined。</p>
+        <pre><code>  <span class="hljs-keyword">if</span> (parent &amp;&amp; !options.abstract) {
+              <span class="hljs-keyword">while</span> (parent.$options.abstract &amp;&amp; parent.$parent) {
+                parent = parent.$parent;
+              }
+              parent.$children.push(vm);
+          }
+        
+           vm.$parent = parent;
+           vm.$root = parent ? parent.$root : vm;
+        
+           vm.$children = [];
+        </code></pre>
+        <p>这里先接着上面的逻辑看，parent是undefined，直接跳过判断语句，执行下面的代码，设置实例的<code>$parent=parent=undefined</code>,三目表达式的结果是vm<code>vm.$root = parent ? parent.$root : vm </code>，所以设置$root属性为实例本身。
+        </p>
+        <p>这里是通过new Vue实例化的是根节点的vue实例。
+            还有另一种情况，是vue的组件的情况，子组件注册的时候会把父实例挂载到自身的parent属性上。</p>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createComponentInstanceForVnode</span> (<span class="hljs-params">
+            vnode, <span class="hljs-regexp">//</span> we know it<span class="hljs-string">'s MountedComponentVNode but flow doesn'</span>t
+            parent <span class="hljs-regexp">//</span> activeInstance in lifecycle state
+          </span>) </span>{
+            <span class="hljs-keyword">var</span> options = {
+              <span class="hljs-attr">_isComponent</span>: <span class="hljs-literal">true</span>,
+              <span class="hljs-attr">_parentVnode</span>: vnode,
+              <span class="hljs-attr">parent</span>: parent
+            };
+            ...
+          }
+        </code></pre>
+        <p>所以子组件在initLifecycle过程中，满足上面判断中的parent存在。
+            判断当前组件是否为抽象组件：
+            抽象组件:没有真实的节点，在组件渲染的时候不会解析渲染成真实的dom节点，而只是作为中间的数据过度层处理,例如 transition,transition-group,keep-alive。</p>
+        <pre><code>  <span class="hljs-keyword">if</span> (parent &amp;&amp; !options.abstract) {
+              <span class="hljs-keyword">while</span> (parent.$options.abstract &amp;&amp; parent.$parent) {
+                parent = parent.$parent;
+              }
+              parent.$children.push(vm);
+          }
+        </code></pre>
+        <p>如果当前组件不是抽象组件，会反向拿到parent上的父组件vnode，如果父组件没有abstract属性，即为非抽象组件，为其$children属性添加该子组件vnode；如果在反向找父组件过程中，如果父组件有abstract属性，就判断该组件属性为抽象组件，此时利用parent的链条往上寻找，直到找的父组件不是抽象组件为止。
+        </p>
+        <p>如果当前组件是抽象组件（options拥有abstract属性），直接跳过继续执行下面逻辑，即设置$parent为parent和$root为parent.$root.</p>
+        <p>总结：
+            <code>options.parent</code> ：
+            组件vm（非抽象和抽象）：vm的options.parent属性会存放注册时候的父组件（这里可以是抽象组件也可以。），并且parent属性不会改变，所以就形成了一个由下向上的链接。</p>
+        <p><code>$parent</code> ：
+            抽象组件：vm的$parent属性，因为<code>parent &amp;&amp; !options.abstract</code>判断不通过，直接跳过向上寻找父组件的过程，直接把options.parent赋给$parent。
+        </p>
+        <p>非抽象组件：vm的$parent属性，因为<code>parent &amp;&amp; !options.abstract</code>判断通过，接着判断options.parent即父组件是否是抽象组件？如果不是，那么直接把options.parent赋给$parent属性；如果是抽象组件，那么把这个抽象父组件的$parent（上一条已经说明了非抽象组件的$parent就是他的options.parent,所以抽象组件的$parent属性也可能是抽象组件，所以才有循环寻找）属性赋给parent缓存，在进行向上查找非抽象父组件的循环（所以非抽象组件的$parent一定是非抽象组件），当找到这个非抽象的父组件的时候，把自己加到这个父组件的$children中。这是通过$parent和$children,所有的非抽象组件形成了一个紧密的关系树。<a
+                href="./demos/vue_init/index.html?step=4" target="_blank">§</a> </p>
+        <p>接下来初始化了生命周期相关的一些属性。</p>
+        <pre><code>  <span class="hljs-string">vm.$refs</span> <span class="hljs-string">=</span> <span class="hljs-string">{};</span>
+        
+          <span class="hljs-string">vm._watcher</span> <span class="hljs-string">=</span> <span class="hljs-literal">null</span><span class="hljs-string">;</span>
+          <span class="hljs-string">vm._inactive</span> <span class="hljs-string">=</span> <span class="hljs-literal">null</span><span class="hljs-string">;</span>
+          <span class="hljs-string">vm._directInactive</span> <span class="hljs-string">=</span> <span class="hljs-literal">false</span><span class="hljs-string">;</span>
+          <span class="hljs-string">vm._isMounted</span> <span class="hljs-string">=</span> <span class="hljs-literal">false</span><span class="hljs-string">;</span>
+          <span class="hljs-string">vm._isDestroyed</span> <span class="hljs-string">=</span> <span class="hljs-literal">false</span><span class="hljs-string">;</span>
+          <span class="hljs-string">vm._isBeingDestroyed</span> <span class="hljs-string">=</span> <span class="hljs-literal">false</span><span class="hljs-string">;</span></code></pre>
+        <p>再回回到_init方法，继续执行<code>initEvents(vm)</code>，首先看下<code>initEvents</code>的代码：</p>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initEvents</span> (<span class="hljs-params">vm</span>) </span>{
+            vm._events = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>);
+            vm._hasHookEvent = <span class="hljs-literal">false</span>;
+            <span class="hljs-comment">// init parent attached events</span>
+            <span class="hljs-keyword">var</span> listeners = vm.$options._parentListeners;
+            <span class="hljs-keyword">if</span> (listeners) {
+              updateComponentListeners(vm, listeners);
+            }
+          }
+        </code></pre>
+        <ol>
+            <li>增加了一个_events属性，用Object.create(null)进行创建原型上比较干净。</li>
+            <li>增加了一个_hasHookEvent,用来判断是否通过@hook监听组件生命周期函数。</li>
+            <li>声明一个变量listeners储存vm.$options._parentListeners，_parentListeners，父组件绑定在当前组件上的事件属性是父组件绑定在当前组件上的事件。</li>
+            <li>判断listeners是否存在，存在就执行<code>updateComponentListeners(vm, listeners)</code></li>
+        </ol>
+        <p>initEvents执行完毕，事件（父组件@监听的）相关已经初始化完成。<a href="./demos/vue_init/index.html?step=5" target="_blank">§</a> 。</p>
+        <p>继续执行<code>initRender(vm)</code>，</p>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initRender</span> (<span class="hljs-params">vm</span>) </span>{
+            vm._vnode = <span class="hljs-literal">null</span>; <span class="hljs-comment">// the root of the child tree</span>
+            vm._staticTrees = <span class="hljs-literal">null</span>; <span class="hljs-comment">// v-once cached trees</span>
+            <span class="hljs-keyword">var</span> options = vm.$options;
+            <span class="hljs-keyword">var</span> parentVnode = vm.$vnode = options._parentVnode; <span class="hljs-comment">// the placeholder node in parent tree</span>
+            <span class="hljs-keyword">var</span> renderContext = parentVnode &amp;&amp; parentVnode.context;
+            vm.$slots = resolveSlots(options._renderChildren, renderContext);
+            vm.$scopedSlots = emptyObject;
+            <span class="hljs-comment">// bind the createElement fn to this instance</span>
+            <span class="hljs-comment">// so that we get proper render context inside it.</span>
+            <span class="hljs-comment">// args order: tag, data, children, normalizationType, alwaysNormalize</span>
+            <span class="hljs-comment">// internal version is used by render functions compiled from templates</span>
+            vm._c = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">a, b, c, d</span>) </span>{ <span class="hljs-keyword">return</span> createElement(vm, a, b, c, d, <span class="hljs-literal">false</span>); };
+            <span class="hljs-comment">// normalization is always applied for the public version, used in</span>
+            <span class="hljs-comment">// user-written render functions.</span>
+            vm.$createElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">a, b, c, d</span>) </span>{ <span class="hljs-keyword">return</span> createElement(vm, a, b, c, d, <span class="hljs-literal">true</span>); };
+        
+            <span class="hljs-comment">// $attrs &amp; $listeners are exposed for easier HOC creation.</span>
+            <span class="hljs-comment">// they need to be reactive so that HOCs using them are always updated</span>
+            <span class="hljs-keyword">var</span> parentData = parentVnode &amp;&amp; parentVnode.data;
+        
+            <span class="hljs-comment">/* istanbul ignore else */</span>
+            {
+              defineReactive$$<span class="hljs-number">1</span>(vm, <span class="hljs-string">'$attrs'</span>, parentData &amp;&amp; parentData.attrs || emptyObject, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                !isUpdatingChildComponent &amp;&amp; warn(<span class="hljs-string">"$attrs is readonly."</span>, vm);
+              }, <span class="hljs-literal">true</span>);
+              defineReactive$$<span class="hljs-number">1</span>(vm, <span class="hljs-string">'$listeners'</span>, options._parentListeners || emptyObject, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                !isUpdatingChildComponent &amp;&amp; warn(<span class="hljs-string">"$listeners is readonly."</span>, vm);
+              }, <span class="hljs-literal">true</span>);
+            }
+          }</code></pre>
+        <p>首先为了实例增加了技术个属性值，接着往下看</p>
+        <pre><code>    vm.$slots = resolveSlots(options._renderChildren, renderContext);</code></pre>
+        <p><code>renderContext</code> 是 <code>vm.$options._parentVnode</code>,<code>renderContext</code> 是
+            <code>vm.$options._parentVnode.context</code>,在我们new Vue()
+            过程中到这里，并没有在$options中添加和辅助<code>_parentVnode</code>，所以这里的两个值都<code>undefined</code>（组件实例化的时候_parentVnode存放自身VNode，context存放父级Vm），接下来再看看<code>resolveSlots</code>函数：
+        </p>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveSlots</span> (<span class="hljs-params">
+            children,
+            context
+          </span>) </span>{
+            <span class="hljs-keyword">if</span> (!children || !children.length) {
+              <span class="hljs-keyword">return</span> {}
+            }
+            <span class="hljs-keyword">var</span> slots = {};
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, l = children.length; i &lt; l; i++) {
+              <span class="hljs-keyword">var</span> child = children[i];
+              <span class="hljs-keyword">var</span> data = child.data;
+              <span class="hljs-comment">// remove slot attribute if the node is resolved as a Vue slot node</span>
+              <span class="hljs-keyword">if</span> (data &amp;&amp; data.attrs &amp;&amp; data.attrs.slot) {
+                <span class="hljs-keyword">delete</span> data.attrs.slot;
+              }
+              <span class="hljs-comment">// named slots should only be respected if the vnode was rendered in the</span>
+              <span class="hljs-comment">// same context.</span>
+              <span class="hljs-keyword">if</span> ((child.context === context || child.fnContext === context) &amp;&amp;
+                data &amp;&amp; data.slot != <span class="hljs-literal">null</span>
+              ) {
+                <span class="hljs-keyword">var</span> name = data.slot;
+                <span class="hljs-keyword">var</span> slot = (slots[name] || (slots[name] = []));
+                <span class="hljs-keyword">if</span> (child.tag === <span class="hljs-string">'template'</span>) {
+                  slot.push.apply(slot, child.children || []);
+                } <span class="hljs-keyword">else</span> {
+                  slot.push(child);
+                }
+              } <span class="hljs-keyword">else</span> {
+                (slots.default || (slots.default = [])).push(child);
+              }
+            }
+            <span class="hljs-comment">// ignore slots that contains only whitespace</span>
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> name$<span class="hljs-number">1</span> <span class="hljs-keyword">in</span> slots) {
+              <span class="hljs-keyword">if</span> (slots[name$<span class="hljs-number">1</span>].every(isWhitespace)) {
+                <span class="hljs-keyword">delete</span> slots[name$<span class="hljs-number">1</span>];
+              }
+            }
+            <span class="hljs-keyword">return</span> slots
+          }
+        </code></pre>
+        <p>首先判断传入的<code>children</code> 是否符合要求，不符合直接返回<code>{}</code>。（根Vue和没有slot的情况）
+            如果符合要求，就对传入的<code>children</code>进行遍历，寻找所有solt，然后返回slots。</p>
+        <p>这里new Vue()实例化，直接返回空，所以 <code>vm.$slots</code> 和 <code>vm.$scopedSlots</code> 初始化都 <code>{}</code>。</p>
+        <p>再看两个关键函数<code>vm._c</code> 和 <code>vm.$createElement </code>,两个函数是一样的，一个用于内部使用，一个提供给用户的方法。</p>
+        <pre><code> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">a, b, c, d</span>) </span>{ <span class="hljs-keyword">return</span> createElement(vm, a, b, c, d, <span class="hljs-literal">true</span>); }
+        </code></pre>
+        <p>内部直接调用<code>createElement</code>函数,<code>createElement</code>函数内部对数据进行校验，</p>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createElement</span> (<span class="hljs-params">
+            context,
+            tag,
+            data,
+            children,
+            normalizationType,
+            alwaysNormalize
+          </span>) </span>{
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(data) || isPrimitive(data)) {
+              normalizationType = children;
+              children = data;
+              data = <span class="hljs-literal">undefined</span>;
+            }
+            <span class="hljs-keyword">if</span> (isTrue(alwaysNormalize)) {
+              normalizationType = ALWAYS_NORMALIZE;
+            }
+            <span class="hljs-keyword">return</span> _createElement(context, tag, data, children, normalizationType)
+          }
+        </code></pre>
+        <p>判断<code>data</code>是不是数组或者是基本类型，如果成立，则判断判断为省略了data参数，就把后面两个参数依次向前赋值，并把data设为undefined。判断<code>alwaysNormalize</code>是否<code>true</code>,是将<code>normalizationType</code>设置为<code>ALWAYS_NORMALIZE</code>(常量2
+            children的两种模式)。然后传入<code>_createElement</code>,<code>createElement</code>函数包装了一下<code>_createElement</code>，处理了一下传参。
+            再看看<code>_createElement</code>,代码有点长，我们直接拆分开看,</p>
+        <pre><code>   <span class="hljs-keyword">if</span> (isDef(data) &amp;&amp; isDef((data).__ob__)) {
+              warn(
+                <span class="hljs-string">"Avoid using observed data object as vnode data: "</span> + (<span class="hljs-built_in">JSON</span>.stringify(data)) + <span class="hljs-string">"\n"</span> +
+                <span class="hljs-string">'Always create fresh vnode data objects in each render!'</span>,
+                context
+              );
+              <span class="hljs-keyword">return</span> createEmptyVNode()
+            }
+        </code></pre>
+        <p><code>isDef():</code></p>
+        <pre><code> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isDef</span> (<span class="hljs-params">v</span>) </span>{
+            <span class="hljs-keyword">return</span> v !== <span class="hljs-literal">undefined</span> &amp;&amp; v !== <span class="hljs-literal">null</span>
+         }
+        </code></pre>
+        <p>监测传入的<code>data</code>参数存在并且<code>(data).__ob__</code>存在，<code>__ob__</code>这个是Vue数据监测的时候加上的标识，这里判断传入的data不能是响应式的，vnode中的data不能是响应式的。如果是，则Vue抛出警告,返回一个空的<code>VNode</code>。
+        </p>
+        <pre><code>  if (isDef(data) &amp;&amp; isDef(data.is)) {
+              tag = data.is;
+          }</code></pre>
+        <p><code>data</code>上有<code>is</code>属性（<code>&lt;div is="bs-pop"&gt;&lt;/div&gt;</code>），使用<code>is</code>的值作为<code>tag</code>的值。
+        </p>
+        <pre><code>  <span class="hljs-keyword">if</span> (!tag) {
+              <span class="hljs-regexp">//</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">case</span> of component <span class="hljs-symbol">:is</span> set to falsy value
+              <span class="hljs-keyword">return</span> createEmptyVNode()
+            }</code></pre>
+        <p>监测<code>tag</code>,如果没有值，想当于没有<code>tag</code>的初值，也没有<code>is</code>属性，即没有html标签也不是组件，直接返回一个空<code>VNode</code>。
+        </p>
+        <pre><code>   <span class="hljs-keyword">if</span> (isDef(data) &amp;&amp; isDef(data.key) &amp;&amp; !isPrimitive(data.key)
+            ) {
+              {
+                warn(
+                  <span class="hljs-string">'Avoid using non-primitive value as key, '</span> +
+                  <span class="hljs-string">'use string/number value instead.'</span>,
+                  context
+                );
+              }
+            }</code></pre>
+        <p>继续判断<code>data.key</code>（<code>&lt;li v-for="(value,index) :key="index"&gt;&lt;/li&gt;</code>）不能是响应式的数据，</p>
+        <pre><code>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(children) &amp;&amp;
+              <span class="hljs-keyword">typeof</span> children[<span class="hljs-number">0</span>] === <span class="hljs-string">'function'</span>
+            ) {
+              data = data || {};
+              data.scopedSlots = { <span class="hljs-keyword">default</span>: children[<span class="hljs-number">0</span>] };
+              children.length = <span class="hljs-number">0</span>;
+            }
+        </code></pre>
+        <p>当<code>createElement</code>函数 使用作用域插槽的时候，如果只有一个<code>default</code>插槽，可以直接使用一个函数。默认插入默认插槽。<a
+                href="./demos/slots.html?step=slots" target="_blank">§</a> </p>
+        <pre><code>    if (normalizationType === ALWAYS_NORMALIZE) {
+              children = normalizeChildren(children);
+            } <span class="hljs-keyword">else</span> if (normalizationType === SIMPLE_NORMALIZE) {
+              children = simpleNormalizeChildren(children);
+            }
+        </code></pre>
+        <p>接下来我们来看下children的规范化:<code>normalizationType</code>不同对<code>children</code>做不同的处理，类型不同规范的方法也不同。</p>
+        <pre><code>    vm.$createElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">a, b, c, d</span>) </span>{
+               <span class="hljs-keyword">return</span> createElement(vm, a, b, c, d, <span class="hljs-literal">true</span>);
+             };
+        </code></pre>
+        <p>造成这种类型不同主要是由于<code>render</code>函数是用户自己手写的还是<code>template</code>生成的。提供给用用户的方法，默认给<code>createElement</code>传了<code>true</code>,所以会执行<code>normalizationType = ALWAYS_NORMALIZE</code>，另一种根据<code>template</code>生成的时候<code>normalizationType = SIMPLE_NORMALIZE</code>
+        </p>
+        <p>接下来我们来看下<code>normalizeChildren</code>和<code>simpleNormalizeChildren</code>的实现:</p>
+        <pre><code> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">normalizeChildren</span> (<span class="hljs-params">children</span>) </span>{
+            <span class="hljs-keyword">return</span> isPrimitive(children)
+              ? [createTextVNode(children)]
+              : <span class="hljs-built_in">Array</span>.isArray(children)
+                ? normalizeArrayChildren(children)
+                : <span class="hljs-literal">undefined</span>
+          }
+        </code></pre>
+        <p>判断children是不是基础类型：
+            如果是，即<code>h('span','xxxx')</code>这种情况，</p>
+        <pre><code> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createTextVNode</span> (<span class="hljs-params">val</span>) </span>{
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> VNode(<span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-built_in">String</span>(val))
+          }</code></pre>
+        <p><code>createTextVNode</code>会返回一个标准文本<code>VNode{text:'xxx'}</code>,所以会返回标准格式的<code>[VNode]</code>。</p>
+        <p>如果不是基础类型，继续继续判断是不是数组，如果不是直接返回<code>undefined</code>;
+            如果是，执行<code>normalizeArrayChildren(children)</code>,再看<code>normalizeArrayChildren</code>这个函数,代码比较长，照样拆分开来看。
+        </p>
+        <pre><code> <span class="hljs-keyword">var</span> res = [];
+         <span class="hljs-keyword">var</span> i, c, lastIndex, last;</code></pre>
+        <p> 定义了五个局部变量，<code>res</code>用来存放的是返回值，<code>i</code>是<code>chilren</code>的便利的下标，<code>c</code>在循环内储存的是每次循环的值，<code>lastIndex</code>是<code>res</code>最后一个值的下标，<code>last</code>是<code>res</code>的最后一个值。
+        </p>
+        <pre><code>for (i = 0; i <span class="hljs-tag">&lt; <span class="hljs-attr">children.length</span>; <span class="hljs-attr">i</span>++) {
+              <span class="hljs-attr">c</span> = <span class="hljs-string">children[i];</span>
+              <span class="hljs-attr">if</span> (<span class="hljs-attr">isUndef</span>(<span class="hljs-attr">c</span>) || <span class="hljs-attr">typeof</span> <span class="hljs-attr">c</span> === <span class="hljs-string">'boolean'</span>) { <span class="hljs-attr">continue</span> }
+              <span class="hljs-attr">lastIndex</span> = <span class="hljs-string">res.length</span> <span class="hljs-attr">-</span> <span class="hljs-attr">1</span>;
+              <span class="hljs-attr">last</span> = <span class="hljs-string">res[lastIndex];</span>
+              <span class="hljs-attr">...</span>
+        }</span></code></pre>
+        <p>进入循环，每次循环首先 <code>c = children[i]</code>,用变量缓存当次循环的值。</p>
+        <pre><code><span class="hljs-keyword">if</span> (isUndef(c) || <span class="hljs-keyword">typeof</span> c === <span class="hljs-string">'boolean'</span>) { <span class="hljs-keyword">continue</span> }</code></pre>
+        <p>对<code>c</code>进行逻辑判断</p>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isUndef</span> (<span class="hljs-params">v</span>) </span>{
+            <span class="hljs-keyword">return</span> v === <span class="hljs-literal">undefined</span> || v === <span class="hljs-literal">null</span>
+          }</code></pre>
+        <p><code>isUndef</code>判断值是否为<code>null</code>或<code>undefined</code>,所以当<code>c</code>为<code>null</code>或<code>undefined</code>或布尔值的时候，直接跳出这次循环进行下一次循环。
+        </p>
+        <p>如果不是，继续此次循环，向下执行。</p>
+        <pre><code>  lastIndex = res.length - <span class="hljs-number">1</span>;
+          last = res[lastIndex];
+          <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(c)) {
+          } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isPrimitive(c)) {
+          }<span class="hljs-keyword">else</span>{
+          }
+        </code></pre>
+        <p>先对<code>lastIndex</code>和<code>last</code>进行赋值。
+            然后判断当前的<code>c</code>是否是一个数组？
+            如果不是数组：
+            继续判断是否是基础类型的？
+            <code>c</code>是基础类型(&amp;&amp;不是数组)，则执行下面代码</p>
+        <pre><code>  <span class="hljs-keyword">if</span> (isTextNode(last)) {
+              res[lastIndex] = createTextVNode(last.text + c)
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (c !== <span class="hljs-string">''</span>) {
+              res.push(createTextVNode(c));
+            }</code></pre>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isTextNode</span> (<span class="hljs-params">node</span>) </span>{
+            <span class="hljs-keyword">return</span> isDef(node) &amp;&amp; isDef(node.text) &amp;&amp; isFalse(node.isComment)
+          }</code></pre>
+        <p><code>isTextNode</code>判断当前传入的对象和对象的<code>text</code>属性均部位<code>undefined</code>和<code>null</code>，且<code>isComment</code>属性为<code>false</code>，即判断当前节点为<code>textNode</code>。
+            判断已经加入到<code>res</code>的最后一个节点<code>last</code>是否为<code>textNode</code>节点？如果是，则合并当前<code>c</code>的值和最后一个节点的值。如果不是，这继续判断当前的值<code>c</code>是否不为空，不为空就以<code>c</code>的值创建一个<code>textNode</code>加入到<code>res</code>中。
+        </p>
+        <p><code>c</code>不是基础类型（&amp;&amp;不是数组）：</p>
+        <pre><code>   if (isTextNode(c) &amp;&amp; isTextNode(last)) {
+                res[lastIndex] = createTextVNode(last.text + c.text);
+           } </code></pre>
+        <p>判断<code>c</code>和<code>last</code>是不是都是<code>textNode</code>？如果是就合并这两项，替换<code>res</code>现在的最后一位（<code>last</code>）。
+            如果不是，则继续判断</p>
+        <pre><code>    <span class="hljs-keyword">else</span> {
+                if (isTrue(children._isVList) &amp;&amp;
+                  isDef(c.tag) &amp;&amp;
+                  isUndef(c.key) &amp;&amp;
+                  isDef(nestedIndex)) {
+                  c.key = <span class="hljs-string">"__vlist"</span> + nestedIndex + <span class="hljs-string">"_"</span> + i + <span class="hljs-string">"__"</span>;
+                }
+                res.push(c);
+            }</code></pre>
+        <p>如果<code>v-for</code>绑定的，判断是否有<code>tag</code>和当前是否传入的<code>nestIndex</code>并且没有<code>key</code>属性，则给<code>c</code>加一个<code>key</code>,采用<code>__vlist</code>+传入的下标+<code>_</code>
+            + 当前的下标 + <code>__</code>，即这部分是为了没有加<code>key</code>属性的<code>v-for</code>操作加上<code>key</code>属性。
+            然后将<code>c</code>加入到<code>res</code>最后。</p>
+        <p>如果是数组：</p>
+        <pre><code> <span class="hljs-keyword">if</span> (c.length &gt; <span class="hljs-number">0</span>) {
+            c = normalizeArrayChildren(c, ((nestedIndex <span class="hljs-params">||</span> <span class="hljs-string">''</span>) + <span class="hljs-string">"_"</span> + i));
+            <span class="hljs-keyword">if</span> (isTextNode(c[<span class="hljs-number">0</span>]) &amp;&amp; isTextNode(last)) {
+              res[lastIndex] = createTextVNode(last.text + (c[<span class="hljs-number">0</span>]).text);
+              c.shift();
+            }
+            res.push.apply(res, c);
+            console.log(res)
+          }</code></pre>
+        <p>判断长度是大于0？如果当前<code>c</code>是空数组，直接完成此次循环。
+            如果<code>c</code>长度大于0，则递归调用<code>normalizeArrayChildren</code>处理，然会一个标准的<code>VNode</code>数组。</p>
+        <pre><code>  if (isTextNode(c[0]) &amp;&amp; isTextNode(last)) {
+              res[lastIndex] = createTextVNode(last.text + (c[0]).text);
+              c.shift();
+            }</code></pre>
+        <p>如果返回的这个数组<code>c</code>的第一个节点是<code>TextNode</code>并且当前<code>res</code>的最后一个也是<code>TextNode</code>，合并这两个<code>TextNode</code>，并删除<code>c</code>的第一个节点。
+        </p>
+        <p>最后，将<code>c</code>这个标准<code>VNode</code>数组通过<code>res.push.apply(res, c)</code>将每一项加入<code>res</code>最后。</p>
+        <p>当遍历完成的时候，<code>res</code>中存放的是标准的<code>VNode</code>节点数组，并且打平成一维数组。</p>
+        <p>另一种情况,由模板编译器<code>render</code>,这情况下<code>html</code>标签生成的渲染函数保证返回Array，如果是组件的情况下会进行规范。</p>
+        <pre><code>    <span class="hljs-keyword">else</span> if (normalizationType === SIMPLE_NORMALIZE) {
+              children = simpleNormalizeChildren(children);
+            }</code></pre>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">simpleNormalizeChildren</span> (<span class="hljs-params">children</span>) </span>{
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; children.length; i++) {
+              <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(children[i])) {
+                <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.prototype.concat.apply([], children)
+              }
+            }
+            <span class="hljs-keyword">return</span> children
+          }</code></pre>
+        <p>但是函数式组件返回的是
+            一个数组而不是一个节点，使用<code>Array.prototype.concat.apply([], children)</code>进行一层级的扁平化，而因为组件内部的子组件已经自己正常化了，所以只需要打平一层成一维数组。
+        </p>
+        <p><code>$createElement</code>和<code>_c</code>都是完成<code>children</code> 的规范化以及 <code>VNode</code> 的创建。<a
+                href="./demos/vue_init/index_vnode.html" target="_blank">§</a> </p>
+        <p>继续回到<code>initRender</code>函数。当前<code>new Vue()</code>实例化过程中，<code>parentData</code>是<code>undifinded</code>,
+        </p>
+        <pre><code> {
+              defineReactive$$<span class="hljs-number">1</span>(vm, <span class="hljs-string">'$attrs'</span>, parentData &amp;&amp; parentData.attrs || emptyObject, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                !isUpdatingChildComponent &amp;&amp; warn(<span class="hljs-string">"$attrs is readonly."</span>, vm);
+              }, <span class="hljs-literal">true</span>);
+              defineReactive$$<span class="hljs-number">1</span>(vm, <span class="hljs-string">'$listeners'</span>, options._parentListeners || emptyObject, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                !isUpdatingChildComponent &amp;&amp; warn(<span class="hljs-string">"$listeners is readonly."</span>, vm);
+              }, <span class="hljs-literal">true</span>);
+         }
+        </code></pre>
+        <p><code>defineReactive$$1</code>这个函数用来创建响应式对象，简单来说就是给需要监听的对象，设置好<code>setter</code>里收集依赖，在<code>getter</code>里面触发，是对definePropoty的一层封装，这里是对响应式数据的初始化。
+        </p>
+        <p>但是在这里，因为传了了第五个参数true,所以这里当前设置值的不会被设置监听，及没有<code>_ob_</code>属性。所这里相当给实例设置<code>$attrs</code>和<code>$listeners</code>两个值，并设置初始值，设置不可设置。
+        </p>
+        <p>至此，<code>initRender</code>执行完成，实例上增加<code>$slots</code>,<code>$scopedSlots</code>,<code>$createElement</code>,<code>$attrs</code>,<code>$listeners</code>。
+        </p>
+        <p>回到<code>_init</code>,</p>
+        <pre><code> callHook(vm, <span class="hljs-string">'beforeCreate'</span>);</code></pre>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callHook</span> (<span class="hljs-params">vm, hook</span>) </span>{
+            pushTarget();
+            <span class="hljs-keyword">var</span> handlers = vm.$options[hook];
+            <span class="hljs-keyword">var</span> info = hook + <span class="hljs-string">" hook"</span>;
+            <span class="hljs-keyword">if</span> (handlers) {
+              <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, j = handlers.length; i &lt; j; i++) {
+                invokeWithErrorHandling(handlers[i], vm, <span class="hljs-literal">null</span>, vm, info);
+              }
+            }
+            <span class="hljs-keyword">if</span> (vm._hasHookEvent) {
+              vm.$emit(<span class="hljs-string">'hook:'</span> + hook);
+            }
+            popTarget();
+          }</code></pre>
+        <p> <code>callHook</code>:触发生命周期钩子（即$options里面对呀的钩子方法）并将当前实例设置钩子函数的<code>this</code>，然后发送对面的hook事件。<a
+                href="./demos/vue_init/index.html?step=6" target="_blank">§</a></p>
+        <p> 这里触发了<code>beforeCreate</code>，也就进入第一个生命周期钩子，官方将<code>new Vue()</code>到<code>callHook(vm, 'beforeCreate')</code>中间这个阶段称为<code>init Events &amp; lifeCycle</code>。这一阶段，我们收集了父子组件之间的关系，收集父组件监听的子组件的事件，初始化了一系列参数和方法。
+            <a href="./demos/vue_init/%5B%C2%A7%5D(./demos/vue_init/lifecyle.html?type=1" target="_blank">§</a>。</p>
+        <p> 继续回到<code>_init</code>执行<code>initInjections(vm)</code>：</p>
+        <p> <code>initInjections</code>,取出当前组件需要注入的值并且返回。
+            因为当时<code>new Vue()</code>,根组件不存在注入，先看数据是什么样提供，<code>initProvide(vm);</code>。</p>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initProvide</span> (<span class="hljs-params">vm</span>) </span>{
+            <span class="hljs-keyword">var</span> provide = vm.$options.provide;
+            <span class="hljs-keyword">if</span> (provide) {
+              vm._provided = <span class="hljs-keyword">typeof</span> provide === <span class="hljs-string">'function'</span>
+                ? provide.call(vm)
+                : provide;
+            }
+          }
+        </code></pre>
+        <p>因为要求<code>provide</code>是一个函数或者对象，所以这里判断并将返回值赋给实例的<code>_provided</code>属性。<a
+                href="./demos/vue_init/index.html?step=9" target="_blank">§</a></p>
+        <p>再看组件注入数据。</p>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initInjections</span> (<span class="hljs-params">vm</span>) </span>{
+            <span class="hljs-keyword">var</span> result = resolveInject(vm.$options.inject, vm);
+            <span class="hljs-keyword">if</span> (result) {
+              toggleObserving(<span class="hljs-literal">false</span>);
+              <span class="hljs-built_in">Object</span>.keys(result).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">key</span>) </span>{
+                <span class="hljs-comment">/* istanbul ignore else */</span>
+                {
+                  defineReactive$$<span class="hljs-number">1</span>(vm, key, result[key], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                    warn(
+                      <span class="hljs-string">"Avoid mutating an injected value directly since the changes will be "</span> +
+                      <span class="hljs-string">"overwritten whenever the provided component re-renders. "</span> +
+                      <span class="hljs-string">"injection being mutated: \""</span> + key + <span class="hljs-string">"\""</span>,
+                      vm
+                    );
+                  });
+                }
+              });
+              toggleObserving(<span class="hljs-literal">true</span>);
+            }
+          }</code></pre>
+        <p><code>resolveInject</code>方法，根据当前组件的<code>$options.inject</code>属性，返回一个属性值对象（对应的值从<code>vm._provided</code>的上获取,如果没有，通过$parent向上寻找）,然后将返回值每一个值绑定到当前组件实例上，从而实现了上下游关系跨组件传值。<a
+                href="./demos/vue_init/index.html?step=7" target="_blank">§</a></p>
+        <p><code> initState(vm)</code>:初始化状态。</p>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initState</span> (<span class="hljs-params">vm</span>) </span>{
+            vm._watchers = [];
+            <span class="hljs-keyword">var</span> opts = vm.$options;
+            <span class="hljs-keyword">if</span> (opts.props) { initProps(vm, opts.props); }
+            <span class="hljs-keyword">if</span> (opts.methods) { initMethods(vm, opts.methods); }
+            <span class="hljs-keyword">if</span> (opts.data) {
+              initData(vm);
+            } <span class="hljs-keyword">else</span> {
+              observe(vm._data = {}, <span class="hljs-literal">true</span> <span class="hljs-comment">/* asRootData */</span>);
+            }
+            <span class="hljs-keyword">if</span> (opts.computed) { initComputed(vm, opts.computed); }
+            <span class="hljs-keyword">if</span> (opts.watch &amp;&amp; opts.watch !== nativeWatch) {
+              initWatch(vm, opts.watch);
+            }
+          }
+        </code></pre>
+        <p>首先初始一个<code>_watchers</code>，开始根据<code>$options</code>上的参数进行初始化：</p>
+        <pre><code>if (opts.props) { initProps(vm, opts.props); }</code></pre>
+        <p>判断是否有传入了<code>props</code>值，如果有就初始化：
+            拆解<code>initProps</code>，首先给实例增加一个<code>_prop</code>属性和实例的<code>$options.propsData</code>，</p>
+        <pre><code>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> propsOptions) loop( key );</code></pre>
+        <p>对<code>$options.props</code>属性进行遍历，执行<code>loop(ley)</code></p>
+        <pre><code>    <span class="hljs-keyword">var</span> loop = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> key </span>) </span>{
+              keys.push(key);
+              <span class="hljs-keyword">var</span> value = validateProp(key, propsOptions, propsData, vm);
+              {
+                <span class="hljs-keyword">var</span> hyphenatedKey = hyphenate(key);
+                <span class="hljs-keyword">if</span> (isReservedAttribute(hyphenatedKey) ||
+                    config.isReservedAttr(hyphenatedKey)) {
+                  warn(
+                    (<span class="hljs-string">"\""</span> + hyphenatedKey + <span class="hljs-string">"\" is a reserved attribute and cannot be used as component prop."</span>),
+                    vm
+                  );
+                }
+                defineReactive$$<span class="hljs-number">1</span>(props, key, value, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                  <span class="hljs-keyword">if</span> (!isRoot &amp;&amp; !isUpdatingChildComponent) {
+                    warn(
+                      <span class="hljs-string">"Avoid mutating a prop directly since the value will be "</span> +
+                      <span class="hljs-string">"overwritten whenever the parent component re-renders. "</span> +
+                      <span class="hljs-string">"Instead, use a data or computed property based on the prop's "</span> +
+                      <span class="hljs-string">"value. Prop being mutated: \""</span> + key + <span class="hljs-string">"\""</span>,
+                      vm
+                    );
+                  }
+                });
+              }
+              <span class="hljs-keyword">if</span> (!(key <span class="hljs-keyword">in</span> vm)) {
+                proxy(vm, <span class="hljs-string">"_props"</span>, key);
+              }
+            };</code></pre>
+        <p><code>keys = vm.$options._propKeys = []</code>,储存传入的<code>prop</code>属性的键值。
+            <code>validateProp</code>，对数据进行类型检测和设置监听初始值，最后返回这个值。
+            <code>hyphenate</code>，将驼峰语法转化<code>-</code>链接并返回。
+            <code>isReservedAttribute(hyphenatedKey) ||config.isReservedAttr(hyphenatedKey)</code>,判断是不是保留的名称或者设置保留的。
+            设置对值监听的数据收集和数据更新，并将获取和设置实例的<code>props</code>上的属性代理到<code>_props</code>上。</p>
+        <p>完成<code>props</code>属性的初始化之后，继续初始化<code>methods</code>属性。
+            <code>initMethods</code>，检测<code>methods</code>中的方法是不是函数，并且有没有和现有的方法方法重名和<code>props</code>属性重名。并且设置访问实例对应名称的时候
+        </p>
+        <pre><code> vm[key] = <span class="hljs-keyword">typeof</span> methods[key] !== <span class="hljs-string">'function'</span> ? noop : bind(methods[key], vm);</code></pre>
+        <p>访问对应的方法，并绑定实例为<code>this</code>.</p>
+        <p>继续初始化<code>data</code>属性：</p>
+        <pre><code>  <span class="hljs-keyword">if</span> (opts.data) {
+            initData(vm);
+          } <span class="hljs-keyword">else</span> {
+            observe(vm._data = {}, <span class="hljs-literal">true</span> <span class="hljs-comment">/* asRootData */</span>);
+          }</code></pre>
+        <p>判断是否传入了<code>data</code>参数，如果没有传入，就给<code>_data</code>赋值空对象，并设置监听。
+            如果传入了，<code>initData(vm)</code>。</p>
+        <pre><code>    var data = vm.$options.data;
+            data = vm._data = typeof data === <span class="hljs-string">'function'</span>
+              ? getData(data, vm)
+              : data <span class="hljs-params">||</span> {};
+        </code></pre>
+        <p> 首先获取<code>data</code>参数，将对象和函数传值通过话处理成对象。</p>
+        <pre><code>    if (!isPlainObject(data)) {
+              data = {};
+              warn(
+                'data functions should return an object:\n' +
+                'https://vuejs.org/v2/guide/components.html<span class="hljs-comment">#data-Must-Be-a-Function',</span>
+                vm
+              );
+            }</code></pre>
+        <p> <code>isPlainObject</code>判断<code>data</code>参数类型必须为对象。</p>
+        <pre><code>    <span class="hljs-comment">// proxy data on instance</span>
+            <span class="hljs-keyword">var</span> keys = <span class="hljs-built_in">Object</span>.keys(data);
+            <span class="hljs-keyword">var</span> props = vm.$options.props;
+            <span class="hljs-keyword">var</span> methods = vm.$options.methods;
+            <span class="hljs-keyword">var</span> i = keys.length;
+            <span class="hljs-keyword">while</span> (i--) {
+              <span class="hljs-keyword">var</span> key = keys[i];
+              {
+                <span class="hljs-keyword">if</span> (methods &amp;&amp; hasOwn(methods, key)) {
+                  warn(
+                    (<span class="hljs-string">"Method \""</span> + key + <span class="hljs-string">"\" has already been defined as a data property."</span>),
+                    vm
+                  );
+                }
+              }
+              <span class="hljs-keyword">if</span> (props &amp;&amp; hasOwn(props, key)) {
+                warn(
+                  <span class="hljs-string">"The data property \""</span> + key + <span class="hljs-string">"\" is already declared as a prop. "</span> +
+                  <span class="hljs-string">"Use prop default value instead."</span>,
+                  vm
+                );
+              } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!isReserved(key)) {
+                proxy(vm, <span class="hljs-string">"_data"</span>, key);
+              }
+            }</code></pre>
+        <p>判断<code>data</code>中的键有没有和<code>props</code>和<code>methods</code>中和重合，并且不是<code>_</code>和<code>$</code>开头。
+            则将对实例访问<code>data</code>中的键时候，将其代理到<code>_data</code>上。</p>
+        <p>最后 监听整个<code>data</code>。</p>
+        <p>继续初始化计算属性，执行<code>initComputed(vm, opts.computed)</code>。</p>
+        <pre><code>  <span class="hljs-keyword">var</span> watchers = vm._computedWatchers = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>);
+          <span class="hljs-keyword">var</span> isSSR = isServerRendering();</code></pre>
+        <p>首先给实例增加<code>_computedWatchers</code>属性，并设置两个局部变量，<code>watchers</code>等于<code>vm._computedWatchers</code>,<code>isSSR</code>是否是服务器渲染的标识。
+        </p>
+        <pre><code>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> computed) {
+              <span class="hljs-keyword">var</span> userDef = computed[key];
+              <span class="hljs-keyword">var</span> getter = <span class="hljs-keyword">typeof</span> userDef === <span class="hljs-string">'function'</span> ? userDef : userDef.get;
+              <span class="hljs-keyword">if</span> (getter == <span class="hljs-literal">null</span>) {
+                warn(
+                  (<span class="hljs-string">"Getter is missing for computed property \""</span> + key + <span class="hljs-string">"\"."</span>),
+                  vm
+                );
+              }
+        
+              <span class="hljs-keyword">if</span> (!isSSR) {
+                <span class="hljs-comment">// create internal watcher for the computed property.</span>
+                watchers[key] = <span class="hljs-keyword">new</span> Watcher(
+                  vm,
+                  getter || noop,
+                  noop,
+                  computedWatcherOptions
+                );
+              }
+              <span class="hljs-keyword">if</span> (!(key <span class="hljs-keyword">in</span> vm)) {
+                defineComputed(vm, key, userDef);
+              } <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">if</span> (key <span class="hljs-keyword">in</span> vm.$data) {
+                  warn((<span class="hljs-string">"The computed property \""</span> + key + <span class="hljs-string">"\" is already defined in data."</span>), vm);
+                } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (vm.$options.props &amp;&amp; key <span class="hljs-keyword">in</span> vm.$options.props) {
+                  warn((<span class="hljs-string">"The computed property \""</span> + key + <span class="hljs-string">"\" is already defined as a prop."</span>), vm);
+                }
+              }
+            }</code></pre>
+        <p>遍历<code>computed</code>的值，如果对应的值是函数，则当作是这个属性的<code>getter</code>.此外属性的值还可以是一个对象，他只有三个有效字段set、get和cache，分别表示属性的setter、getter和是否启用缓存，其中get是必须的，cache默认为true。
+        </p>
+        <p>如果不是服务端渲染，创建一个计算属性 watcher。
+            如果实例上没有与计算属性重名的值，执行<code>  defineComputed(vm, key, userDef)</code>,调用defineComputed函数，监听数据，为组件中的属性绑定getter及setter。
+        </p>
+        <p><code>initWatch(vm, opts.watch)</code>:</p>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initWatch</span> (<span class="hljs-params">vm, watch</span>) </span>{
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> watch) {
+              <span class="hljs-keyword">var</span> handler = watch[key];
+              <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(handler)) {
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; handler.length; i++) {
+                  createWatcher(vm, key, handler[i]);
+                }
+              } <span class="hljs-keyword">else</span> {
+                createWatcher(vm, key, handler);
+              }
+            }
+          }</code></pre>
+        <p>给<code>watch</code>参数中的每一项都创建<code>watcher</code>，如果是数组，则遍历每一个元素。</p>
+        <pre><code>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createWatcher</span> (<span class="hljs-params">
+            vm,
+            expOrFn,
+            handler,
+            options
+          </span>) </span>{
+            <span class="hljs-keyword">if</span> (isPlainObject(handler)) {
+              options = handler;
+              handler = handler.handler;
+            }
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> handler === <span class="hljs-string">'string'</span>) {
+              handler = vm[handler];
+            }
+            <span class="hljs-keyword">return</span> vm.$watch(expOrFn, handler, options)
+          }
+        </code></pre>
+        <p>处理对象和函数两种传参，然后通过<code>$watch</code>,监听数据变化，并执行回调。</p>
+        <p>至此，完成了生命周期的数据初始化，包括<code>props</code>,<code>methods</code>,<code>data</code>,<code>watch</code>,<code>computed</code>,<code>inject</code>,<code>provide</code>，这些数据已经绑定到实例上了，并且对应的属性已经被监听。此<code>$el</code>属性尚未初始化，也没有初始化页面和绑定，此时没有<code>dom</code>结构。
+        </p>
+        <pre><code>   callHook(vm, <span class="hljs-string">'created'</span>);</code></pre>
+        <p>执行回调。<a href="./demos/vue_init/lifecyle.html?type=2" target="_blank">§</a>。</p>
+        <p>继续往下看<code>_init(options)</code>:</p>
+        <pre><code>      <span class="hljs-keyword">if</span> (vm.$options.el) {
+                vm.$mount(vm.$options.el);
+              }</code></pre>
+        <p>如果没有<code>el</code>参数，那么初始化至此结束了，不会挂载到页面上，直到调用实例的<code>$mount</code>方法。
+            如果有<code>el</code>参数，直接在<code>_init()</code>最后调用并传入<code>el</code>参数。</p>
+        <p>拆解<code>$mount</code>:</p>
+        <pre><code>  el = el &amp;&amp; query(el);
+        
+          <span class="hljs-keyword">if</span> (el === <span class="hljs-built_in">document</span>.body || el === <span class="hljs-built_in">document</span>.documentElement) {
+            warn(
+              <span class="hljs-string">"Do not mount Vue to &lt;html&gt; or &lt;body&gt; - mount to normal elements instead."</span>
+            );
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
+          }</code></pre>
+        <p>通过<code>el</code>参数获取对应的DOM,判断是否是<code>body</code>和<code>html</code>，如果是 抛出警告返回this结束。</p>
+        <ul>
+            <li>
+                <p>如果没有传入<code>render</code>函数:</p>
+                <ol>
+                    <li>
+                        <p>如果没传入<code>template</code></p>
+                        <pre><code>template = getOuterHTML(el);</code></pre>
+                        <p>通过<code>el</code>获取<code>el</code>及其内部的元素作为<code>template</code>.</p>
+                    </li>
+                    <li>
+                        <p>如果传入<code>template</code></p>
+                        <ul>
+                            <li>
+                                <p>判断<code>tempalte</code>参数传入的是不是字符串，如果是字符串，判断是否以"#"开头的。</p>
+                                <pre><code> <span class="hljs-keyword">if</span> (template.charAt(<span class="hljs-number">0</span>) === <span class="hljs-string">'#'</span>) {
+                 template = idToTemplate(template);
+                 <span class="hljs-comment">/* istanbul ignore if */</span>
+                 <span class="hljs-keyword">if</span> (!template) {
+                   warn(
+                     (<span class="hljs-string">"Template element not found or is empty: "</span> + (options.template)),
+                     <span class="hljs-keyword">this</span>
+                   );
+                 }
+               }</code></pre>
+                                <pre><code><span class="hljs-keyword">var</span> idToTemplate = cached(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">id</span>) </span>{
+         <span class="hljs-keyword">var</span> el = query(id);
+         <span class="hljs-keyword">return</span> el &amp;&amp; el.innerHTML
+        });</code></pre>
+                                <p>如果是，就当作元素的id去获取对应的DOM，并将其赋给template。接着判断是否获取到了DOM，没有抛出警告。</p>
+                                <p>如果不是"#"开头的字符串，就不做处理直接当作template。</p>
+                            </li>
+                            <li>
+                                <p>如果不是字符串
+                                    当作DOM处理，判断<code>template.nodeType</code>,使用<code>innerHTML</code>作为<code>template</code>。
+                                </p>
+                            </li>
+                            <li>
+                                <p>其余情况直接抛出警告，返回实例结束。</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>将传入的<code>template</code>统一处理后，如果<code>tempalte</code>有值，</p>
+                        <pre><code> <span class="hljs-keyword">var</span> ref = compileToFunctions(template, {
+            <span class="hljs-attr">outputSourceRange</span>: <span class="hljs-string">"development"</span> !== <span class="hljs-string">'production'</span>,
+            <span class="hljs-attr">shouldDecodeNewlines</span>: shouldDecodeNewlines,
+            <span class="hljs-attr">shouldDecodeNewlinesForHref</span>: shouldDecodeNewlinesForHref,
+            <span class="hljs-attr">delimiters</span>: options.delimiters,
+            <span class="hljs-attr">comments</span>: options.comments
+          }, <span class="hljs-keyword">this</span>);
+          <span class="hljs-keyword">var</span> render = ref.render;
+          <span class="hljs-keyword">var</span> staticRenderFns = ref.staticRenderFns;
+          options.render = render;
+          options.staticRenderFns = staticRenderFns;
+        </code></pre>
+                        <p> 使用<code>compileToFunctions</code>,编译字符串模板，如果 shouldDecodeNewlines 为 true，意味着 Vue
+                            在编译模板的时候，要对属性值中的换行符或制表符做兼容处理。而shouldDecodeNewlinesForHref为true 意味着Vue在编译模板的时候，要对a标签的 href
+                            属性值中的换行符或制表符做兼容处理。delimiters改变纯文本插入分隔符，comments为true的时候保留html注释。
+                            编译完成后会返回一个对象，有两个属性<code>render</code>和<code>staticRenderFns</code>，一个获得绑定动态数据的VNode，一个是获得静态数据Vnode。
+                        </p>
+                        <p> 然后把这两个属性绑定<code>options</code>参数上面。
+                            此时，<code>options</code> 也有<code>render</code>方法。
+                            最后 调用<code>return mount.call(this, el, hydrating)</code>。</p>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <p>如果传入<code>render</code>函数:</p>
+                <pre><code>直接调用`<span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">mount</span><span class="hljs-selector-class">.call</span>(<span class="hljs-selector-tag">this</span>, <span class="hljs-selector-tag">el</span>, <span class="hljs-selector-tag">hydrating</span>)`</code></pre>
+            </li>
+        </ul>
+        <p>再看看<code>mount</code>函数：</p>
+        <pre><code>  mount = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">
+            el,
+            hydrating
+          </span>) </span>{
+            el = el &amp;&amp; inBrowser ? query(el) : <span class="hljs-literal">undefined</span>;
+            <span class="hljs-keyword">return</span> mountComponent(<span class="hljs-keyword">this</span>, el, hydrating)
+          };</code></pre>
+        <p>判断<code>el</code>参数是否存在和是否在浏览器中，给el重新赋值为DOM或者undefined。
+            调用<code>mountComponent(this, el, hydrating)</code>,<code>this</code>是当前实例。</p>
+        <pre><code>   vm.$el = el;
+            <span class="hljs-keyword">if</span> (!vm.$options.render) {
+              vm.$options.render = createEmptyVNode;
+              {
+                <span class="hljs-regexp">/* istanbul ignore if */</span>
+                <span class="hljs-keyword">if</span> ((vm.$options.template &amp;&amp; vm.$options.template.charAt(<span class="hljs-number">0</span>) !== <span class="hljs-string">'#'</span>) <span class="hljs-params">||</span>
+                  vm.$options.el <span class="hljs-params">||</span> el) {
+                  warn(
+                    <span class="hljs-string">'You are using the runtime-only build of Vue where the template '</span> +
+                    <span class="hljs-string">'compiler is not available. Either pre-compile the templates into '</span> +
+                    <span class="hljs-string">'render functions, or use the compiler-included build.'</span>,
+                    vm
+                  );
+                } <span class="hljs-keyword">else</span> {
+                  warn(
+                    <span class="hljs-string">'Failed to mount component: template or render function not defined.'</span>,
+                    vm
+                  );
+                }
+              }
+            }</code></pre>
+        <p>首先将<code>el</code>赋给实例的<code>#el</code>属性，如果在浏览器中，就是当前实例绑定的DOM。
+            如果没有<code>$options.render</code>,给<code>render</code>赋一个生产空VNode的函数,抛出错误。</p>
+        <pre><code> callHook(vm, <span class="hljs-string">'beforeMount'</span>);</code></pre>
+        <p>执行<code>beforeMount</code>回调，此时相对于之前，首先根据<code>el</code>参数，将<code>#el</code>赋值；其次，如果没有<code>render</code>参数，就根据<code>tempalte</code>生成一个并赋值给<code>options.render</code>。
+            此时还没有挂到页面上面，所以只有一个挂载节点的DOM存在。<a href="./demos/vue_init/lifecyle.html?type=3" target="_blank">§</a></p>
+        <p>申明一个函数，函数内部调用实例的<code>_update</code>方法，传入实例的<code>_render</code>方法。</p>
+        <pre><code> updateComponent = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                vm._update(vm._render(), hydrating);
+         };</code></pre>
+        <p>先看下<code>_render</code>方法：</p>
+        <pre><code>      var vm = this;
+              var ref = vm.$options;
+              var render = ref.render;
+              var _parentVnode = ref._parentVnode;
+        
+              <span class="hljs-keyword">if</span> (_parentVnode) {
+                vm.$scopedSlots = normalizeScopedSlots(
+                  _parentVnode.data.scopedSlots,
+                  vm.$slots,
+                  vm.$scopedSlots
+                );
+              }
+              vm.$vnode = _parentVnode;
+        </code></pre>
+        <p>首先接我们上一步，上一步中确保生成了一个<code>render</code>函数，赋给了<code>options</code>上，这里取出来存储在局部变量，准备使用，同时取出<code>_parentVnode</code>。
+            判断是否拥有<code>_parentVnode</code>属性，如果有这个属性，初始化作用域插槽。
+            然后把<code>_parentVnode</code>放在实例的<code>$vnode</code>属性上。</p>
+        <pre><code>      ...
+              vnode = render.call(vm._renderProxy, vm.$createElement);
+              ...
+              vnode.parent = _parentVnode;
+              <span class="hljs-keyword">return</span> vnode</code></pre>
+        <p>通过call的方式调用<code>render</code>，传入当前实例作为<code>this</code>（<code>_renderProxy</code>是当前实例的代理）,第二参数<code>$createElement</code>根据参数创建<code>Vnode</code>。这里的<code>render</code>跟参数传入的<code>render</code>是一样的，这里是由模板编译得到的<code>render</code>。执行完成的返回结果<code>Vnode</code>。这里<code>_parentVnode</code>储存的是未经过<code>render</code>函数处理的<code>Vnode</code>,中间会含有vue的组件标签，经过<code>render</code>函数之后返回的vnode，是纯html标签的Vnode。
+        </p>
+        <p>再回到<code>vm._update(vm._render(), hydrating)</code>，</p>
+        <p>_update主要是调用了patch函数，patch函数的主要功能将vnode转换为dom节点然后渲染在视图中。因此，为了生成dom节点，还需要判断vnode是否有子节点，一直递归到没有子节点时。开始创建子节点并插入在父节点中。最后再将原来定义的根节点移除，因为已经重新建立了新的节点替换原来的根节点。
+            也就是说创建dom节点的这个过程，是先从最底层的子节点开始的。<a href="./demos/vue_init/alllifecyle.html" target="_blank">§</a>。</p>
+        <p><code>beforeCreate ---&gt; beforeMount</code>:父组件会先于子组件触发生命周期。
+            <code>mounted</code>:子组件会先于父组件触发生命周期。
+            即：父beforeCreate-&gt;父created-&gt;父beforeMount-&gt;子beforeCreate-&gt;子created-&gt;子beforeMount-&gt;子mounted-&gt;父mounted
+            非父子关系无法确定先后顺序，同级通常是按照Vnode结构中得先后顺序，但不一定。</p>
+        <p>把这个函数储存再<code>updateComponent</code>中，并创建一个渲染 Watcher。</p>
+        <pre><code> <span class="hljs-selector-tag">new</span> <span class="hljs-selector-tag">Watcher</span>(<span class="hljs-selector-tag">vm</span>, <span class="hljs-selector-tag">updateComponent</span>, <span class="hljs-selector-tag">noop</span>, {
+              <span class="hljs-attribute">before</span>: function before () {
+                if (vm._isMounted &amp;&amp; !vm._isDestroyed) {
+                  <span class="hljs-built_in">callHook</span>(vm, <span class="hljs-string">'beforeUpdate'</span>);
+                }
+              }
+            }, <span class="hljs-selector-tag">true</span> <span class="hljs-comment">/* isRenderWatcher */</span>);</code></pre>
+        <p>实例化了渲染 Watcher 并调用了 updateComponent 进行第一次渲染。</p>
+        <pre><code> <span class="hljs-keyword">if</span> (vm.$vnode == null) {
+              vm._isMounted = <span class="hljs-literal">true</span>;
+              callHook(vm, <span class="hljs-string">'mounted'</span>);
+            }
+            <span class="hljs-keyword">return</span> vm</code></pre>
+        <p>此时，Vue实例化完成，并且与完成视图绑定。 <a href="./demos/vue_init/mount.html" target="_blank">§</a>。</p>
+        <p>再看看vue数据更新的触发的生命周期：
+            在<code>mounted</code>生命钩子及之后，对监听数据进行改变会触发这两个钩子，并且在所有数据更新之后，视图更新之前调用<code>beforeUpdate</code>,在视图更新之后调用<code>updated</code>。Vue的数据更新视图，在一次宏任务中，所有的数据变化都会被收集，然后在宏任务结束之后触发<code>beforeUpdate</code>,最后开始更新视图，然后触发<code>updated</code>钩子，所以<code>beforeUpdate</code>钩子中再本次更新中最后一次可以修改数据,做一些数据统一更新处理的相应函数,此时的DOM还是更新之前的，而在<code>updated</code>可以获取更新之后DOM，如果改变数据，会进行新一轮的数据更新(谨慎使用，因为触发了数据更新会导致updated再次调用，形成循环)。<a
+                href="./demos/vue_init/update1.html" target="_blank">§</a>。</p>
+        <p>在看看组件之间的更新顺序：父组件<code>beforeUpdate</code> &gt; 子组件<code>beforeUpdate</code> &gt; 子组件<code>updated</code> &gt;
+            父组件<code>updated</code> 。 非父子关系的，无法确定先后。 <a href="./demos/vue_init/update2.html" target="_blank">§</a>;</p>
+        <p>Vue销毁的两个钩子（$destroy触发）：
+            父组件 beforeDestroy 》 子组件 beforeDestroy 》 子组件 destroyed 》 父组件 destroyed </p>
+        <blockquote>
+            <p>beforeDestroy:实例销毁之前调用。在这一步，实例仍然完全可用。</p>
+        </blockquote>
+        <p>然我们来看下<code>$destroy</code>从调用到触发<code>beforeDestroy</code>钩子之间干了什么：</p>
+        <pre><code>   <span class="hljs-keyword">var</span> vm = <span class="hljs-keyword">this</span>;
+            <span class="hljs-keyword">if</span> (vm._isBeingDestroyed) {
+            <span class="hljs-keyword">return</span>
+            }
+            callHook(vm, <span class="hljs-string">'beforeDestroy'</span>);</code></pre>
+        <p>所以在触发<code>beforeDestroy</code>之前，实际上只是通过了<code>_isBeingDestroyed</code>参数，判断当前实例有没有开始销毁，避免多次触发。
+            所以有了上面官方介绍，这一步 实例仍然“完全”可用，因为就没有改任务东西。
+            这一步，是我们最后能国通过Vue标准方法获取关联的对象，比如通过<code>refs</code>取消手动绑定的插件。</p>
+        <p>继续往下看:</p>
+        <pre><code>    vm._isBeingDestroyed = <span class="hljs-literal">true</span>;
+              <span class="hljs-regexp">//</span> remove <span class="hljs-keyword">self</span> from parent
+              var parent = vm.$parent;
+              <span class="hljs-keyword">if</span> (parent &amp;&amp; !parent._isBeingDestroyed &amp;&amp; !vm.$options.abstract) {
+                remove(parent.$children, vm);
+              }</code></pre>
+        <p>设置正在销毁的状态<code>_isBeingDestroyed</code>。
+            当前组件的不是抽象组件，并且有父组件，并且父组件没有处于销毁的状态的时候，将自己从父组件的children中删除（触发销毁的组件状态会先改变，然后子组件才会触发销毁）。</p>
+        <pre><code>  <span class="hljs-keyword">if</span> (vm._watcher) {
+                vm._watcher.teardown();
+           }
+            <span class="hljs-keyword">var</span> i = vm._watchers.length;
+            <span class="hljs-keyword">while</span> (i--) {
+            vm._watchers[i].teardown();
+            }</code></pre>
+        <pre><code>  Watcher.prototype.teardown = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">teardown</span> (<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.active) {
+              <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.vm._isBeingDestroyed) {
+                remove(<span class="hljs-keyword">this</span>.vm._watchers, <span class="hljs-keyword">this</span>);
+              }
+              <span class="hljs-keyword">var</span> i = <span class="hljs-keyword">this</span>.deps.length;
+              <span class="hljs-keyword">while</span> (i--) {
+                <span class="hljs-keyword">this</span>.deps[i].removeSub(<span class="hljs-keyword">this</span>);
+              }
+              <span class="hljs-keyword">this</span>.active = <span class="hljs-literal">false</span>;
+            }
+          };</code></pre>
+        <p>当前<code>_isBeingDestroyed</code>为<code>ture</code>，<code>teardown</code>方法将当前<code>watcher</code>从依赖集合中删掉，不再监听数据变化更新试图了。
+        </p>
+        <pre><code>  if (vm._data.__ob__) {
+                vm._data.__ob__.vmCount--;
+          }
+        </code></pre>
+        <p><code>vmCount</code>是当前对象被监听的次数，销毁减少一次。</p>
+        <pre><code> <span class="hljs-selector-tag">vm</span><span class="hljs-selector-class">.__patch__</span>(<span class="hljs-selector-tag">vm</span><span class="hljs-selector-class">._vnode</span>, <span class="hljs-selector-tag">null</span>);</code></pre>
+        <p>这里开始接触DOM与Vnode的绑定，会深层便利所有子组件，所以会才最内层子组件完成销毁才会一层一层的向上继续销毁。页面上的DOM和虚拟DOM断开连接，无法通过vue的属性值访问DOM有关的属性。（$el除外），不会移除已经存在页面上的DOM。
+        </p>
+        <pre><code> callHook(vm, <span class="hljs-string">'destroyed'</span>);</code></pre>
+        <blockquote>
+            <p>destroyed:实例销毁后调用。该钩子被调用后，对应 Vue 实例的所有指令都被解绑，所有的事件监听器被移除，所有的子实例也都被销毁。</p>
+        </blockquote>
+        <p>但事实上，这里的Vue绑定的事件监听并没有被移除。</p>
+        <pre><code> vm.$off();</code></pre>
+        <p>这一步才是移除事件，但是移除的是<code>_events</code>中的事件，也就是通过<code>$on,$once</code>绑定的事件以及组件调用时候<code>@</code>绑定的事件。
+            最后取消对实例的指向占用，释放内存。</p>
+        <p>但是，实际上，如果通过<code>@</code>给<code>html</code>标签绑定事件，在这之后并不会主动移除，而且如果通过EventBus的方式兄弟组件间通讯，也不回自动回收，需要手动处理。</p>
+        <p>最后还有两个钩子函数：
+            activated ：被 keep-alive 缓存的组件激活时调用。
+            deactivated ： 被 keep-alive 缓存的组件停用时调用。
+            例如：类似A》B》C,前进的新开页面，后退需要缓存的场景，使用这两个钩子。
+            在路由切换的时候，如果没有使用keep-alive 缓存，那么就会触发 beforeDestroy 和
+            destroyed，而这种情况下，切换组件会移除DOM，所以上面HTML的绑定事件没有收回也就避免了，但是EventBus问题还是存在的。<a href="./demos/vue_init/router.html"
+                target="_blank">§</a>。</p>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script>
-        // import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.js';
-        // 数据双向绑定
-        // 
 
-
-
-        var vm = new Vue({
-            el: "#app",
-            components: {
-                testEvent: {
-                    template: "<button @click='$emit(\"test\")'>按钮</button>",
-                    mounted() {
-                        this.$on('test', () => { console.log('testEvent on') })
-                        this.$emit('test')
-                    }
-
-                }
-            },
-            data: {
-                title: "vue 生命周期",
-                num: 1,
-            },
-            watch: {
-                title() {
-                    console.log(this.title)
-                }
-            },
-            computed: {
-                ctitle() {
-                    return this.title
-                }
-            },
-            methods: {
-                catchEvent() {
-                    console.log('@test')
-                },
-                setTitle() {
-                    this.title = "vue ——  set Title"
-                },
-                setData(key, value) {
-                    this[key] = value
-                    setTimeout(() => {
-                        console.log('setTimeOut 0')
-                    }, 0)
-                    this.$nextTick(() => {
-                        console.log('nextTick')
-                    })
-
-                    console.log('直接console.log')
-                    // this.$forceUpdate()
-                }
-            },
-            beforeCreate: function () { console.log('---- ---- Before Create'); },
-            created: function () { console.log('---- ---- Created'); },
-            beforeMount: function () {
-                console.log('---- ---- Before Mount');
-            },
-            mounted: function () {
-                console.log('---- ---- Mounted');
-                this.$refs['test'].$on('test', () => { console.log('vm use ref on') })
-            },
-            beforeUpdate: function () { console.log('---- ---- Before Update'); },
-            updated: function () { console.log('---- ---- Updated'); },
-            beforeDestroy: function () { console.log('---- ---- Before Destroy'); },
-            destroyed: function () { console.log('---- ---- Destroyed'); }
-        })
-    </script>
 </body>
 
 </html>

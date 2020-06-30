@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/markdown.css">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <style>
+       
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/marked/1.1.0/marked.min.js"></script>
+    <script src="/js/highlight.pack.js"></script>
+    <script>
+
+        marked.setOptions({
+            renderer: new marked.Renderer(),
+            highlight: function (code) {
+                // console.log(code)
+                return hljs.highlightAuto(code).value;
+            },
+            pedantic: false,
+            gfm: true,
+            tables: true,
+            breaks: false,
+            sanitize: false,
+            smartLists: true,
+            smartypants: false,
+            xhtml: false
+        });
+        $.get('./index.md').then(res => {
+            document.getElementById('app').innerHTML = marked(res);
+            $("#app").scrollTop($("#app").get(0).scrollHeight);
+            $('a').attr("target","_blank")
+        })
+    </script>
+</body>
+
+</html>
