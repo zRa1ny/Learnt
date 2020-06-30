@@ -1549,9 +1549,100 @@ _update主要是调用了patch函数，patch函数的主要功能将vnode转换�
 
 
 再看看vue数据更新的触发的生命周期：
-在`mounted`生命钩子及之后，对监听数据进行改变会触发这两个钩子，并且在所有数据更新之后，视图更新之前调用`beforeUpdate`,在视图更新之后调用`updated`。Vue的数据更新视图，在一次宏任务中，所有的数据变化都会被收集，然后在宏任务结束之后触发`beforeUpdate`,最后开始更新视图，然后触发`updated`钩子，所以`beforeUpdate`钩子中再本次更新中最后一次可以修改数据,此时的DOM还是更新之前的，而在`updated`可以获取更新之后DOM，如果改变数据，会进行新一轮的数据更新(谨慎使用，因为触发了数据更新会导致updated再次调用，形成循环)。[§](./demos/vue_init/update1.html)。
+在`mounted`生命钩子及之后，对监听数据进行改变会触发这两个钩子，并且在所有数据更新之后，视图更新之前调用`beforeUpdate`,在视图更新之后调用`updated`。Vue的数据更新视图，在一次宏任务中，所有的数据变化都会被收集，然后在宏任务结束之后触发`beforeUpdate`,最后开始更新视图，然后触发`updated`钩子，所以`beforeUpdate`钩子中再本次更新中最后一次可以修改数据,做一些数据统一更新处理的相应函数,此时的DOM还是更新之前的，而在`updated`可以获取更新之后DOM，如果改变数据，会进行新一轮的数据更新(谨慎使用，因为触发了数据更新会导致updated再次调用，形成循环)。[§](./demos/vue_init/update1.html)。
 
-在看看组件之间的更新顺序：父组件`beforeUpdate` > 子组件`beforeUpdate` > 子组件`updated` > 父组件`updated` 。 非父子关系的，无法 [§](./demos/vue_init/update2.html);
+在看看组件之间的更新顺序：父组件`beforeUpdate` > 子组件`beforeUpdate` > 子组件`updated` > 父组件`updated` 。 非父子关系的，无法确定先后。 [§](./demos/vue_init/update2.html);
+
+Vue销毁的两个钩子（$destroy触发）：
+父组件 beforeDestroy  》 子组件 beforeDestroy  》 子组件 destroyed  》 父组件 destroyed 
+ 
+> beforeDestroy:实例销毁之前调用。在这一步，实例仍然完全可用。
+
+然我们来看下`$destroy`从调用到触发`beforeDestroy`钩子之间干了什么：
+```
+   var vm = this;
+    if (vm._isBeingDestroyed) {
+    return
+    }
+    callHook(vm, 'beforeDestroy');
+```
+所以在触发`beforeDestroy`之前，实际上只是通过了`_isBeingDestroyed`参数，判断当前实例有没有开始销毁，避免多次触发。
+所以有了上面官方介绍，这一步 实例仍然“完全”可用，因为就没有改任务东西。
+这一步，是我们最后能国通过Vue标准方法获取关联的对象，比如通过`refs`取消手动绑定的插件。
+
+继续往下看:
+```
+    vm._isBeingDestroyed = true;
+      // remove self from parent
+      var parent = vm.$parent;
+      if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
+        remove(parent.$children, vm);
+      }
+```
+设置正在销毁的状态`_isBeingDestroyed`。
+当前组件的不是抽象组件，并且有父组件，并且父组件没有处于销毁的状态的时候，将自己从父组件的children中删除（触发销毁的组件状态会先改变，然后子组件才会触发销毁）。
+```
+  if (vm._watcher) {
+        vm._watcher.teardown();
+   }
+    var i = vm._watchers.length;
+    while (i--) {
+    vm._watchers[i].teardown();
+    }
+```
+```
+  Watcher.prototype.teardown = function teardown () {
+    if (this.active) {
+      if (!this.vm._isBeingDestroyed) {
+        remove(this.vm._watchers, this);
+      }
+      var i = this.deps.length;
+      while (i--) {
+        this.deps[i].removeSub(this);
+      }
+      this.active = false;
+    }
+  };
+```
+
+
+当前`_isBeingDestroyed`为`ture`，`teardown`方法将当前`watcher`从依赖集合中删掉，不再监听数据变化更新试图了。
+
+```
+  if (vm._data.__ob__) {
+        vm._data.__ob__.vmCount--;
+  }
+
+```
+`vmCount`是当前对象被监听的次数，销毁减少一次。
+
+```
+ vm.__patch__(vm._vnode, null);
+```
+这里开始接触DOM与Vnode的绑定，会深层便利所有子组件，所以会才最内层子组件完成销毁才会一层一层的向上继续销毁。页面上的DOM和虚拟DOM断开连接，无法通过vue的属性值访问DOM有关的属性。（$el除外），不会移除已经存在页面上的DOM。
+
+```
+ callHook(vm, 'destroyed');
+```
+> destroyed:实例销毁后调用。该钩子被调用后，对应 Vue 实例的所有指令都被解绑，所有的事件监听器被移除，所有的子实例也都被销毁。
+
+但事实上，这里的Vue绑定的事件监听并没有被移除。
+
+```
+ vm.$off();
+```
+这一步才是移除事件，但是移除的是`_events`中的事件，也就是通过`$on,$once`绑定的事件以及组件调用时候`@`绑定的事件。
+最后取消对实例的指向占用，释放内存。
+
+但是，实际上，如果通过`@`给`html`标签绑定事件，在这之后并不会主动移除，而且如果通过EventBus的方式兄弟组件间通讯，也不回自动回收，需要手动处理。
+
+
+
+最后还有两个钩子函数：
+activated ：被 keep-alive 缓存的组件激活时调用。
+deactivated ： 被 keep-alive 缓存的组件停用时调用。
+例如：类似A》B》C,前进的新开页面，后退需要缓存的场景，使用这两个钩子。
+在路由切换的时候，如果没有使用keep-alive 缓存，那么就会触发 beforeDestroy 和 destroyed，而这种情况下，切换组件会移除DOM，所以上面HTML的绑定事件没有收回也就避免了，但是EventBus问题还是存在的。[§](./demos/vue_init/router.html)。
 
 
 

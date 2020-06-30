@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue</title>
+</head>
+
+<body>
+    <div id="app">
+        <h3 ref="title" @click="co()">{{title}}</h3>
+        <h3>{{test.a}}</h3>
+        <child1 :title="title" @xh="xh"></child1>
+        <button @click="d()">root 销毁</button>
+        <button @click="title='change'">change title</button>
+
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            components: {
+                child1: {
+                    components: {
+                        grandson: {
+                            props: {
+                                title: {
+                                    type: String,
+                                    default: "title"
+                                },
+                                name: {
+                                    type: String,
+                                    default: "name"
+                                },
+                            },
+                            template: "<div>{{title}} = > {{name}}</div>",
+                            beforeDestroy: function () {
+                                console.log("----grandson beforeDestroy --- ")
+                            },
+                            destroyed: function () {
+                                console.log("----grandson destroyed --- ")
+                            },
+                        },
+                    },
+                    props: {
+                        title: {
+                            type: String,
+                            default: "title"
+                        }
+                    },
+                    template: "<div @click='co'>{{title}}<grandson :title='title' :name='name'></grandson> <button @click='d()'>child 销毁</button></div>",
+                    data() {
+                        return {
+                            name: "name"
+                        }
+                    },
+                    methods: {
+                        d() {
+                            this.$destroy();
+                        },
+                        co(){
+                            console.log('hah')
+                        }
+                    },
+                    beforeDestroy: function () {
+                        this.$emit("xh","来自 child beforeDestroy 的消息")
+                        console.log("----child1 beforeDestroy --- ")
+                       
+                    },
+                    destroyed: function () {
+                        console.log(this)
+                        this.$emit("xh","来自 child destroyed 的消息")
+                        console.log("----child1 destroyed --- ")
+                        debugger;
+                       
+                    },
+                },
+
+            },
+            data: {
+                title: "title",
+                test: {
+
+                }
+            },
+            watch: {
+                title: function () { }
+            },
+            computed: {
+               
+                mtitle: function () {
+                    return "m" + this.title
+                }
+            },
+            methods: {
+                xh:function(msg){
+                    console.log(msg)
+                },
+                co(){
+                    console.log("haha")
+                },
+                show() { },
+                d() {
+                    this.$destroy();
+                }
+            },
+
+            beforeDestroy: function () {
+                console.log(this.$refs.title)
+                this.title = "beforeDestroy";// 已经不会响应双向绑定
+                console.log("----root beforeDestroy --- ")
+               
+            },
+            destroyed: function () {
+               
+                this.title = "destroyed";
+                console.log("----root destroyed --- ")
+            },
+        })
+    </script>
+</body>
+
+</html>

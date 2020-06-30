@@ -3999,6 +3999,7 @@
       if (vm._isBeingDestroyed) {
         return
       }
+      
       callHook(vm, 'beforeDestroy');
       vm._isBeingDestroyed = true;
       // remove self from parent
@@ -4014,6 +4015,7 @@
       while (i--) {
         vm._watchers[i].teardown();
       }
+   
       // remove reference from data ob
       // frozen object may not have observer.
       if (vm._data.__ob__) {

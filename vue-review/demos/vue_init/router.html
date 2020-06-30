@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue</title>
+</head>
+
+<body>
+    <div id="app">
+        <h1>Hello App!</h1>
+        <p>
+            <router-link to="/foo">Go to Foo</router-link>
+            <router-link to="/bar">Go to Bar</router-link>
+        </p>
+        <!-- <router-view></router-view> -->
+        <keep-alive>
+            <router-view></router-view>
+        </keep-alive>
+    </div>
+    <script src="./vue.js"></script>
+    <script src="./vue-router.min.js"></script>
+    <script>
+
+        const Foo = {
+            template: '<div class="foo">foo</div>',
+            beforeDestroy: function () {
+                console.log("----foo beforeDestroy --- ")
+
+            },
+            destroyed: function () {
+                console.log("----foo destroyed --- ")
+            },
+            activated:function(){
+                console.log("----foo activated --- ")
+            },
+            deactivated:function(){
+                console.log("----foo deactivated --- ")
+            }
+        }
+        const Bar = {
+            template: '<div class="bar">bar</div>',
+            beforeDestroy: function () {
+                console.log("----bar beforeDestroy --- ")
+            },
+            destroyed: function () {
+                console.log("----bar destroyed --- ")
+            },
+            activated:function(){
+                console.log("----bar activated --- ")
+            },
+            deactivated:function(){
+                console.log("----bar deactivated --- ")
+            }
+        }
+
+
+        const routes = [
+            { path: '/foo', component: Foo },
+            { path: '/bar', component: Bar }
+        ]
+
+
+        const router = new VueRouter({
+            routes // (缩写) 相当于 routes: routes
+        })
+
+        const app = new Vue({
+            router
+        }).$mount('#app')
+    </script>
+</body>
+
+</html>
