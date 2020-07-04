@@ -131,115 +131,50 @@
     <script src="./plugins/swiper/swiper.min.js"></script>
     <script src="./vue_init/vue.js"></script>
     <script src="./vue_init/vue-router.min.js"></script>
+    <script src="./js/mComponents.js"></script>
     <script>
 
-        Vue.component("m-card", {
-            template: "#m-card",
-            props: {
-                value: {
-                    type: Object,
-                    default() {
-                        return {}
-                    }
-                }
-            },
-            mounted() {
-                console.log(this.value)
-            }
-        })
-        Vue.component("m-swiper", {
-            template: "#m-swiper",
-            props: {
-                config: {
-                    type: Object,
-                    default() {
-                        return {}
-                    }
-                },
-                data: {
-                    type: Array,
-                    default() {
-                        return []
-                    }
-                }
-            },
-            computed: {
-                params() {
-                    var defaultConfig = {
-                        direction: false,
-                        loop: false,
-                        pagination: false,
-                        navigation: false,
-                        scrollbar: false,
-                    }, opts = Object.assign({}, defaultConfig, this.config), params = {};
-
-                    for ([key] of Object.entries(opts)) {
-                        // 需要dom的参数转化
-                        // 不需要转化的直接使用传入的参数
-                        opts[key] && this[key] ? params[key] = this[key] : params[key] = opts[key];
-                    }
-                    this.init = false;// 配置改变重新初始化
-                    console.log(params)
-                    return params;
-                }
-            },
-            data() {
-                return {
-                    // 如果需要分页器
-                    pagination: {
-                        el: '.swiper-pagination',
-                    },
-                    // 如果需要前进后退按钮
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                    // 如果需要滚动条
-                    scrollbar: {
-                        el: '.swiper-scrollbar',
-                    },
-                    init: false
-                }
-            },
-
-            methods: {
-                swiperInit(init) {
-                    if (this.swiper && this.init) {
-                        this.swiper.update();
-                        console.log('数据更新')
-                        return;
-                    }
-                    var _this = this;
-                    this.swiper = new Swiper(this.$refs['swiper-container'], Object.assign({}, this.params, {
-                        on: {
-                            slideChange: function () {
-                                _this.$emit("slide-change", this)
-                            }
-                        }
-                    }));
-                    this.init = true;
-                }
-            },
-            mounted: function () {
-                this.swiperInit()
-            },
-            beforeUpdate() {
-                console.log('child beforeUpdate')
-            },
-            updated() {
-                console.log('child updated')
-                this.swiperInit()
-            },
-
-        });
         const routes = [
-            { path: '/foo', name: "foo", meta: { name: "foo", }, component: { template: "<span>foo</span>" } },
-            { path: '/bar', name: "bar", meta: { name: "bar", }, component: { template: "<span>bar</span>" } }
+            {
+                path: '/foo', name: "foo", meta: {
+                    name: "foo",
+                    auth: true,
+                    roles: ["foo"]
+                }, component: { template: "<span>foo</span>" }
+            },
+            {
+                path: '/bar', name: "bar",
+                meta: {
+                    name: "bar",
+                    auth: true,
+                    roles: ["bar"]
+                }, component: { template: "<span>bar</span>" }
+            }
         ]
+
+        var login = { template: "<span>login</span>" };
 
 
         const router = new VueRouter({
-            routes // (缩写) 相当于 routes: routes
+            routes: [
+                {
+                    path: '/login',
+                    name: 'login',
+                    meta: {
+                        name: "login",
+                    },
+                    component: { template: "<span>login</span>" }
+                },
+                {
+                    path: '/404',
+                    name: '404',
+                    meta: {
+                        name: "404",
+                        hide:true
+                    },
+                    component: { template: "<span>404</span>" }
+                }
+            ]
         })
 
 
@@ -249,15 +184,17 @@
             },
             computed: {
                 routes() {
-                    return this.dRoutes.concat(this.$router.options.routes)
+                    return this.dRoutes.concat(this.$router.options.routes).filter(function(value){
+                        return !(value&&value.meta&&value.meta.hide)
+                    })
                 }
             },
 
             methods: {
-                addRoutes(router) {
+                $addRoutes(router) {
                     if (!Array.isArray(router)) return;
                     this.$router.addRoutes(router);
-                    this.dRoutes = this.dRoutes.concat(router);
+                    this.dRoutes = router.concat(this.dRoutes);
                     this.setSession();
                 },
                 setSession() {
@@ -265,12 +202,24 @@
                 },
                 getSession() {
                     var sessionRouter = JSON.parse(sessionStorage.getItem("_dRoutes_"));
-                    this.dRoutes = sessionRouter ? sessionRouter : [];
+                    sessionRouter = sessionRouter ? sessionRouter : [];
+                    this.$addRoutes(sessionRouter);
+                },
+                clear() {
+                    sessionStorage.setItem("_dRoutes_", null);
+                    window.location.reload();
+                },
+                beforeEach (to,from,next){
+                    next()
+                },
+                setBeforeEach(){
+                    this.$router.beforeEach(this.beforeEach)
                 }
 
             },
             mounted() {
                 this.getSession();
+                this.setBeforeEach();
             },
         }
         var vm = new Vue({
@@ -282,7 +231,7 @@
                 config: {
                     // autoplay: true,
                     direction: "horizontal",
-                    loop: true,
+                    loop: false,
                     pagination: true,
                     navigation: true,
                     scrollbar: false
@@ -294,16 +243,7 @@
                     // console.log(swiper)
                 },
                 changeSlide: function () {
-                    this.addRoutes([
-                        {
-                            path: '/login',
-                            name: 'login',
-                            meta:{
-                                name:"login"
-                            },
-                            component: { template: "<span>login</span>" }
-                        }
-                    ])
+                    this.$addRoutes(routes)
 
                 },
                 changeConfig: function () {
@@ -312,7 +252,10 @@
                 chose(value) {
                     console.log(value)
                     this.text = value.text
-                }
+                },
+                beforeEach (to,from,next){
+                    next()
+                },
             },
             mounted() {
 
