@@ -651,7 +651,7 @@ const handlers = options.render && options.render._withStripped
   }
 
 ```
-如果当前组件不是抽象组件，会反向拿到parent上的父组件vnode，如果父组件没有abstract属性，即为非抽象组件，为其$children属性添加该子组件vnode；如果在反向找父组件过程中，如果父组件有abstract属性，就判断该组件属性为抽象组件，此时利用parent的链条往上寻找，直到找的父组件不是抽象组件为止。
+如果当前组件不是抽象组件，会反向拿到parent上的父组件，如果父组件没有abstract属性，即为非抽象组件，为其$children属性添加该子组件；如果在反向找父组件过程中，如果父组件有abstract属性，就判断该组件属性为抽象组件，此时利用parent的链条往上寻找，直到找的父组件不是抽象组件为止。
 
 
 如果当前组件是抽象组件（options拥有abstract属性），直接跳过继续执行下面逻辑，即设置$parent为parent和$root为parent.$root.
@@ -710,20 +710,14 @@ initEvents执行完毕，事件（父组件@监听的）相关已经初始化完
     var renderContext = parentVnode && parentVnode.context;
     vm.$slots = resolveSlots(options._renderChildren, renderContext);
     vm.$scopedSlots = emptyObject;
-    // bind the createElement fn to this instance
-    // so that we get proper render context inside it.
-    // args order: tag, data, children, normalizationType, alwaysNormalize
-    // internal version is used by render functions compiled from templates
+  
     vm._c = function (a, b, c, d) { return createElement(vm, a, b, c, d, false); };
-    // normalization is always applied for the public version, used in
-    // user-written render functions.
+
     vm.$createElement = function (a, b, c, d) { return createElement(vm, a, b, c, d, true); };
 
-    // $attrs & $listeners are exposed for easier HOC creation.
-    // they need to be reactive so that HOCs using them are always updated
     var parentData = parentVnode && parentVnode.data;
 
-    /* istanbul ignore else */
+
     {
       defineReactive$$1(vm, '$attrs', parentData && parentData.attrs || emptyObject, function () {
         !isUpdatingChildComponent && warn("$attrs is readonly.", vm);
@@ -734,7 +728,7 @@ initEvents执行完毕，事件（父组件@监听的）相关已经初始化完
     }
   }
 ```
-首先为了实例增加了技术个属性值，接着往下看
+首先为了实例增加了几个属性值，接着往下看
 ```
     vm.$slots = resolveSlots(options._renderChildren, renderContext);
 ```

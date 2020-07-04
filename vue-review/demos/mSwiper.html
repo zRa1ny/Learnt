@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>updated</title>
+    <link rel="stylesheet" href="./plugins/swiper/swiper.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .swiper-container {
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+        }
+
+        .slot-area {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all .2s;
+            transition-delay: 0.3s;
+        }
+
+        .btn::before {
+            content: "";
+            display: block;
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-top: 2px solid #000;
+            border-left: 2px solid #000;
+            transition: all .5s;
+        }
+
+        .btn::after {
+            content: "";
+            display: block;
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            border-right: 2px solid #000;
+            border-bottom: 2px solid #000;
+            transition: all .5s;
+
+        }
+
+        .btn:hover {
+            cursor: pointer;
+            background: green;
+            box-shadow: 0 0 50px greenyellow;
+            color: #fff;
+        }
+
+        .btn:hover::after,
+        .btn:hover::before {
+            width: 100%;
+            height: 100%;
+            border-color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+
+        <m-swiper :config="config" :data="routes" @slide-change="slideChange">
+            <template v-slot="value">
+                <m-card :value="value" @card-click="chose">
+                    <router-link :to="{name:value.name}">{{value.meta&&value.meta.name?value.meta.name:'未命名'}}
+                    </router-link>
+                </m-card>
+            </template>
+        </m-swiper>
+
+        <keep-alive>
+            <router-view></router-view>
+        </keep-alive>
+
+
+        <div style="text-align: center;">
+            <button @click="changeSlide">add swiper-slide</button>
+            <button @click="changeConfig">change config</button>
+        </div>
+
+    </div>
+
+
+
+
+    <template id="m-swiper">
+        <div ref="swiper-container" class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" v-for="(value,index) in data" :key="index">
+                    <slot v-bind="value"> </slot>
+                </div>
+            </div>
+            <div class="swiper-pagination" v-show="params.pagination && data.length>0"></div>
+            <div class="swiper-button-prev" v-show="params.navigation && data.length>0"></div>
+            <div class="swiper-button-next" v-show="params.navigation && data.length>0"></div>
+            <div class="swiper-scrollbar" v-show="params.scrollbar && data.length>0"></div>
+        </div>
+    </template>
+
+    <template id="m-card">
+        <div class="slot-area">
+            <slot v-bind="value">
+                <span class="btn" @click="$emit('card-click',value)">{{value.text}}</span>
+            </slot>
+        </div>
+    </template>
+
+
+    <script src="./plugins/swiper/swiper.min.js"></script>
+    <script src="./vue_init/vue.js"></script>
+    <script src="./vue_init/vue-router.min.js"></script>
+    <script>
+
+        Vue.component("m-card", {
+            template: "#m-card",
+            props: {
+                value: {
+                    type: Object,
+                    default() {
+                        return {}
+                    }
+                }
+            },
+            mounted() {
+                console.log(this.value)
+            }
+        })
+        Vue.component("m-swiper", {
+            template: "#m-swiper",
+            props: {
+                config: {
+                    type: Object,
+                    default() {
+                        return {}
+                    }
+                },
+                data: {
+                    type: Array,
+                    default() {
+                        return []
+                    }
+                }
+            },
+            computed: {
+                params() {
+                    var defaultConfig = {
+                        direction: false,
+                        loop: false,
+                        pagination: false,
+                        navigation: false,
+                        scrollbar: false,
+                    }, opts = Object.assign({}, defaultConfig, this.config), params = {};
+
+                    for ([key] of Object.entries(opts)) {
+                        // 需要dom的参数转化
+                        // 不需要转化的直接使用传入的参数
+                        opts[key] && this[key] ? params[key] = this[key] : params[key] = opts[key];
+                    }
+                    this.init = false;// 配置改变重新初始化
+                    console.log(params)
+                    return params;
+                }
+            },
+            data() {
+                return {
+                    // 如果需要分页器
+                    pagination: {
+                        el: '.swiper-pagination',
+                    },
+                    // 如果需要前进后退按钮
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    // 如果需要滚动条
+                    scrollbar: {
+                        el: '.swiper-scrollbar',
+                    },
+                    init: false
+                }
+            },
+
+            methods: {
+                swiperInit(init) {
+                    if (this.swiper && this.init) {
+                        this.swiper.update();
+                        console.log('数据更新')
+                        return;
+                    }
+                    var _this = this;
+                    this.swiper = new Swiper(this.$refs['swiper-container'], Object.assign({}, this.params, {
+                        on: {
+                            slideChange: function () {
+                                _this.$emit("slide-change", this)
+                            }
+                        }
+                    }));
+                    this.init = true;
+                }
+            },
+            mounted: function () {
+                this.swiperInit()
+            },
+            beforeUpdate() {
+                console.log('child beforeUpdate')
+            },
+            updated() {
+                console.log('child updated')
+                this.swiperInit()
+            },
+
+        });
+        const routes = [
+            { path: '/foo', name: "foo", meta: { name: "foo", }, component: { template: "<span>foo</span>" } },
+            { path: '/bar', name: "bar", meta: { name: "bar", }, component: { template: "<span>bar</span>" } }
+        ]
+
+
+        const router = new VueRouter({
+            routes // (缩写) 相当于 routes: routes
+        })
+
+
+        var dynamicRouter = {
+            data: {
+                dRoutes: []
+            },
+            computed: {
+                routes() {
+                    return this.dRoutes.concat(this.$router.options.routes)
+                }
+            },
+
+            methods: {
+                addRoutes(router) {
+                    if (!Array.isArray(router)) return;
+                    this.$router.addRoutes(router);
+                    this.dRoutes = this.dRoutes.concat(router);
+                    this.setSession();
+                },
+                setSession() {
+                    sessionStorage.setItem("_dRoutes_", JSON.stringify(this.dRoutes))
+                },
+                getSession() {
+                    var sessionRouter = JSON.parse(sessionStorage.getItem("_dRoutes_"));
+                    this.dRoutes = sessionRouter ? sessionRouter : [];
+                }
+
+            },
+            mounted() {
+                this.getSession();
+            },
+        }
+        var vm = new Vue({
+            el: "#app",
+            router: router,
+            mixins: [dynamicRouter],
+            data: {
+                text: "",
+                config: {
+                    // autoplay: true,
+                    direction: "horizontal",
+                    loop: true,
+                    pagination: true,
+                    navigation: true,
+                    scrollbar: false
+                },
+                data: []
+            },
+            methods: {
+                slideChange: function (swiper) {
+                    // console.log(swiper)
+                },
+                changeSlide: function () {
+                    this.addRoutes([
+                        {
+                            path: '/login',
+                            name: 'login',
+                            meta:{
+                                name:"login"
+                            },
+                            component: { template: "<span>login</span>" }
+                        }
+                    ])
+
+                },
+                changeConfig: function () {
+                    this.config.pagination = false;
+                },
+                chose(value) {
+                    console.log(value)
+                    this.text = value.text
+                }
+            },
+            mounted() {
+
+            },
+            beforeUpdate() {
+                console.log('root beforeUpdate')
+            },
+            updated() {
+                console.log('root updated')
+            },
+        })
+
+    </script>
+</body>
+
+</html>
