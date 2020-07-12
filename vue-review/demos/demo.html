@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo</title>
+    <link rel="stylesheet" href="./plugins/swiper/swiper.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .swiper-container {
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+        }
+
+        .slot-area {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all .2s;
+            transition-delay: 0.3s;
+        }
+
+        .btn::before {
+            content: "";
+            display: block;
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-top: 2px solid #000;
+            border-left: 2px solid #000;
+            transition: all .5s;
+        }
+
+        .btn::after {
+            content: "";
+            display: block;
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            border-right: 2px solid #000;
+            border-bottom: 2px solid #000;
+            transition: all .5s;
+
+        }
+
+        .btn:hover,.btn.on {
+            cursor: pointer;
+            background: blue;
+            box-shadow: 0 0 50px blue;
+            color: #fff;
+        }
+        .btn.on ::after,
+        .btn.on ::before,
+        .btn:hover::after,
+        .btn:hover::before {
+            width: 100%;
+            height: 100%;
+            border-color: blue;
+        }
+
+
+        .navs {
+          display: flex;
+          justify-content: flex-start;
+
+        }
+        .navs>div{
+            flex:0 0 auto;
+            width: auto;
+            margin: 20px;
+        }
+        .navs>div>span{
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+        header{
+            text-align: center;
+        }
+        .bread-crumbs{
+            overflow: hidden;
+            clear:both;
+        }
+       .bread-crumbs>div{
+           float: left;
+       }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            {{$route.meta&&$route.meta.name?$route.meta.name:"未知"}}
+        </header>
+        <div class="navs">
+            <m-card v-for="(value,index) in routes" :key="index" :value="value">
+               <template v-slot="value">
+                <span  @click="jumpTo(value)">
+                    {{value.meta.name}}
+                </span>
+               </template>
+            </m-card>
+        </div>
+        <div class="u-path">
+            {{path}}
+            <bread-crumbs :data = "path" @click="navigateto"></bread-crumbs>
+        </div>
+        <keep-alive>
+            <router-view></router-view>
+        </keep-alive>
+
+        <!-- <m-swiper :config="config" :data="routes" @slide-change="slideChange">
+            <template v-slot="value">
+                <m-card :value="value" @card-click="chose">
+                    <router-link :to="{name:value.name}">{{value.meta&&value.meta.name?value.meta.name:'未命名'}}
+                    </router-link>
+                </m-card>
+            </template>
+        </m-swiper> -->
+
+
+
+
+        <!--
+             <div style="text-align: center;">
+            <button @click="changeSlide">add swiper-slide</button>
+            <button @click="changeConfig">change config</button>
+        </div> 
+        -->
+
+    </div>
+
+
+
+
+    <template id="m-swiper">
+        <div ref="swiper-container" class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" v-for="(value,index) in data" :key="index">
+                    <slot v-bind="value"> </slot>
+                </div>
+            </div>
+            <div class="swiper-pagination" v-show="params.pagination && data.length>0"></div>
+            <div class="swiper-button-prev" v-show="params.navigation && data.length>0"></div>
+            <div class="swiper-button-next" v-show="params.navigation && data.length>0"></div>
+            <div class="swiper-scrollbar" v-show="params.scrollbar && data.length>0"></div>
+        </div>
+    </template>
+
+    <template id="m-card">
+        <div class="slot-area btn">
+            <slot v-bind="value">
+                    {{value}}
+            </slot>
+        </div>
+    </template>
+
+    <script src="./js/require.min.js"></script>
+    <script src="./js/require-config.js"></script>
+    <script>
+        require(['vue', 'router', 'dynamicRouter', 'mComponents'], function (Vue, router, dynamicRouter, mComponents) {
+            var routes = [
+                {
+                    path: '/foo', name: "foo", meta: {
+                        name: "foo",
+                        auth: true,
+                        roles: ["foo"]
+                    },
+                    component: { template: "<span>foo</span>" },
+                    children: [
+                        {
+                            path: 'zoo',
+                            name: "zoo",
+                            meta: {
+                                name: "zoo",
+                                auth: true,
+                                roles: ["foo"]
+                            },
+                            component: { template: "<span>zoo</span>" },
+                        }
+                    ]
+                },
+                {
+                    path: '/bar', name: "bar",
+                    meta: {
+                        name: "bar",
+                        auth: true,
+                        roles: ["bar"],
+                        isChild: true
+                    },
+                    component: { template: "<span>bar</span>" },
+                    children: [
+                        {
+                            path: 'boo',
+                            name: "boo",
+                            meta: {
+                                name: "boo",
+                                auth: true,
+                                roles: ["bar"],
+                                isChild: true
+                            },
+                            component: { template: "<span>boo</span>" },
+                        }
+                    ]
+                }
+            ];
+            var vm = new Vue({
+                el: "#app",
+                router: router,
+                mixins: [dynamicRouter],
+                data: {
+                    path: [],
+                    text: "",
+                    config: {
+                        // autoplay: true,
+                        slidesPerView: 2,
+                        direction: "horizontal",
+                        loop: false,
+                        pagination: true,
+                        navigation: true,
+                        scrollbar: false
+                    },
+                    data: [],
+                    dynamicAllRouters: routes
+                },
+
+                methods: {
+                    jumpTo(router){
+                        this.$router.push(router);
+                        this.path.push(router);
+                    },
+                    navigateto(router,index,len){
+                        var idx = index+1 ,goIdx = idx - len;
+                       if(idx === len  ) return;// 点击的是 当前路由 
+                        this.path = this.path.slice(0,idx);
+                        this.$router.go(goIdx);
+                    },
+                    slideChange: function (swiper) {
+                        // console.log(swiper)
+                    },
+                    changeSlide: function () {
+                        this.$addRoutes(routes)
+                    },
+                    changeConfig: function () {
+                        this.config.pagination = false;
+                    },
+                    chose(value) {
+                        console.log(value)
+                        this.text = value.text
+                    },
+                    beforeEach(to, from, next) {
+                        console.log(to)
+                        next()
+                    },
+                },
+                mounted() {
+
+                },
+                beforeUpdate() {
+                    console.log('root beforeUpdate')
+                },
+                updated() {
+                    console.log('root updated')
+                },
+            })
+        })
+
+    </script>
+
+</body>
+
+</html>
