@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #input-grpup {
+            width: 200px;
+            height: 40px;
+            border: 1px solid #000;
+            position: relative;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        #input-grpup>label>input {
+            height: 100%;
+            width: 100%;
+            border: none;
+            outline: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #input-grpup>label>div {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            left: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="" autocomplete="off" id="mf">
+        <!-- <input type="text" name="userid" >
+        <input type="password" name="password" > -->
+
+        <!-- <input type="text" name="userid" id="userid"> -->
+        <!-- <input type="text" name="password"> -->
+        <!-- <div id="input-grpup">
+            <label >
+                <input type="text" name="password" autocomplete="off"  id="password"  value="1" >
+            <div id="show">*</div>
+            </label>
+        </div> -->
+
+        <input type="text" id="username" name="username" autocomplete="off" value="1234">
+        <input style="display:none">
+        <input type="text" id="pw" name="password" autocomplete="off">
+
+        <button>提交</button>
+
+        <!-- 
+            <div contenteditable="true" style="height: 30px;border:1px solid #000;"></div> 
+        -->
+    </form>
+    <button id="ddd">设置</button>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        ; (function (name, definition) {
+            if (typeof define === 'function') {
+                define(definition)
+            } else if (typeof module !== 'undefined' && module.exports) {
+                module.exports = definition()
+            } else {
+                this[name] = definition()
+            }
+        })('Text2Password', function () {
+            function Text2Password(opts) {
+                let { id, callback = () => { } } = opts, input = document.getElementById(id), _this = this;
+                _this._value = [], _this.input = input, _this.callback = callback;
+                input.addEventListener("copy", Text2Password.preventDefault)
+                input.addEventListener("cut", Text2Password.preventDefault)
+                input.addEventListener("paste", Text2Password.preventDefault)
+                input.addEventListener("input", _this.passwordHandler.bind(_this))
+                _this.init();
+                Object.defineProperty(_this, "value", {
+                    get: function () {
+                        return _this._value.join("")
+                    },
+                })
+                return this
+            }
+            
+            Text2Password.preventDefault = function (e) {
+                var e = e || window.event;
+                e.preventDefault();
+            }
+            Text2Password.prototype.init=function(){
+                this.input.value.split("").forEach(function(value){
+                    this._value.push(value)
+                }.bind(this))
+                this.input.value = new Array(this._value.length).fill("*").join("");
+            }
+            Text2Password.prototype.passwordHandler = function () {
+                var cursor = this.input.selectionStart, cvalue = this.input.value.split(''), ovalue = this._value;
+                var changeLen = cvalue.length - ovalue.length;
+                if (changeLen > 0) {
+                    // changeLen  如果是正数  说明新数据的长度比旧数据长  所以曾嘉乐数据
+                    ovalue.splice(cursor - 1, 0, ...cvalue.slice(cursor - 1, cursor - 1 + changeLen))
+                }
+                if (changeLen < 0) {
+                    // 删除某些元素
+                    ovalue.splice(cursor, Math.abs(changeLen))
+                }
+                cvalue.forEach(function (value, index) {
+                    if (value != "*") {
+                        ovalue[index] = value;
+                    }
+                })
+                this.input.value = new Array(cvalue.length).fill("*").join("");
+                this.input.selectionStart = cursor;
+                this.input.selectionEnd = cursor;
+                typeof this.callback == "function" && this.callback();
+            }
+            return Text2Password
+        })
+
+
+        var username = new Text2Password({
+            id: "username",
+            callback: function () {
+                console.log(this.value)
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>

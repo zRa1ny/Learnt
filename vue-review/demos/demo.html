@@ -62,12 +62,14 @@
 
         }
 
-        .btn:hover,.btn.on {
+        .btn:hover,
+        .btn.on {
             cursor: pointer;
             background: blue;
             box-shadow: 0 0 50px blue;
             color: #fff;
         }
+
         .btn.on ::after,
         .btn.on ::before,
         .btn:hover::after,
@@ -79,30 +81,53 @@
 
 
         .navs {
-          display: flex;
-          justify-content: flex-start;
+            display: flex;
+            justify-content: flex-start;
 
         }
-        .navs>div{
-            flex:0 0 auto;
-            width: auto;
+
+        .navs>div {
+            flex: 0 0 80px;
+            width: 80px;
+            height: 30px;
             margin: 20px;
-        }
-        .navs>div>span{
-            display: block;
             position: relative;
-            z-index: 1;
+            box-sizing: border-box;
         }
-        header{
+
+        .navs>div>span {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            z-index: 1;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header {
             text-align: center;
         }
-        .bread-crumbs{
+
+        .bread-crumbs {
             overflow: hidden;
-            clear:both;
+            clear: both;
         }
-       .bread-crumbs>div{
-           float: left;
-       }
+
+        .bread-crumbs>div {
+            float: left;
+        }
+
+        .bread-crumbs>div.alink {
+            cursor: pointer;
+        }
+
+        .bread-crumbs>div.alink:hover,
+        .bread-crumbs>div.alink.on {
+            color: #315efb;
+        }
     </style>
 </head>
 
@@ -113,16 +138,16 @@
         </header>
         <div class="navs">
             <m-card v-for="(value,index) in routes" :key="index" :value="value">
-               <template v-slot="value">
-                <span  @click="jumpTo(value)">
-                    {{value.meta.name}}
-                </span>
-               </template>
+                <template v-slot="value">
+                    <span @click="jumpTo(value)">
+                        {{value.meta.name}}
+                    </span>
+                </template>
             </m-card>
         </div>
         <div class="u-path">
-            {{path}}
-            <bread-crumbs :data = "path" @click="navigateto"></bread-crumbs>
+            <!-- {{path}} -->
+            <bread-crumbs :data="path" @click="navigateto"></bread-crumbs>
         </div>
         <keep-alive>
             <router-view></router-view>
@@ -169,7 +194,7 @@
     <template id="m-card">
         <div class="slot-area btn">
             <slot v-bind="value">
-                    {{value}}
+                {{value}}
             </slot>
         </div>
     </template>
@@ -244,14 +269,14 @@
                 },
 
                 methods: {
-                    jumpTo(router){
+                    jumpTo(router) {
                         this.$router.push(router);
                         this.path.push(router);
                     },
-                    navigateto(router,index,len){
-                        var idx = index+1 ,goIdx = idx - len;
-                       if(idx === len  ) return;// 点击的是 当前路由 
-                        this.path = this.path.slice(0,idx);
+                    navigateto(router, index, len) {
+                        var idx = index + 1, goIdx = idx - len;
+                        if (idx === len) return;// 点击的是 当前路由 
+                        this.path = this.path.slice(0, idx);
                         this.$router.go(goIdx);
                     },
                     slideChange: function (swiper) {
@@ -271,9 +296,20 @@
                         console.log(to)
                         next()
                     },
+                    monitorWHistory() {
+
+                        if (window.history && window.history.pushState) {
+                            //监听浏览器前进后退事件
+                            window.addEventListener('popstate', function () {
+                                //do something...
+                                console.log(history);
+                            });
+
+                        }
+                    }
                 },
                 mounted() {
-
+                    this.monitorWHistory()
                 },
                 beforeUpdate() {
                     console.log('root beforeUpdate')
