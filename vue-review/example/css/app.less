@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+
+}
+
+[v-cloak] {
+    display: none;
+}
+
+#app {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    >.title {
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+        box-sizing: border-box;
+        background-color: #35495e;
+        color: #fff;
+        position: relative;
+
+        >div {
+            position: absolute;
+            left: 10px;
+        }
+    }
+
+    >.view {
+        width: 100%;
+        height: calc(~"100% - 40px");
+        display: block;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        &.page-index {
+            >.cell-item {
+                display: block;
+                text-decoration: none;
+                display: flex;
+                justify-content: space-between;
+                color: #333;
+                font-size: 14px;
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+                padding: 10px 15px;
+                line-height: 25px;
+                position: relative;
+
+                &:before {
+                    content: " ";
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    right: 0;
+                    height: 1px;
+                    border-top: 1px solid #d9d9d9;
+                    color: #d9d9d9;
+                    -webkit-transform-origin: 0 0;
+                    transform-origin: 0 0;
+                    -webkit-transform: scaleY(.5);
+                    transform: scaleY(.5);
+                    left: 15px;
+                }
+                &:first-child::before{
+                    left: 0;
+                }
+                &:last-child::after{
+                    content: " ";
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    right: 0;
+                    height: 1px;
+                    border-top: 1px solid #d9d9d9;
+                    color: #d9d9d9;
+                    -webkit-transform-origin: 0 0;
+                    transform-origin: 0 0;
+                    -webkit-transform: scaleY(.5);
+                    transform: scaleY(.5);
+                }
+                &:active {
+                    background-color: #ececec;
+                }
+            }
+        }
+    }
+}

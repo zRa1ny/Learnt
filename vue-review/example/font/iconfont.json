@@ -1,0 +1,16 @@
+{
+  "id": "1617104",
+  "name": "common",
+  "font_family": "ziconfont",
+  "css_prefix_text": "z-icon",
+  "description": "常用图表集合",
+  "glyphs": [
+    {
+      "icon_id": "731126",
+      "name": "跳转",
+      "font_class": "guanbi1",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    }
+  ]
+}

@@ -1,12 +1,14 @@
 define([
     'require',
     'vue',
-    'vue-router'
-], function (require, Vue, VueRouter) {
+    'vue-router',
+    'index',
+    'detail',
+], function (require, Vue, VueRouter,index,detail) {
     'use strict';
     Vue.use(VueRouter)
-   
     var router = new VueRouter({
+        mode:"hash",
         routes: [
             {
                 path: '/',
@@ -19,10 +21,19 @@ define([
                 path: '/index',
                 name: 'index',
                 meta: {
-                    name: "首页",
+                    title: "首页",
                 },
-                component: { template: "<span>index</span>" },  
+                component: index,  
             },
+            {
+                path: '/detail',
+                name: 'detail',
+                meta: {
+                    title: "详情",
+                },
+                component: detail,  
+            },
+            
             {
                 path: '/login',
                 name: 'login',

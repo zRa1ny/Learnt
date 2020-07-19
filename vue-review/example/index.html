@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo</title>
+    <link rel="stylesheet" href="./font/iconfont.css">
+    <link rel="stylesheet" href="./plugins/swiper/swiper.min.css">
+    <link rel="stylesheet" href="./css/app.css">
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="title">
+            <div @click="$router.go(-1)">back</div>
+            {{$route.meta.title}}
+            <div></div>
+        </div>
+        <router-view class="view"></router-view>
+    </div>
+
+    <template id="index">
+        <div class="detail">
+            <div class="msg" v-if="value">
+                <div class="nickname">{{value.nickname}}</div>
+                <div class="score-group">
+                    <span>{{value.score}}</span>
+                    <span>{{value.date}}</span>
+                </div>
+            </div>
+            <ul>
+                <li v-for="(val,index) in data" :key="index">
+                    <m-swiper :config="config" :data="val.imgs">
+                        <template v-slot="value">
+                            <span>{{value}}</span>
+                        </template>
+                    </m-swiper>
+                </li>
+            </ul>
+        </div>
+
+    </template>
+
+ 
+
+
+    <script src="./js/require.min.js"></script>
+    <script src="./js/require-config.js"></script>
+    <script>
+        require(['vue', 'router', 'mComponents', 'api'], function (Vue, router, mComponents) {
+
+            var vm = new Vue({
+                el: "#app",
+                router: router,
+            });
+
+            window.vm = vm;
+
+        })
+    </script>
+
+</body>
+
+</html>
