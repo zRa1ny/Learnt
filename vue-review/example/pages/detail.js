@@ -15,8 +15,9 @@ define([
                     navigation: true,
                     scrollbar: false
                 },
-                data: [],
-                nickname:null
+                imgs:[],
+                dailys: [],
+                value:null
             }
         },
         methods:{
@@ -26,6 +27,11 @@ define([
                         this.data = res.data
                     }
                 })
+            },
+            change(value){
+               
+                value.nickname = "张三";
+                console.log(this.value)
             }
         },
         beforeCreate(){
@@ -34,18 +40,25 @@ define([
             // 尽量不要动参数，避免后续初始化出错
             // 判断不是从列表跳转过来直接访问的重新定向到列表页 params参数刷新会掉 所以刷新也会被重定向
             // 如果需要直接访问使用query
-            if(!this.$route.params.allowed){
-                this.$router.replace({name:"index"})
-            }
+            // if(!this.$route.params.allowed){
+            //     this.$router.replace({name:"index"})
+            // }
        
         },
         created(){
             // 数据已经初始化成功
             // 可以开始初始化，加快数据渲染速度 避免出现空数据
-            this.value = this.$route.params.value;
-            this.loadDetail(this.value.id);
+            // this.value = this.$route.params.value;
+            this.loadDetail();
+            this.value = {
+                nickname:"name",
+                score:100,
+                date:"2010-10-11"
+            }
         },
-        beforeMount(){},
+        beforeMount(){
+            
+        },
         mounted(){
           
         },

@@ -82,3 +82,17 @@ body {
 #app > .view.page-index > .cell-item:active {
   background-color: #ececec;
 }
+#app > .view.page-detail > .msg {
+  padding: 20px 15px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #c0bfc4;
+}
+#app > .view.page-detail > .msg > .nickname {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 30px;
+}
+#app > .view.page-detail > .msg > .score-group {
+  display: flex;
+  justify-content: space-between;
+}

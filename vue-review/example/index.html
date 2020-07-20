@@ -21,21 +21,25 @@
     </div>
 
     <template id="index">
-        <div class="detail">
+        <div class="page-detail">
             <div class="msg" v-if="value">
-                <div class="nickname">{{value.nickname}}</div>
+                <div class="nickname" @click="change(value)">{{value.nickname}}</div>
                 <div class="score-group">
                     <span>{{value.score}}</span>
                     <span>{{value.date}}</span>
                 </div>
             </div>
+            <div class="pics">
+                <m-swiper :config="config" :data="imgs">
+                    <template v-slot="value">
+                        <span>{{value}}</span>
+                    </template>
+                </m-swiper>
+            </div>
+           
             <ul>
-                <li v-for="(val,index) in data" :key="index">
-                    <m-swiper :config="config" :data="val.imgs">
-                        <template v-slot="value">
-                            <span>{{value}}</span>
-                        </template>
-                    </m-swiper>
+                <li v-for="(val,index) in dailys" :key="index">
+                   {{index}} : {{value}}
                 </li>
             </ul>
         </div>
