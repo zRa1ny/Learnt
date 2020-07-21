@@ -74,13 +74,14 @@ define([
             console.log(this.value)
         }
     })
+    // 作用域插槽
     // 基于dom的组件
     Vue.component("m-swiper", {
         template: `
                 <div ref="swiper-container" class="swiper-container">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide" v-for="(value,index) in data" :key="index">
-                        <slot v-bind="value"> </slot>
+                        <slot v-bind="{value:value,index:index}"> </slot>
                     </div>
                 </div>
                 <div class="swiper-pagination" v-show="params.pagination && data.length>0"></div>
@@ -165,13 +166,15 @@ define([
         mounted: function () {
             this.swiperInit()
         },
-        beforeUpdate() {
-            // console.log('child beforeUpdate')
-        },
+        
         updated() {
             // console.log('child updated')
             this.swiperInit()
 
+        },
+        destroyed() {
+            this.swiper.destroy(false);
+            this.swiper = null;
         },
 
     });

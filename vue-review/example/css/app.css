@@ -82,7 +82,11 @@ body {
 #app > .view.page-index > .cell-item:active {
   background-color: #ececec;
 }
+#app > .view.page-detail {
+  background: #f7f7fa;
+}
 #app > .view.page-detail > .msg {
+  background: #fff;
   padding: 20px 15px;
   box-sizing: border-box;
   border-bottom: 1px solid #c0bfc4;
@@ -95,4 +99,134 @@ body {
 #app > .view.page-detail > .msg > .score-group {
   display: flex;
   justify-content: space-between;
+}
+#app > .view.page-detail > .block1 {
+  padding: 20px 15px;
+  margin-top: 10px;
+  background: #fff;
+}
+#app > .view.page-detail > .block1 > h5 {
+  font-size: 16px;
+  line-height: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+#app > .view.page-detail > .block1 > h5 > label {
+  font-weight: normal;
+}
+#app > .view.page-detail > .block1 > h5 > label > input {
+  display: none;
+}
+#app > .view.page-detail > .block1 > h5 > label > span {
+  font-size: 20px;
+}
+#app > .view.page-detail > .block1 > .pics {
+  width: 100%;
+  height: 200px;
+}
+#app > .view.page-detail > .block1 .img-preview {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  position: relative;
+}
+#app > .view.page-detail > .block1 .img-preview > span {
+  font-size: 20px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+#app > .view.page-detail > .block2 {
+  padding: 20px 0;
+  margin-top: 10px;
+  background: #fff;
+  height: calc(100% - 384px);
+  box-sizing: border-box;
+}
+#app > .view.page-detail > .block2 > h5 {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  line-height: 30px;
+  padding: 0 15px;
+}
+#app > .view.page-detail > .block2 > ul {
+  list-style: none;
+  height: calc(100% - 10px);
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+#app > .view.page-detail > .block2 > ul > li {
+  padding: 10px 15px;
+  text-decoration: none;
+  display: flex;
+  justify-content: space-between;
+  color: #333;
+  font-size: 14px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  line-height: 25px;
+  position: relative;
+}
+#app > .view.page-detail > .block2 > ul > li:before {
+  content: " ";
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid #d9d9d9;
+  color: #d9d9d9;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+  left: 15px;
+}
+#app > .view.page-detail > .block2 > ul > li:first-child::before {
+  left: 0;
+}
+#app > .view.page-detail > .block2 > ul > li:last-child::after {
+  content: " ";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid #d9d9d9;
+  color: #d9d9d9;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
+#app > .view.page-detail > .block2 > ul > li:active {
+  background-color: #ececec;
+}
+#app > .view.edit {
+  background: #f7f7fa;
+}
+#app > .view.edit > .form-control {
+  background: #fff;
+  padding: 10px 15px;
+  margin: 5px 0;
+  box-sizing: border-box;
+}
+#app > .view.edit > .form-control > label {
+  display: flex;
+  justify-content: space-between;
+  align-items: top;
+}
+#app > .view.edit > .form-control > label > input,
+#app > .view.edit > .form-control > label textarea {
+  flex: 1;
+  margin-left: 5px;
+}
+#app > .view.edit > .btn {
+  background: #4e6ef2;
+  padding: 10px 15px;
+  margin: 10px 0;
+  color: #fff;
+  text-align: center;
 }

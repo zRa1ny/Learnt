@@ -24,20 +24,14 @@ define([
     Mock.mock('/getlist', {
         "success": 1,
         "data|20-100": [{
-            "id|+1":1,
+            "pid|+1":1,
             "date": "@datetime", //随机生成日期时间
             "score|1-100": 100, //随机生成1-800的数字
             "nickname": "@cname", //随机生成中文名字
         }]
     });
 
-    Mock.mock('/getDetail', {
-        "success": 1,
-        "data|1-10": [{
-           'des':"测试描述",
-           'imgs':[]
-        }]
-    });
+
 
     
 });

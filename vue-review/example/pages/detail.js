@@ -1,14 +1,59 @@
 define([
     'require',
-], function(require) {
+    'keeySpace',
+    'aInterface',
+], function(require,keeySpace,aInterface) {
     'use strict';
     return {
-        template:"#index",
+        name:"detail",
+        mixins:[keeySpace],
+        template:`
+            <div class="page-detail">
+                <div class="msg" v-if="value">
+                    <div class="nickname">{{value.nickname}}</div>
+                    <div class="score-group">
+                        <span>{{value.score}}</span>
+                        <span>{{value.date}}</span>
+                    </div>
+                </div>
+
+                <div class="block1">
+                    <h5>
+                        <span>相册</span>
+                        <label class="addimg">
+                            <input type="file" multiple @change="readFile" ref="finput">
+                            <span class="ziconfont z-iconzengjia"></span>
+                        </label>
+                    </h5>
+                    <m-swiper :config="config" :data="imgs" class="pics">
+                        <template v-slot="value">
+                            <div class="img-preview" :style="{'background-image':'url('+value.value.base64+')'}">
+                                <span class="ziconfont z-iconguanbi" @click="del(value.index)"></span>
+                            </div>
+                        </template>
+                    </m-swiper>
+
+                </div>
+
+                <div class="block2">
+                    <h5>
+                        <span >日志</span>
+                        <span class="ziconfont z-iconjiahaozhankai" @click.stop="toEdit()"></span>
+                    </h5>
+                    <ul ref="dailys" >
+                        <li v-for="(val,index) in dailys" :key="index" @click.stop="toEdit(value)">
+                            <span>{{val.title}}</span>
+                            <span class="ziconfont z-iconjianhaoshouqi" @click.stop="delDaily(index)"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        `,
         data(){
             return{
                 config: {
                     // autoplay: true,
-                    slidesPerView: 2,
+                    // slidesPerView: 2,
                     direction: "horizontal",
                     loop: false,
                     pagination: true,
@@ -20,50 +65,73 @@ define([
                 value:null
             }
         },
+        computed: {
+            scrollEl(){
+            return this.$refs.dailys
+            }
+        },
+        inject:['addKeepAlive','removeKeepAlive'],
         methods:{
-            loadDetail(){
-                this.$http.get("/getDetail",(res)=>{
-                    if(res.success){
-                        this.data = res.data
+            readFile(){
+                var _this=this;
+                var fd = new FormData();
+                var input =this.$refs.finput,iLen =input.files.length ;
+              
+                for(var i=0;i<iLen;i++){
+                    if (!input['value'].match(/.jpg|.gif|.png|.jpeg|.bmp/i)){　　//判断上传文件格式
+                        return alert("上传的图片格式不正确，请重新选择");
                     }
+                    var reader = new FileReader();
+                    fd.append(i,input.files[i]);
+                    reader.readAsDataURL(input.files[i]);  //转成base64
+                    reader.fileName = input.files[i].name;
+                    reader.onload = function(e){
+                        var imgMsg = {
+                            name : this.fileName,//获取文件名
+                            base64 : this.result   //reader.readAsDataURL方法执行完后，base64数据储存在reader.result里
+                        }
+                        _this.imgs.push(imgMsg)
+
+                    }
+                }
+            },
+            del(index){
+                this.imgs.splice(index,1)
+            },
+            toEdit(value){
+                if(!value)value ={pid:this.value.pid };
+                this.$router.push({
+                    name:"edit",
+                    params:value
                 })
             },
-            change(value){
-               
-                value.nickname = "张三";
-                console.log(this.value)
+            delDaily(index){
+                this.dailys.splice(index,1)
+            },
+            loadDaily(){
+                aInterface.load(this.value.pid).then(res=>{
+                    console.log("拉取日志数据")
+                    this.dailys =  res;
+                })
             }
-        },
-        beforeCreate(){
-            // 此处可以做一些验证，是否实例化vue实例
-            // 判断页面所处的环境
-            // 尽量不要动参数，避免后续初始化出错
-            // 判断不是从列表跳转过来直接访问的重新定向到列表页 params参数刷新会掉 所以刷新也会被重定向
-            // 如果需要直接访问使用query
-            // if(!this.$route.params.allowed){
-            //     this.$router.replace({name:"index"})
-            // }
-       
         },
         created(){
+            
+            // 设置页面缓存
+            this.addKeepAlive('detail');
             // 数据已经初始化成功
             // 可以开始初始化，加快数据渲染速度 避免出现空数据
-            // this.value = this.$route.params.value;
-            this.loadDetail();
-            this.value = {
-                nickname:"name",
-                score:100,
-                date:"2010-10-11"
+            this.value = this.$route.params.value;
+            this.loadDaily();
+        },
+        activated(){
+            this.loadDaily();
+        },
+        
+        deactivated() {
+            if(this.$route.name == 'index'){
+                this.removeKeepAlive('detail');
             }
-        },
-        beforeMount(){
-            
-        },
-        mounted(){
-          
-        },
-        updated(){
-            console.log('updates')
         }
         
     } 

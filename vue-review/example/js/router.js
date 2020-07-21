@@ -4,26 +4,28 @@ define([
     'vue-router',
     'index',
     'detail',
-], function (require, Vue, VueRouter,index,detail) {
+    'edit'
+], function (require, Vue, VueRouter, index, detail, edit) {
     'use strict';
     Vue.use(VueRouter)
     var router = new VueRouter({
-        mode:"hash",
+        mode: "hash",
         routes: [
             {
                 path: '/',
-                meta:{
+                meta: {
                     hide: true
                 },
-                redirect:"index"
+                redirect: "index"
             },
             {
                 path: '/index',
                 name: 'index',
                 meta: {
                     title: "首页",
+                    keepAlive: false,
                 },
-                component: index,  
+                component: index,
             },
             {
                 path: '/detail',
@@ -31,27 +33,39 @@ define([
                 meta: {
                     title: "详情",
                 },
-                component: detail,  
+                component: detail,
             },
-            
+            {
+                path: '/edit',
+                name: 'edit',
+                meta: {
+                    title: "编写日志",
+                },
+                component: edit
+            },
             {
                 path: '/login',
                 name: 'login',
                 meta: {
-                    name: "登录",
+                    title: "登录",
                 },
                 component: { template: "<span>login</span>" },
+            },
+            {
+                path: '*',
+                redirect: "404"
             },
             {
                 path: '/404',
                 name: '404',
                 meta: {
-                    name: "404",
+                    title: "未找到页面",
                     hide: true
                 },
                 component: { template: "<span>404</span>" }
             }
         ]
     })
-   return router;
+
+    return router;
 });

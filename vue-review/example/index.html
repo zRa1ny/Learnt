@@ -17,49 +17,50 @@
             {{$route.meta.title}}
             <div></div>
         </div>
-        <router-view class="view"></router-view>
+        <keep-alive :include="keepAlive">
+            <router-view class="view" ></router-view>
+        </keep-alive>
+       
+
     </div>
 
-    <template id="index">
-        <div class="page-detail">
-            <div class="msg" v-if="value">
-                <div class="nickname" @click="change(value)">{{value.nickname}}</div>
-                <div class="score-group">
-                    <span>{{value.score}}</span>
-                    <span>{{value.date}}</span>
-                </div>
-            </div>
-            <div class="pics">
-                <m-swiper :config="config" :data="imgs">
-                    <template v-slot="value">
-                        <span>{{value}}</span>
-                    </template>
-                </m-swiper>
-            </div>
-           
-            <ul>
-                <li v-for="(val,index) in dailys" :key="index">
-                   {{index}} : {{value}}
-                </li>
-            </ul>
-        </div>
 
-    </template>
-
- 
 
 
     <script src="./js/require.min.js"></script>
     <script src="./js/require-config.js"></script>
     <script>
+       
         require(['vue', 'router', 'mComponents', 'api'], function (Vue, router, mComponents) {
-
+            
+            
             var vm = new Vue({
                 el: "#app",
+                data:{
+                    keepAlive:[]
+                },
+                provide(){
+                    var _this=this;
+                    return {
+                        addKeepAlive(name){
+                           _this.keepAlive.push(name) 
+                        },
+                        removeKeepAlive(name){
+                            _this.keepAlive.every((value,index)=>{
+                                if(value === name){
+                                    _this.keepAlive.splice(index,1)
+                                    return false;
+                                }
+                                return true
+                            })
+                        },
+                    }
+                },
                 router: router,
+
             });
 
-            window.vm = vm;
+            // window.vm = vm;
 
         })
     </script>
