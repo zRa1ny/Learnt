@@ -44,7 +44,7 @@ define([
         created () {
             // 没有挂载$el
             this.main = this.$route.params;
-           
+            console.log( this.main)
         },
 
 

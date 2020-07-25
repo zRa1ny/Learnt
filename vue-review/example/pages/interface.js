@@ -24,11 +24,12 @@ define([
                         }
                         return true
                     })) {
+                        
                         value.id = data.length;
                         data.push(value);
                         this.setSession(value.pid,data)
                     }
-                   
+                    this.setSession(value.pid,data)
                     res({
                         success: 1,
                         data: "保存成功"

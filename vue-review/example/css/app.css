@@ -129,6 +129,7 @@ body {
   height: 100%;
   background-size: contain;
   background-position: center;
+  background-repeat: no-repeat;
   position: relative;
 }
 #app > .view.page-detail > .block1 .img-preview > span {

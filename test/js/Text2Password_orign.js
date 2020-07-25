@@ -7,156 +7,127 @@
         this[name] = definition()
     }
 })('Text2Password', function () {
-    function Text2Password(opts) {
-        let { id, callback = () => { } } = opts, input = document.getElementById(id), _this = this;
-        _this._value = [], _this.input = input, _this.callback = callback;
-        input.addEventListener("copy", Text2Password.preventDefault)
-        input.addEventListener("cut", Text2Password.preventDefault)
-        input.addEventListener("paste", Text2Password.preventDefault)
-        input.addEventListener("compositionstart", function () {
-            _this.lock = true;
-        })
-        input.addEventListener("compositionend", function () {
-            this.value = new Array(_this.value.split("").length).fill("*").join("");
-            _this.lock = false;
-        })
-
-        input.addEventListener("input", _this.passwordHandler.bind(_this))
-        input.addEventListener("propertychange", _this.passwordHandler.bind(_this))
-        _this.init();
-        Object.defineProperty(_this, "value", {
-            get: function () {
-                return _this._value.join("")
-            },
-        })
-        return this
-    }
-
-    Text2Password.preventDefault = function (e) {
-        var e = e || window.event;
-        e.preventDefault();
-    }
-    Text2Password.prototype.init = function () {
-        this.input.value.split("").forEach(function (value) {
-            this._value.push(value)
-        }.bind(this))
-        this.input.value = new Array(this._value.length).fill("*").join("");
-    }
-    Text2Password.prototype.passwordHandler = function () {
-        if (this.lock)return;
-
-        var cursor = this.input.selectionStart, cvalue = this.input.value.split(''), ovalue = this._value;
-        var changeLen = cvalue.length - ovalue.length;
-        
-        if (changeLen > 0) {
-            // changeLen  如果是正数  说明新数据的长度比旧数据长  所以曾嘉乐数据
-            ovalue.splice(cursor - 1, 0, ...cvalue.slice(cursor - 1, cursor - 1 + changeLen))
-        }
-        if (changeLen < 0) {
-            // 删除某些元素
-            ovalue.splice(cursor, Math.abs(changeLen))
-        }
-        cvalue.forEach(function (value, index) {
-            if (value != "*") {
-                ovalue[index] = value;
+    function Text2Password (opts) {
+        let { id,type = 'text', symbol = '*',callback = () => { } } = opts, _this = this;
+        _this.input = document.getElementById(id);
+        _this.input.valueProxy = "";
+        _this.callback = callback;
+        _this.type = type;
+        _this.symbol = symbol;
+        _this.isInit = false;
+        Object.defineProperty(_this,'value',{
+            get(){
+                return _this.input.valueProxy
             }
         })
-        this._value=ovalue.join("").replace(/\*/g,"").split("");
-        this.input.value = new Array(cvalue.length).fill("*").join("");
-        this.input.selectionStart = cursor;
-        this.input.selectionEnd = cursor;
+        _this.init();
+        return _this
+    }
+
+
+    Text2Password.prototype.init = function () {
+        this.$setValue();// 设置初始值
+        this._preventDefaultEvent();//阻止input type=text 的默认操作 使其比较相似与password
+        this._bindEvent();// 绑定事件 转化数据 =》 符号
+
+
+        this.isInit = true;
+    }
+   
+    // 阻止复制 剪切  拖拽进入 拖拽离开
+    Text2Password.prototype._preventDefaultEvent = function (e) {
+        function _preventDefaultHandler () {
+            var e = e || window.event;
+            e.preventDefault();
+        }
+        function _mousedownHandler (e) {
+            if (e.button === 0 && (this.selectionStart != this.selectionEnd)) {
+                this.selectionStart = this.selectionEnd = this.valueProxy.length;
+            }
+            return false
+        }
+        function _dragleaveHandler (e) {
+            e.preventDefault();
+            console.log("_dragleaveHandler")
+            this.removeAttribute('readonly')
+            return false
+        }
+        function _dragenterhandlder (e) {
+            e.preventDefault();
+            console.log("_dragenterhandlder")
+            this.setAttribute('readonly', true)
+            return false
+        }
+
+        this.input.addEventListener("copy", _preventDefaultHandler);
+        this.input.addEventListener("cut", _preventDefaultHandler);
+        this.input.addEventListener("dragenter", _dragenterhandlder);
+        this.input.addEventListener("dragleave", _dragleaveHandler);
+        this.input.addEventListener("mousedown", _mousedownHandler);
+
+    }
+
+    Text2Password.prototype._bindEvent = function () {
+
+        this.input.addEventListener("compositionstart", () => {
+            this.lock = true;
+            console.log("start")
+        })
+        this.input.addEventListener("compositionend", () => {
+            this.lock = false;
+            console.log("end");
+            this._inputHandler();
+        })
+
+        this.input.addEventListener("input", this._inputHandler.bind(this))
+        this.input.addEventListener("propertychange", this._inputHandler.bind(this))
+    }
+
+    Text2Password.prototype._inputHandler = function () {
+        if (this.lock) return;
+        if(!this.isInit){
+            console.log('init')
+        }else{
+            console.log('input')
+        }
+        
+        if(this.type === 'password'){
+            this._passwordHandler()
+        }else{
+            this._textHandler()
+        }
+        this._showValue()
+        this._setCursor()
         typeof this.callback == "function" && this.callback();
+    }
+
+    Text2Password.prototype._passwordHandler = function(){}
+    Text2Password.prototype._textHandler = function(){
+        this.input.valueProxy = this.input.value;
+    }
+    Text2Password.prototype._showValue = function(){
+        var str  = "";
+        if(this.type === 'password'){
+            this.value.split("").forEach((val)=>{
+                str += this.symbol;
+            })
+        }else{
+            str = this.value;
+        }
+        this.input.value  = str;
+    }
+    Text2Password.prototype._setCursor = function(){}
+    Text2Password.prototype.$setValue = function (value) {
+        if (value) this.input.value = value;
+        this._inputHandler();
+    }
+   
+    Text2Password.prototype.$changeType = function(type){
+        this.type = type;
+        this.$setValue(this.value);
     }
     return Text2Password
 })
 
 
 
-Vue.component("pass-wrod", {
-    template: "#pw",
-    props: {
-        type: {
-            type: String,
-            default: 'password'
-        },
-        value: {
-            type: String,
-            default: ""
-        },
-        symbol: {
-            type: String,
-            default: "*"
-        },
-        pattern: {
-            type: String,
-            default: /([\u4e00-\u9fa5])/g
-        }
-    },
-    data() {
-        return {
-            valueProxy: "",
-        }
-    },
-    computed: {
-        showValue() {
-            if (this.type != "password") {
-                return this.valueProxy
-            }
-            return this.fillSymbol()
-        }
-    },
-    watch: {
-        value() {
-            this._initValue()
-        }
-    },
-    mounted() {
-        this._initValue()
-    },
-    methods: {
-        _filterCn(str, repStr) {
-            var pattern = this.pattern, repStr = repStr ? repStr : "";
-            return str.replace(pattern, repStr)
-        },
-        _initValue() {
-            this.valueProxy = this._filterCn(this.value)
-            this.$emit('input', this.valueProxy);
-        },
-        _inputHandler() {
-            var cvalueArr = this._filterCn(this.$refs['pw-input'].value).split(""),
-                ovalueArr = this.valueProxy.split(""), cursor = this.$refs['pw-input'].selectionStart;
-            cvalueArr.forEach((value, index) => {
-                if (value !== this.symbol) {
-                    ovalueArr.splice(index, 0, value)
-                }
-            })
-            ovalueArr.length = cvalueArr.length;
-            if (this.valueProxy == ovalueArr.join("")) {
-                this.$forceUpdate();
-            } else {
-                this.valueProxy = ovalueArr.join("");
-            }
-            this.$nextTick(() => {
-                this.$refs['pw-input'].selectionStart = cursor;
-                this.$refs['pw-input'].selectionEnd = cursor;
-            })
-        },
-        cinput() {
-            if (this.type != 'password') {
-                this.valueProxy = this._filterCn(this.$refs['pw-input'].value);
-            } else {
-                this._inputHandler();
-            }
-
-            this.$emit('input', this.valueProxy)
-        },
-        fillSymbol() {
-            var symbolstr = "";
-            for (let i = 0, len = this.valueProxy.length; i < len; i++) {
-                symbolstr += this.symbol;
-            }
-            return symbolstr
-        }
-
-    },
-})

@@ -25,154 +25,52 @@
             margin: 0;
         }
 
-        #input-grpup>label>div {
-            position: absolute;
-            height: 100%;
-            width: 100%;
-            left: 0;
-            top: 0;
-            display: flex;
-            align-items: center;
-        }
+    
     </style>
 </head>
 
 <body>
     <div id="app">
-        {{value}}
-        <input type="text" v-model="value">
-        <button @click="type == 'text' ?type = 'password':type = 'text'  ">{{type}}</button>
-        <pass-wrod v-model="value" :type="type" style=""></pass-wrod>
+      
+         <div id="show"></div>
+        <!-- <pass-word v-model="value"  :type="type"></pass-word> -->
+        <input type="text" id="username"  value="123456">
+        <button id="switch">切换显示</button>
+        <!-- <button @click="type == 'text' ?type = 'password':type = 'text'  ">切换显示</button> -->
         <!-- <password :value="value"  @input = "value=$event.target.value"></password> -->
     </div>
     <template id="pw">
-        <input ref='pw-input' :value="showValue" type="text" @input="cinput" @copy.prevent="" @cut.prevent=""
-            style="ime-mode:disabled" />
+
     </template>
     <!-- <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.min.js"></script>
-    <script src="./js/Text2Password.js"></script>
+    <!-- <script src="./js/vue.js"></script> -->
+    <!-- <script src="./js/vue.2.6.11.js"></script> -->
+    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.min.js"></script> -->
+    <script src="./js/Text2Password_orign.js"></script>
+    <!-- <script src="./js/passWord.js"></script> -->
     <script>
-
-        Vue.component("pass-wrod", {
-            template: "#pw",
-            props: {
-                type: {
-                    type: String,
-                    default: 'password'
-                },
-                value: {
-                    type: String,
-                    default: ""
-                },
-                symbol: {
-                    type: String,
-                    default: "*"
-                },
-                pattern: {
-                    type: String,
-                    default: /([\u4e00-\u9fa5])/g
-                }
-            },
-            data() {
-                return {
-                    valueProxy: "",
-                }
-            },
-            computed: {
-                showValue() {
-                    if (this.type != "password") {
-                        return this.valueProxy
-                    }
-                    return this.fillSymbol()
-                }
-            },
-            watch: {
-                value() {
-                    this._initValue()
-                }
-            },
-            mounted() {
-                this._initValue()
-            },
-            methods: {
-                _filterCn(str, repStr) {
-                    var pattern = this.pattern, repStr = repStr ? repStr : "";
-                    return str.replace(pattern, repStr)
-                },
-                _initValue() {
-                    this.valueProxy = this._filterCn(this.value)
-                    this.$emit('input', this.valueProxy);
-                },
-                _inputHandler() {
-                    var cvalueArr = this._filterCn(this.$refs['pw-input'].value).split(""),
-                        ovalueArr = this.valueProxy.split(""),
-                        clen = cvalueArr.length - ovalueArr.length,
-                        cursor = this.$refs['pw-input'].selectionStart, sidx = "", eidx = "";
-
-                    if (clen > 0) {
-                        var inArr = cvalueArr.join("").replace(/\*/g, "").split("");
-                        var right = cvalueArr.length - cursor > 0 ?  ovalueArr.slice(-(cvalueArr.length - cursor)) :  [] ;
-                        ovalueArr = [].concat(ovalueArr.slice(0, cursor - inArr.length), inArr,right);
-                    }
-                    if (clen < 0) {
-                        // 删除某些元素
-                        ovalueArr.splice(cursor, Math.abs(clen))
-                    }
-                   
-                    cvalueArr.forEach(function (value, index) {
-                        if (value != "*") {
-                            ovalueArr[index] = value;
-                        }
-                    })
-                    
-                    if (this.valueProxy == ovalueArr.join("")) {
-                        this.$forceUpdate();
-                    } else {
-                        this.valueProxy = ovalueArr.join("");
-                    }
-                    this.$nextTick(() => {
-                        this.$refs['pw-input'].selectionStart = cursor;
-                        this.$refs['pw-input'].selectionEnd = cursor;
-                    })
-                },
-                cinput() {
-                    if (this.type != 'password') {
-                        this.valueProxy = this._filterCn(this.$refs['pw-input'].value);
-                    } else {
-                        this._inputHandler();
-                    }
-
-                    this.$emit('input', this.valueProxy)
-                },
-                fillSymbol() {
-                    var symbolstr = "";
-                    for (let i = 0, len = this.valueProxy.length; i < len; i++) {
-                        symbolstr += this.symbol;
-                    }
-                    return symbolstr
-                }
-
-            },
-        })
-
-
-        var vm = new Vue({
-            el: "#app",
-            data: {
-                value: "123456",
-                type: "password"
-            }
-        })
-
-
-        // var username = new Text2Password({
-        //     id: "username",
-        //     callback: function () {
-        //         console.log(this.value)
+        "use strict";
+        // var vm = new Vue({
+        //     el: "#app",
+        //     data: {
+        //         value: "123456",
+        //         type: "password"
         //     }
-        // });
+        // })
 
+
+        var username = new Text2Password({
+            id: "username",
+            callback: function () {
+                document.getElementById("show").innerHTML =  this.value;
+            }
+        });
+
+
+        document.getElementById("switch").onclick = function(){
+            var type = username.type === 'password' ? 'text' : 'password';
+            username.$changeType(type)
+        }
 
     </script>
 </body>

@@ -41,7 +41,7 @@ define([
                         <span class="ziconfont z-iconjiahaozhankai" @click.stop="toEdit()"></span>
                     </h5>
                     <ul ref="dailys" >
-                        <li v-for="(val,index) in dailys" :key="index" @click.stop="toEdit(value)">
+                        <li v-for="(val,index) in dailys" :key="index" @click.stop="toEdit(val)">
                             <span>{{val.title}}</span>
                             <span class="ziconfont z-iconjianhaoshouqi" @click.stop="delDaily(index)"></span>
                         </li>
@@ -99,6 +99,7 @@ define([
                 this.imgs.splice(index,1)
             },
             toEdit(value){
+                console.log(value)
                 if(!value)value ={pid:this.value.pid };
                 this.$router.push({
                     name:"edit",
@@ -109,11 +110,21 @@ define([
                 this.dailys.splice(index,1)
             },
             loadDaily(){
-                aInterface.load(this.value.pid).then(res=>{
+                aInterface.load(this.value&&this.value.pid ? this.value.pid : "").then(res=>{
                     console.log("拉取日志数据")
                     this.dailys =  res;
+                    console.log(res)
                 })
             }
+        },
+         beforeCreate(){
+            // 此处可以做一些验证，是否实例化vue实例
+            // 判断页面所处的环境
+            // 尽量不要动参数，避免后续初始化出错
+           if(!this.$route.params.allowed){
+               this.$router.go(-1)
+           }
+           
         },
         created(){
             
@@ -129,10 +140,12 @@ define([
         },
         
         deactivated() {
+
             if(this.$route.name == 'index'){
                 this.removeKeepAlive('detail');
             }
         }
+        
         
     } 
 });

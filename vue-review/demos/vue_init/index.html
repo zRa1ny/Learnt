@@ -14,8 +14,10 @@
         <hello-wrod @click="hellowordclickFn" @hook:beforeCreate="hookbeforeCreateFn" ref="helloword2">
         </hello-wrod>
         <hello-wrod @click="hellowordclickFn" @hook:beforeCreate="hookbeforeCreateFn" ref="helloword1">
+           <!-- <transition> -->
             <hello-wrod @click="hellowordclickFn" @hook:beforeCreate="hookbeforeCreateFn" ref="helloword2">
             </hello-wrod>
+           <!-- </transition> -->
         </hello-wrod>
 
         <!-- </transition> -->
@@ -41,6 +43,7 @@
                 'aa':'aa'
             },
             beforeCreate() {
+                
             }
         })
   
@@ -119,6 +122,7 @@
             updated: function () { },
             beforeDestroy: function () { },
             destroyed: function () { },
+            // render(h) =>h(app)
            
         })
     </script>
