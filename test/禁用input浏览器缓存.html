@@ -34,43 +34,48 @@
       
          <div id="show"></div>
         <!-- <pass-word v-model="value"  :type="type"></pass-word> -->
-        <input type="text" id="username"  value="123456">
+        <input type="text" id="password"  value="123456a" autocomplete="off">
         <button id="switch">切换显示</button>
-        <!-- <button @click="type == 'text' ?type = 'password':type = 'text'  ">切换显示</button> -->
-        <!-- <password :value="value"  @input = "value=$event.target.value"></password> -->
+
+        <button @click="type == 'text' ?type = 'password':type = 'text'  ">切换显示</button>
+        <pass-word :value="value"  :type="type"></pass-word>
     </div>
     <template id="pw">
 
     </template>
     <!-- <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <!-- <script src="./js/vue.js"></script> -->
-    <!-- <script src="./js/vue.2.6.11.js"></script> -->
+    <script src="./js/vue.2.6.11.js"></script>
     <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.min.js"></script> -->
-    <script src="./js/Text2Password_orign.js"></script>
-    <!-- <script src="./js/passWord.js"></script> -->
+    <!-- <script src="./js/Text2Password_orign.js"></script> -->
+    <!-- <script src="./js/Text2Password.js"></script> -->
+    <script src="./js/passWord.js"></script>
     <script>
         "use strict";
-        // var vm = new Vue({
-        //     el: "#app",
-        //     data: {
-        //         value: "123456",
-        //         type: "password"
-        //     }
-        // })
-
-
-        var username = new Text2Password({
-            id: "username",
-            callback: function () {
-                document.getElementById("show").innerHTML =  this.value;
+        Vue.use(PassWordPlugin)
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                value: "123456",
+                type: "password"
             }
-        });
+        })
 
 
-        document.getElementById("switch").onclick = function(){
-            var type = username.type === 'password' ? 'text' : 'password';
-            username.$changeType(type)
-        }
+        // var username = new Text2Password({
+        //     id: "password",
+        //     callback: function () {
+        //         document.getElementById("show").innerHTML =  this.value;
+        //     }
+        // });
+
+
+        // document.getElementById("switch").onclick = function(){
+        //     var type = username.type === 'password' ? 'text' : 'password';
+        //     username.$changeType(type)
+        // }
+
+    
 
     </script>
 </body>
