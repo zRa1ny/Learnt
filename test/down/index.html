@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div v-for="(value,index) in cook">
+            <label style="display: block;" for="test">
+                <!-- <div>{{value.name}}</div> -->
+                <span>ssss</span>
+                <select v-model="cook[index]" id="test">
+                    <option :value="val" v-for="(val,idx) in options">{{val.name}}</option>
+                </select>
+                <!-- <input type="text" v-model="value.name"  @input="" keyup = " getoptions"> -->
+
+            </label>
+            <div>{{value.phone}}</div>
+        </div>
+
+    </div>
+
+    <div>
+        <label for="se">aaa</label>
+        <select name="se" id="se">
+            <option value="1"></option>
+            <option value="3"></option>
+            <option value="2"></option>
+        </select>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.1.6/vue.min.js"></script>
+    <script>
+
+        document.getElementById("se").focus()
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    cook: [],
+                    options: [
+                        {
+                            name: "aaa",
+                            phone: "111"
+                        },
+                        {
+                            name: "bbbb",
+                            phone: "2222"
+                        }
+                    ]
+                }
+            },
+            mounted() {
+                this.cook.push({
+                    name: "",
+                    phone: ""
+                })
+                this.cook.push({
+                    name: "",
+                    phone: ""
+                })
+            },
+        })
+    </script>
+</body>
+
+</html>
