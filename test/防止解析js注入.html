@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+    <textarea id="textarea" style="width:300px;height:100px;"></textarea>
+    <button id="getValue" onclick="getVal()">获取</button>
+    <button id="setValue" onclick="setVal()">赋值</button>
+    <button id="setValue" onclick="setUrl()">设置url</button>
+    <button onclick="openUrl()">打开url</button>
+    <!-- <iframe src="javascript:alert(0)" id="if" frameborder="0"></iframe> -->
+    <!-- <a href="./open.html" target="_blank">open</a> -->
+    <div id="test"></div>
+    <form action="">
+        <textarea name="" id="" cols="30" rows="10"></textarea>
+        <button>提交</button>
+    </form>
+    <!-- <script> javascript:alert(1)</script> -->
+</body>
+<script>
+    function checkURL(URL) {
+        var str = URL;
+        var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+        var objExp = new RegExp(Expression);
+        if (objExp.test(str) == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function makeAbsUrl(url) {
+        if (url.indexOf("//") === 0 ||
+            url.indexOf("http://") === 0 ||
+            url.indexOf("https://") === 0) {
+            return url;
+        } else {
+            var el = document.createElement("div");
+            el.innerHTML = "<a href='" + url + "'></a>";
+            return el.getElementsByTagName("a")[0].href;
+        }
+    }
+
+    function openUrl() {
+        var a = window.open('./open.html');
+        a._iframeUrl = "./s"
+    }
+
+    window.getUrl = function () {
+        return ".//xxx"
+    }
+    var $ = document.getElementById('textarea');
+    var _val = '';
+
+    function getVal() {
+        _val = htmlEncode($.value);
+        console.log(_val)
+        document.getElementById("test").innerHTML = $.value
+        $.value = '';
+    }
+
+    function setVal() {
+        $.value = htmlDecode(_val);
+        document.getElementById('if').src = encodeURIComponent(_val)
+    }
+
+    function setUrl() {
+        document.getElementById('if').src = encodeURIComponent(_val)
+    }
+    //转义  元素的innerHTML内容即为转义后的字符
+    function htmlEncode(str) {
+        var ele = document.createElement('span');
+        ele.appendChild(document.createTextNode(str));
+        return ele.innerHTML;
+    }
+    //解析 
+    function htmlDecode(str) {
+        var ele = document.createElement('span');
+        ele.innerHTML = str;
+        return ele.textContent;
+    }
+</script>
+
+
+</html>

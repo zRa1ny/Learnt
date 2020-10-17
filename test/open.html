@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h3>用户留言列表：</h3>
+    <ul id="mul">
+
+
+    </ul>
+    <a href="javascript:alert(1)">1</a>
+    <a href="javascript:void(0)">我是一个不需要跳转的链接</a>
+    <a href=".*javascript:alert(0)">执行函数</a>
+    <iframe src=".*javascript:alert(0)" frameborder="0"></iframe>
+    <!-- <script src="javascript:alert()"></script> -->
+    <!-- <img src="javascript:alert()" alt="" srcset=""> -->
+    <!-- <object data="javascript:alert()" type=""></object> -->
+    <script>
+        console.log(makeAbsUrl("/javascript:alert()"))
+
+        function makeAbsUrl(url) {
+            if (url.indexOf("//") === 0 ||
+                url.indexOf("http://") === 0 ||
+                url.indexOf("https://") === 0) {
+                return url;
+            } else {
+                var el = document.createElement("div");
+                if (!(url.charAt(0) == '.' || url.charAt(0) == '/')) {
+                    url = "/" + url
+                }
+                el.innerHTML = "<a href='" + url + "'></a>";
+                return el.getElementsByTagName("a")[0].href;
+            }
+        }
+
+        function dosomething() {
+            console.log("dosomething")
+        }
+        var a = {
+                success: 1,
+                data: ['用户1：哈哈 我抢到沙发了', '用户2：不错不错 我是二楼', '用户3：哈哈 三楼也还可以', '用户4：<script>alert("这页面有毒，大家快退出！")<\/script>',
+                    '用户5：五楼不开心'
+                ]
+            },
+            html = '';
+        a.data.forEach(function (value) {
+            var li = document.createElement('li');
+            li.appendChild(document.createTextNode(value))
+            document.getElementById('mul').appendChild(li);
+        })
+    </script>
+</body>
+
+</html>
