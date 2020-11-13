@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="width: 100px;background:red;height: 2000px;"></div>
+    <style>
+        .zhezhao {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 99;
+            left: 0px;
+            top: 0px;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .zhezhao .zhezhao1 {
+            position: absolute;
+            width: 90%;
+            left: 5%;
+            top: 35%;
+            background: #fff;
+            border-radius: 3px;
+        }
+
+        .zhezhao .zhezhao1 .title {
+            padding: 10px 0px;
+            text-align: center;
+
+        }
+
+        .zhezhao .zhezhao1 .title .p1 {
+            color: orange;
+            font-size: 1.1rem;
+        }
+
+        .zhezhao .zhezhao1 .center .f1 {
+            padding: 10px 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .zhezhao .zhezhao1 .center .f1 .s1 {
+            width: 80px;
+            color: #000;
+            font-size: 0.9rem;
+        }
+
+        .zhezhao .zhezhao1 .center .f1 input {
+            width: 50%;
+            border: none;
+            height: 22px;
+            color: #000;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        .zhezhao .zhezhao1 .center .f1 select {
+            float: left;
+            width: 50%;
+            border: none;
+            height: 22px;
+            color: #000;
+            margin: 0;
+            font-size: 0.8rem;
+            padding: 0;
+            padding-left: 10px;
+        }
+
+        .zhezhao .zhezhao1 .last a {
+            display: inline-block;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: #00a0e9;
+            color: #fff;
+        }
+
+        .close_z {
+            border: 0px #000 solid;
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            text-align: center;
+            line-height: 30px;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            background-color: #00a0e9;
+            color: white;
+        }
+
+        .mui-clearfix {
+            display: block;
+            clear: both;
+        }
+    </style>
+
+    <div class="zhezhao" id="hook1">
+        <div class="zhezhao1">
+            <div class="title">
+                <p class="p1">请填写信息</p>
+                <span class="close_z" id="close_hook">X</span>
+            </div>
+            <div class="center">
+                <div class="f1 mui-clearfix">
+                    <span class="s1">姓名</span>
+                    <input class="input_at input_at1" id="real_name" type="text" placeholder="请填写姓名">
+                </div>
+                <div class="f1 mui-clearfix">
+                    <span class="s1">手机号</span>
+                    <input class="input_at input_at2" id="mobile" type="number" placeholder="请填写手机号"
+                        onblur="check_mobile()">
+                </div>
+                <input id="bussiness_val" type="hidden" value="">
+                <div class="f1 mui-clearfix">
+                    <span class="s1">所属商会</span>
+                    <select name="bussiness" id="bussiness" tabindex="-1" style="width: 60%">
+                        <option value="0">请选择...</option>
+                        {volist name="bussiness_list" id="b"}
+                        <option value="{$b.id}">{$b.title}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="last">
+                <a href="javascript:submit_info()">确定</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+    <script>
+        $('body').click(() => {
+            $("#hook1").show()
+        })
+
+        $('#close_hook').click((e) => {
+            e.stopPropagation()
+            $("#hook1").hide()
+        })
+    </script>
+</body>
+
+</html>
