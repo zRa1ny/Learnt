@@ -8,6 +8,7 @@ module.exports = {
             router:"/public"
         }
     ],
+    public:"/public",
     logPath: path.resolve(__dirname, './logs/koa-template.log'),
     secret: "zrainy.com",
     mysql: {

@@ -2,19 +2,17 @@ var fs = require('fs');
 var UUID = require('uuid');
 var Path = require('path');
 var join = Path.join;
-var config = require('../config')
+var config = require('../config.js')
+var mime = require('mime')
 
 function getJsonFiles(jsonPath) {
     let jsonFiles = [];
-
     function findJsonFile(path, pId) {
         pId = pId || "0";
         let files = fs.readdirSync(path);
         files.forEach(function (item, index) {
             let fPath = join(path, item);
             let stat = fs.statSync(fPath);
-            console.log(stat)
-            console.log(item)
             var id = UUID.v1();
             // jsonFiles.push({
             //     id:id,
@@ -34,8 +32,8 @@ function getJsonFiles(jsonPath) {
                 pId,
                 item,
                 fPath,
-                fPath.replace(Path.resolve(config.public),"").replace(/\\/g,'/'),
-                Path.extname(fPath).replace('.', ''),
+                fPath.replace(Path.resolve(config.public), "").replace(/\\/g, '/'),
+                mime.getType(fPath),
                 stat.isDirectory(),
                 stat.isFile(),
                 stat.size,
@@ -49,8 +47,8 @@ function getJsonFiles(jsonPath) {
                     hour12: false
                 })
             ]);
-
             if (stat.isDirectory() === true) {
+               
                 findJsonFile(fPath, id);
             }
 
@@ -68,9 +66,10 @@ function writeFile(name, data) {
     })
 }
 
-// var result = getJsonFiles("test");
-
-module.exports =  {
+var result = getJsonFiles("../public").then(result=>{
+    writeFile('./data.json',result)
+});
+module.exports = {
     getJsonFiles,
     writeFile
 }
