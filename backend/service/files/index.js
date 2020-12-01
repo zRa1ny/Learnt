@@ -11,5 +11,10 @@ module.exports = {
         return FileDB.fetchRows({
             id: id
         }, 'id,pId,name,type,size,url,des,tips,isDirectory,isFile')
+    },
+    getfile(id) {
+        return FileDB.fetchRow({
+            id: id
+        })
     }
 }

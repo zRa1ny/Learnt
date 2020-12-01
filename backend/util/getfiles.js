@@ -6,7 +6,7 @@ var config = require('../config.js')
 var mime = require('mime')
 
 function getJsonFiles(jsonPath) {
-    let jsonFiles = [];
+    let jsonFiles = [],startPath =  jsonPath;
     function findJsonFile(path, pId) {
         pId = pId || "0";
         let files = fs.readdirSync(path);
@@ -30,9 +30,9 @@ function getJsonFiles(jsonPath) {
             jsonFiles.push([
                 id,
                 pId,
-                item,
+                item.split('.')[0],
                 fPath,
-                fPath.replace(Path.resolve(config.public), "").replace(/\\/g, '/'),
+                fPath.replace(Path.resolve(startPath), "").replace(/\\/g, '/'),
                 mime.getType(fPath),
                 stat.isDirectory(),
                 stat.isFile(),

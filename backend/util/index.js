@@ -1,3 +1,4 @@
+const path  = require('path')
 const {
     getJsonFiles,
     writeFile
@@ -6,7 +7,6 @@ const {
     execcuteSql
 } = require('./mysql')
 const config = require('../config')
-
 function insertFilePath2Mysql(filePath) {
     getJsonFiles(filePath).then(res => {
         let sql = 'INSERT INTO file(`id`,`pId`,`name`,`path`,`url`,`type`,`isDirectory`,`isFile`,`size`,`visitedTime`,`createdTime`,`updatedTime`) VALUES ?';
@@ -17,7 +17,8 @@ function insertFilePath2Mysql(filePath) {
         // console.log(err)
     })
 }
-// insertFilePath2Mysql(config.public)
+// console.log()
+// insertFilePath2Mysql(path.resolve(__dirname,'../' + config.publics[0].dir))
 module.exports = {
     insertFilePath2Mysql
     
