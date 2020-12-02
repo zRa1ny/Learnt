@@ -45,9 +45,9 @@ module.exports = {
         let chunksize = (end - start) + 1;
         ctx.set("Content-Range" , "bytes " + start + "-" + end + "/" + total)
         ctx.set( "Accept-Ranges", "bytes")
-        ctx.set("Content-Length" , chunksize,)
+        ctx.set("Content-Length" , chunksize)
         ctx.set("Content-Type" ,  row.type)
-         let data = fs.readFileSync(filepath);
+        //  let data = fs.readFileSync(filepath);
         //  ctx.end(data, "binary");
         
         // var stream = fs.createReadStream(filepath, {
@@ -63,7 +63,7 @@ module.exports = {
         // const bufferStream = new stream.PassThrough();
         // bufferStream.end(data);
         // bufferStream.pipe(ctx);
-        // ctx.body = data
+        ctx.body = fs.createReadStream(filepath)
         return next();
     },
 
