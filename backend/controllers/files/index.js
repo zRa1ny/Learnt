@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const stream = require('stream')
+var slice = require('stream-slice').slice;
 const {
     queryFiles,
     queryFile,
@@ -41,18 +42,20 @@ module.exports = {
         let positions = range ? range.replace(/bytes=/, "").split("-") : [0];
         let start = parseInt(positions[0], 10);
         let total = stats.size;
-        let end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+        let end = positions[1] ? parseInt(positions[1], 10) : Math.min(positions[0]  +  10000 , total - 1);
         let chunksize = (end - start) + 1;
-        ctx.set("Content-Range" , "bytes " + start + "-" + end + "/" + total)
+        // ctx.set("Content-Range" , "bytes " + start + "-" + end + "/" + total)
         ctx.set( "Accept-Ranges", "bytes")
-        ctx.set("Content-Length" , chunksize)
+        
+        ctx.set("Content-Length" , total)
         ctx.set("Content-Type" ,  row.type)
+        // ctx.status = 206;
         //  let data = fs.readFileSync(filepath);
         //  ctx.end(data, "binary");
         
         // var stream = fs.createReadStream(filepath, {
-        //         start: start,
-        //         end: end
+                // start: start,
+                // end: end
         //     })
         //     .on("open", function () {
         //         stream.pipe(ctx);
@@ -63,7 +66,9 @@ module.exports = {
         // const bufferStream = new stream.PassThrough();
         // bufferStream.end(data);
         // bufferStream.pipe(ctx);
+
         ctx.body = fs.createReadStream(filepath)
+     
         return next();
     },
 

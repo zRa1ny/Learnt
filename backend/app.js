@@ -10,8 +10,6 @@ const { errorHandler,responseHandler }  = require('./middlewares/response')
 
 const app = new Koa();
 
-// 大文件持续
-app.use(range)
 // Logger 
 app.use(loggerMiddleware)
 
@@ -20,8 +18,10 @@ app.use(errorHandler)
 app.use(bodyParser)
 
 // Global Middlewares
-// app.use(static(config.publics))
-app.use(static( config.public))
+
+// 大文件持续
+app.use(range)
+app.use(static(config.public))
 
 
 
