@@ -10,7 +10,8 @@ const router = new Router()
 router.prefix('/api')
 
 router.get('/login', controllers.login)
-router.get('/getfile/:id', filesControllers.getfile)
+router.get('/getfile', filesControllers.getfile)
+
 router.get('/queryFiles', filesControllers.queryFiles)
 router.get('/queryFile', filesControllers.queryFile)
 

@@ -7,4 +7,4 @@ const path  = require('path')
 // console.log(path.basename(__filename)); //获取文件名
 // console.log(path.extname(__filename));  //获取文件扩展名
 // console.log(path.dirname(__filename));  //获取文件路径
-console.log(path.resolve('./', '…/123.txt'))
+console.log(path.resolve('./', './123.txt'))

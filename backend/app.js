@@ -1,7 +1,7 @@
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')()
 const static = require('koa-static')
-var range = require('koa-range');
+const range = require('koa-range');
 
 const config = require('./config')
 const {publicRouter,privateRouter} = require('./routes')
@@ -32,6 +32,8 @@ app.use(privateRouter.routes(),privateRouter.allowedMethods())
 
 // Response 
 app.use(responseHandler)
-
+// app.on('error',(err)=>{
+//     console.log(err)
+// })
 module.exports = app
 

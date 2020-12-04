@@ -1,15 +1,14 @@
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
-const stream = require('stream')
-var slice = require('stream-slice').slice;
+const path = require('path')
+const config = require('../../config')
+
 const {
     queryFiles,
     queryFile,
     getfile
 } = require('../../service/files');
-const {
-    stringify
-} = require('uuid');
+
 module.exports = {
     queryFiles: async (ctx, next) => {
         let {
@@ -31,45 +30,35 @@ module.exports = {
         }
         return next();
     },
+    
     getfile: async (ctx, next) => {
         let {
-            id = 0
-        } = ctx.params;
-        let [row] = await getfile(id)
-        let filepath = row.path
-        let stats = fs.statSync(filepath)
-        let range = ctx.headers.range;
-        let positions = range ? range.replace(/bytes=/, "").split("-") : [0];
-        let start = parseInt(positions[0], 10);
-        let total = stats.size;
-        let end = positions[1] ? parseInt(positions[1], 10) : Math.min(positions[0]  +  10000 , total - 1);
-        let chunksize = (end - start) + 1;
-        // ctx.set("Content-Range" , "bytes " + start + "-" + end + "/" + total)
-        ctx.set( "Accept-Ranges", "bytes")
-        
-        ctx.set("Content-Length" , total)
-        ctx.set("Content-Type" ,  row.type)
-        // ctx.status = 206;
-        //  let data = fs.readFileSync(filepath);
-        //  ctx.end(data, "binary");
-        
-        // var stream = fs.createReadStream(filepath, {
-                // start: start,
-                // end: end
-        //     })
-        //     .on("open", function () {
-        //         stream.pipe(ctx);
-        //     }).on("error", function (err) {
-        //         ctx.end(err);
-        //     });
-        // console.log(data)
-        // const bufferStream = new stream.PassThrough();
-        // bufferStream.end(data);
-        // bufferStream.pipe(ctx);
-
-        ctx.body = fs.createReadStream(filepath)
-     
-        return next();
-    },
+            filepath
+        } = ctx.query;
+        if (!path) return next();
+        let range = ctx.headers.range; // 实际上请求头的 Range 视屏调节请求会自动带上开始内容 类似这样 Range: bytes=26214400-
+        if (!range) {
+            // 初始化请求不会带上range 造一个 并且返回200
+            range = "bytes=0-";
+            ctx.status = 200
+        } else {
+            // 带range的请求返回 206 表明返回目标url上的部分内容
+            ctx.status = 206
+        }
+        let startBytes = range.replace(/bytes=/, "").split("-")[0];
+        startBytes= Number(startBytes);
+        filepath = path.resolve(config.public, '.' + filepath);
+        let stats = fs.statSync(filepath);
+        ctx.set("Accept-Ranges", "bytes")
+        console.log("bytes " + startBytes + "-" + (stats.size - 1) + "/" + stats.size)
+        ctx.set("Content-Length", stats.size - startBytes)
+        ctx.set("Content-Range", "bytes " + startBytes + "-" + (stats.size - 1) + "/" + stats.size)
+        ctx.set("Content-Type", "video/mp4")
+        ctx.body = fs.createReadStream(filepath, {
+            start: startBytes,
+            end: stats.size
+        })
+        next();
+    }
 
 }
