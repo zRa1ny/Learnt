@@ -16,5 +16,8 @@ module.exports = {
         return FileDB.fetchRow({
             id: id
         })
+    },
+    refresh(){
+        return FileDB.refresh()
     }
 }

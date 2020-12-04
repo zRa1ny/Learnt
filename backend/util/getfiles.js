@@ -66,9 +66,9 @@ function writeFile(name, data) {
     })
 }
 
-var result = getJsonFiles("../public").then(result=>{
-    writeFile('./data.json',result)
-});
+// var result = getJsonFiles("../public").then(result=>{
+//     writeFile('./data.json',result)
+// });
 module.exports = {
     getJsonFiles,
     writeFile

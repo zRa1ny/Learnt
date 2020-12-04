@@ -90,6 +90,22 @@ class DB {
             })
         })
     }
+    refresh() {
+        const {
+            pool,
+            table
+        } = this;
+        return new Promise((resolve, reject) => {
+            const sql = ` truncate table ${table} `
+            pool.query(sql, function (error, result) {
+                if (error) {
+                    return reject(error)
+                }
+
+                resolve(result)
+            })
+        })
+    }
 
     execcuteSql(sql) {
         const {

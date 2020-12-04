@@ -2,11 +2,12 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const path = require('path')
 const config = require('../../config')
-
+const {initTableFile} = require('../../util')
 const {
     queryFiles,
     queryFile,
-    getfile
+    getfile,
+    refresh
 } = require('../../service/files');
 
 module.exports = {
@@ -30,7 +31,7 @@ module.exports = {
         }
         return next();
     },
-    
+
     getfile: async (ctx, next) => {
         let {
             filepath
@@ -46,7 +47,7 @@ module.exports = {
             ctx.status = 206
         }
         let startBytes = range.replace(/bytes=/, "").split("-")[0];
-        startBytes= Number(startBytes);
+        startBytes = Number(startBytes);
         filepath = path.resolve(config.public, '.' + filepath);
         let stats = fs.statSync(filepath);
         ctx.set("Accept-Ranges", "bytes")
@@ -59,6 +60,14 @@ module.exports = {
             end: stats.size
         })
         next();
+    },
+    refresh: async (ctx, next) => {
+        let data = await refresh();
+        let reuslt = await initTableFile();
+        ctx.result = {
+            data: reuslt
+        }
+        return next();
     }
 
 }

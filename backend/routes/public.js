@@ -11,7 +11,7 @@ router.prefix('/api')
 
 router.get('/login', controllers.login)
 router.get('/getfile', filesControllers.getfile)
-
+router.get('/refresh', filesControllers.refresh)
 router.get('/queryFiles', filesControllers.queryFiles)
 router.get('/queryFile', filesControllers.queryFile)
 
