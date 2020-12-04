@@ -62,8 +62,8 @@ module.exports = {
         next();
     },
     refresh: async (ctx, next) => {
-        let data = await refresh();
-        let reuslt = await initTableFile();
+        let data = await refresh(); //清空表
+        let reuslt = await initTableFile(); //重新录表
         ctx.result = {
             data: reuslt
         }

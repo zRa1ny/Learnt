@@ -46,7 +46,7 @@ class DB {
         })
     }
     /**
-     * @name: 
+     * @name: fetchRow 
      * @param {*
      *  id:1,
      *  name:2,

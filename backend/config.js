@@ -9,6 +9,7 @@ module.exports = {
         }
     ],
     public:path.resolve(__dirname,"./public"),
+    // public:"F:\\BaiduNetdiskDownload",
     logPath: path.resolve(__dirname, './logs/koa-template.log'),
     secret: "zrainy.com",
     mysql: {
